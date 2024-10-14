@@ -31,8 +31,8 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Copy env prod
-        run: cp .env.production .env
+      - name: Copy env develop
+        run: cp .env.development .env
 
       - name: Docker meta
         id: meta
