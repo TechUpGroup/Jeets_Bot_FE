@@ -1,0 +1,31 @@
+{
+  "plugins": [
+    "@typescript-eslint",
+    "unused-imports",
+    "tailwindcss",
+    "simple-import-sort"
+  ],
+  "extends": [
+    "plugin:tailwindcss/recommended",
+    "next/core-web-vitals", // Needed to avoid warning in next.js build: 'The Next.js plugin was not detected in your ESLint configuration'
+    "prettier",
+    "plugin:prettier/recommended"
+
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "endOfLine": "auto",
+        "trailingComma": "all",
+        "printWidth": 120,
+        "tabWidth": 2
+      }
+    ]
+  }
+}
