@@ -7,9 +7,9 @@ import Header from './Header';
 
 export default function DefaultLayout({ children }: React.PropsWithChildren) {
   return (
-    <Flex as="main" flexDir="column" minH="100vh" bg="main" fontWeight={500} lineHeight={1.375}>
+    <Flex as="main" flexDir="column" minH="100vh" bg="main" px={{ base: 2.5, md: 5 }}>
       <Header />
-      <Flex flexDir="column" flex={1} pb={{ base: 20, md: '100px' }}>
+      <Flex flexDir="column" flex={1}>
         {children}
       </Flex>
       <Footer />
