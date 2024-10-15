@@ -31,7 +31,7 @@ export default function PoolView() {
           <Table variant="unstyled">
             <Thead>
               <Tr fontFamily="sfPro" fontWeight={800} fontSize={20} color="rgba(172, 172, 172, 1)">
-                <Td p={0} lineHeight={1.4}>
+                <Td p={0} lineHeight={1.4} w={288}>
                   Amount
                 </Td>
                 <Td p={0} lineHeight={1.4} textAlign="center">
@@ -59,7 +59,15 @@ export default function PoolView() {
                     </Flex>
                   </Td>
                   <Td px={0} pb={0} pt={2.5}>
-                    <Flex alignItems="center" bg="rgba(237, 247, 255, 1)" h="90px" fontFamily="sfPro" fontWeight={800}>
+                    <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      bg="rgba(237, 247, 255, 1)"
+                      h="90px"
+                      fontFamily="sfPro"
+                      fontWeight={800}
+                      textAlign="center"
+                    >
                       18/10/2024
                     </Flex>
                   </Td>

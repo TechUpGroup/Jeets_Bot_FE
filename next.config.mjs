@@ -10,10 +10,9 @@ const domainImages = process.env.NEXT_PUBLIC_IMAGE_DOMAINS
     }))
   : [];
 
-
 const nextConfig = {
   reactStrictMode: false,
-  output: "standalone",
+  output: 'standalone',
   basePath,
   assetPrefix: basePath || undefined,
   images: {
@@ -21,6 +20,11 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'storage.googleapis.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
         pathname: '/**',
       },
       ...domainImages,
@@ -31,7 +35,7 @@ const nextConfig = {
       config.plugins.push(
         new context.webpack.IgnorePlugin({
           resourceRegExp: /^(lokijs|pino-pretty|encoding)$/,
-        })
+        }),
       );
     }
     return config;
