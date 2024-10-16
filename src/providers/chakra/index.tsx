@@ -14,6 +14,8 @@ const customTheme = extendTheme({
     main: 'rgba(214, 231, 246, 1)',
     purple: 'rgba(144, 79, 236, 1)',
     green: 'rgba(29, 246, 157, 1)',
+    disabled: 'rgba(192, 192, 192, 1)',
+    black: 'rgba(16, 16, 16, 1)',
   },
 });
 

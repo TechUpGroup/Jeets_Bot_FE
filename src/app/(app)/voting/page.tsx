@@ -1,5 +1,5 @@
 import VotingView from '@/views/VotingView';
 
-export default function Home() {
+export default function Voting() {
   return <VotingView />;
 }

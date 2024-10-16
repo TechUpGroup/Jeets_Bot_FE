@@ -23,7 +23,7 @@ export default function Header() {
 
       <FlexCenter gap={{ base: 2.5, md: '60px' }}>
         {[
-          { name: 'Missions', href: '#' },
+          { name: 'Missions', href: '/missions' },
           { name: 'Voting', href: '/voting' },
           { name: 'Pool', href: '/' },
         ].map((e) => (

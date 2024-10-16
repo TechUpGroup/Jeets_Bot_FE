@@ -1,11 +1,11 @@
 'use client';
 
 import { Button, Currency, FlexCol, ImageRatio } from '@/components';
-import { Box, Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 export default function PoolView() {
   return (
-    <Flex flex={1} pt={{ base: 5, md: 30 }} justifyContent="center" lineHeight={1.145}>
+    <Flex flex={1} pt={{ base: 5, md: 30 }} justifyContent="center" lineHeight={1.145} pb={10}>
       <FlexCol maxW={1517} w="full" rounded={24} pt={6} px={'44px'} pb={79} bg="white" alignItems="center" gap={30}>
         <Box fontSize={82}>POOL</Box>
         <Flex gap={2.5} rounded={10} bg="rgba(238, 226, 255, 1)" w="full" px="25.43px">
@@ -78,7 +78,7 @@ export default function PoolView() {
                           DEPOSITED
                         </Button>
                       ) : (
-                        <Button h={50} w="full" bg="rgba(192, 192, 192, 1)" color="rgba(239, 239, 239, 1)" rounded={8}>
+                        <Button h={50} w="full" bg="disabled" color="rgba(239, 239, 239, 1)" rounded={8}>
                           LOCKED
                         </Button>
                       )}
