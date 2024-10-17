@@ -1,24 +1,144 @@
 'use client';
 
+import { useEffect, useMemo, useState } from 'react';
+
 import { Button, FlexCol, ImageRatio } from '@/components';
-import { Box, Flex } from '@chakra-ui/react';
+import { TeleIcon, VerifiedIcon, XIcon } from '@/components/Icons';
+import { appConfig } from '@/config';
+import useCodeSocial from '@/hooks/useCodeSocial';
+import { postConnectTelegram, postConnectTwitter } from '@/services/api';
+import { incrementCount } from '@/store/useGlobalStore';
+import { useUser } from '@/store/useUserStore';
+import { toastError } from '@/utils/toast';
+import { Box, Center, Flex } from '@chakra-ui/react';
 
 export default function HomeView() {
+  const openConnectTwitter = () => {
+    window.open(`${appConfig.publicUrl}/users/twitter/start`, '_self');
+  };
+  const openConnectTelegram = () => {
+    window.open(`${appConfig.publicUrl}/users/telegram/start`, '_self');
+  };
+
+  const { code, isTwitter, isTelegram } = useCodeSocial();
+  const user = useUser();
+  const isTwitterConnected = useMemo(() => !!user?.twitter_uid, [user?.twitter_uid]);
+  const isTeleConnected = useMemo(() => !!user?.telegram_uid, [user?.telegram_uid]);
+  const [loadingTwitter, setLoadingTwitter] = useState(false);
+  const [loadingTele, setLoadingTele] = useState(false);
+
+  useEffect(() => {
+    const handleConnectTwitter = async () => {
+      if (isTwitter && code && !user?.twitter_uid) {
+        try {
+          setLoadingTwitter(true);
+          const res = await postConnectTwitter(code);
+          if (!res) {
+            toastError('Connect twitter failed');
+          }
+          incrementCount();
+        } catch (e: any) {
+          toastError('Connect twitter failed', e);
+        } finally {
+          setLoadingTwitter(false);
+        }
+      }
+    };
+    handleConnectTwitter();
+  }, [isTwitter, code, user?.twitter_uid]);
+
+  useEffect(() => {
+    const handleConnectTelegram = async () => {
+      if (isTelegram && code && !user?.telegram_uid) {
+        try {
+          setLoadingTele(true);
+          const res = await postConnectTelegram(code);
+          if (!res) {
+            toastError('Connect telegram failed');
+          }
+          incrementCount();
+        } catch (e: any) {
+          toastError('Connect telegram failed', e);
+        } finally {
+          setLoadingTele(false);
+        }
+      }
+    };
+    handleConnectTelegram();
+  }, [isTelegram, code, user?.twitter_uid]);
+
   return (
-    <Flex pt={{ base: '60px', md: 91 }} gap="8.28125%" w="full" justifyContent="center">
-      <ImageRatio src="/images/cry.png" ratio={3744 / 3320} w="27.1875%" pt="30px" />
-      <FlexCol w="42.03125%" px="44px" pt="84px" pb="87px" bg="white" rounded={24} alignItems="center" gap="30px">
-        <Box lineHeight={1.145} fontSize={82}>
+    <Flex
+      pt={{ base: '40px', md: 91 }}
+      flexDir={{ base: 'column', md: 'row' }}
+      gap={{ base: 10, md: '10.36%' }}
+      w="full"
+      justifyContent="center"
+      maxW={1524}
+      mx="auto"
+    >
+      <ImageRatio
+        src="/images/cry.png"
+        ratio={3744 / 3320}
+        w={{ base: ' 50%', md: '43.25%' }}
+        pt="30px"
+        mx={{ base: 'auto', md: 'unset' }}
+        // display={{ base: 'none', md: 'block' }}
+      />
+      <FlexCol
+        w={{ base: ' full', md: '52.95%' }}
+        px={{ base: 5, md: '44px' }}
+        pt={{ base: 10, md: '84px' }}
+        pb={{ base: 10, md: '87px' }}
+        bg="white"
+        rounded={24}
+        alignItems="center"
+        gap="30px"
+      >
+        <Box lineHeight={1.145} fontSize={{ base: 32, md: 82 }}>
           SUBMIT
         </Box>
-        <FlexCol gap="30px" fontSize={34} lineHeight={38.98 / 34} w="full" color="white">
-          <Button rounded={10} h="76px" bg="rgba(43, 162, 222, 1)">
-            CONNECT TELEGRAM
+        <FlexCol gap="30px" fontSize={{ base: 20, md: 34 }} lineHeight={38.98 / 34} w="full" color="white">
+          <Button
+            rounded={10}
+            h="76px"
+            bg="rgba(43, 162, 222, 1)"
+            onClick={!isTeleConnected ? openConnectTelegram : undefined}
+            isLoading={!isTeleConnected && loadingTele && isTelegram}
+            disabled={!isTeleConnected && loadingTele}
+          >
+            <Center gap={{ base: 3, md: 22 }}>
+              <TeleIcon />
+              {isTeleConnected ? user?.telegram_username : 'CONNECT TELEGRAM'}
+              {isTeleConnected && <VerifiedIcon />}
+            </Center>
           </Button>
-          <Button rounded={10} h="76px" bg="rgba(32, 27, 3, 1)">
-            CONNECT X
+
+          <Button
+            rounded={10}
+            h="76px"
+            bg="rgba(32, 27, 3, 1)"
+            onClick={!isTwitterConnected ? openConnectTwitter : undefined}
+            isLoading={!isTwitterConnected && loadingTwitter && isTwitter}
+            disabled={!isTwitterConnected && loadingTwitter}
+          >
+            <Center gap={{ base: 3, md: 22 }}>
+              <XIcon />
+              {isTwitterConnected ? user?.twitter_username : 'CONNECT X'}
+              {isTwitterConnected && <VerifiedIcon />}
+            </Center>
           </Button>
-          <Button rounded={10} h="76px" bg="rgba(192, 192, 192, 1)" color="rgba(239, 239, 239, 1)">
+          <Button
+            rounded={10}
+            h="76px"
+            disabled={!isTwitterConnected || !isTeleConnected}
+            _disabled={{
+              bg: 'rgba(192, 192, 192, 1)',
+              color: 'rgba(239, 239, 239, 1)',
+            }}
+            bg="linear-gradient(90deg, #1EF69E 0%, #904FEC 100%)"
+            color="white"
+          >
             CONTINUE
           </Button>
         </FlexCol>

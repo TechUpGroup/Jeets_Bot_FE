@@ -28,7 +28,13 @@ export default function Header() {
       mx="auto"
     >
       <LinkCustom href="/">
-        <ImageRatio src="/images/logo.png" ratio={271 / 108} w={{ base: 120, md: 271 }} />
+        <ImageRatio
+          src="/images/logo.png"
+          ratio={271 / 108}
+          w={{ base: 120, md: 271 }}
+          display={{ base: 'none', md: 'block' }}
+        />
+        <ImageRatio src="/images/cry.png" ratio={3744 / 3320} w={'60px'} display={{ base: 'block', md: 'none' }} />
       </LinkCustom>
 
       <FlexCenter gap={{ base: 2.5, md: '60px' }}>

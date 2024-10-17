@@ -30,3 +30,17 @@ export const postSignIn = async (body: {
   const data = await axiosNoAuthInstance.post<IUserInfo>('/auth/sign-in', body);
   return data.data;
 };
+
+export const postConnectTwitter = async (code: string) => {
+  const data = await axiosInstance.post<boolean>('/users/twitter/connect', {
+    code,
+  });
+  return data.data;
+};
+
+export const postConnectTelegram = async (code: string) => {
+  const data = await axiosInstance.post<boolean>('/users/telegram/connect', {
+    code,
+  });
+  return data.data;
+};

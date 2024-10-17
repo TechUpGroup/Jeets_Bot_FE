@@ -40,7 +40,7 @@ const getValue = (props: Props) => {
   try {
     if (!isNil(value)) {
       const valueTemp = value instanceof BigNumber ? value.toFixed() : value.toString();
-      const numberDecimal = isWei ? 18 : decimalNumber;
+      const numberDecimal = isWei ? 6 : decimalNumber;
       const valTemp =
         numberDecimal !== undefined ? BigNumber(valueTemp).dividedBy(Math.pow(10, numberDecimal)) : valueTemp;
       let valueBig = BigNumber(valTemp);

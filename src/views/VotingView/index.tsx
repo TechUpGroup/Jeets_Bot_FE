@@ -3,7 +3,11 @@
 import { Button, FlexCenter, FlexCol, ImageRatio } from '@/components';
 import { Box, Flex } from '@chakra-ui/react';
 
+import { useQueryVoting } from './hooks/useQueryVoting';
+
 export default function VotingView() {
+  const { data } = useQueryVoting();
+  console.log('🚀 ~ VotingView ~ data:', data);
   return (
     <Flex flex={1} pt={{ base: 5, md: 30 }} justifyContent="center" lineHeight={1.145} pb={10}>
       <FlexCol maxW={1517} w="full" rounded={24} pt={6} px={'44px'} pb={79} bg="white" alignItems="center" gap={30}>

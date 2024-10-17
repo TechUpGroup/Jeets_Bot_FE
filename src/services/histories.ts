@@ -9,7 +9,7 @@ export const getHistories = async () => {
       remain: string;
       transfer_amount: string;
     }>
-  >(`/histories`);
+  >(`/histories`, { params: { page: 1, limit: 100 } });
   return data.data;
 };
 

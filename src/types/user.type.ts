@@ -7,4 +7,8 @@ export interface IUser {
   _id: ObjectID;
   address: string;
   banned: boolean;
+  twitter_username: boolean;
+  twitter_uid: string;
+  telegram_username: boolean;
+  telegram_uid: string;
 }

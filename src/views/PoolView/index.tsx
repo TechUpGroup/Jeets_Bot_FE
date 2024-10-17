@@ -1,9 +1,16 @@
 'use client';
 
-import { Button, Currency, FlexCol, ImageRatio } from '@/components';
+import { Button, Currency, FlexCol, ImageRatio, LinkCustom } from '@/components';
+import { getTransactionHashUrl } from '@/utils';
+import { formatAddress } from '@/utils/address';
+import dayjs from '@/utils/dayjs';
 import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
+import { useQueryHistories, useQueryHistoriesRemain } from './hooks/useQueryHistories';
+
 export default function PoolView() {
+  const { data: histories } = useQueryHistories();
+  const { data: remaining } = useQueryHistoriesRemain();
   return (
     <Flex flex={1} pt={{ base: 5, md: 30 }} justifyContent="center" lineHeight={1.145} pb={10}>
       <FlexCol maxW={1517} w="full" rounded={24} pt={6} px={'44px'} pb={79} bg="white" alignItems="center" gap={30}>
@@ -11,9 +18,13 @@ export default function PoolView() {
         <Flex gap={2.5} rounded={10} bg="rgba(238, 226, 255, 1)" w="full" px="25.43px">
           <ImageRatio src="/images/people-pool.png" ratio={178 / 175} w={178} mt="15px" />
           <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
-            <Box fontSize={52} textAlign="center" color="purple">
-              <Currency value={10_000_000} suffix=" TOKEN" />
-            </Box>
+            <Flex fontSize={52} textAlign="center" color="purple" gap={2.5} alignItems="center">
+              <Currency value={remaining} isWei />{' '}
+              <Box as="span" color="rgba(32, 27, 3, 1)">
+                $MOON
+              </Box>
+              <ImageRatio src="/icons/moon.png" ratio={1} w={10} />
+            </Flex>
             <Box fontSize={20} flexFlow="sfPro" color="rgba(16, 16, 16, 1)">
               Locked
             </Box>
@@ -35,6 +46,9 @@ export default function PoolView() {
                   Amount
                 </Td>
                 <Td p={0} lineHeight={1.4} textAlign="center">
+                  Transactions
+                </Td>
+                <Td p={0} lineHeight={1.4} textAlign="center">
                   Deposit time
                 </Td>
                 <Td p={0} lineHeight={1.4} textAlign="center" w={288}>
@@ -43,7 +57,7 @@ export default function PoolView() {
               </Tr>
             </Thead>
             <Tbody fontSize={20}>
-              {Array.from({ length: 10 }).map((_, i) => (
+              {histories?.docs?.map((e, i) => (
                 <Tr key={i}>
                   <Td px={0} pb={0} pt={2.5}>
                     <Flex
@@ -55,8 +69,23 @@ export default function PoolView() {
                       fontFamily="sfPro"
                       fontWeight={800}
                     >
-                      2,000
+                      <Currency value={e.transfer_amount} isWei />
                     </Flex>
+                  </Td>
+                  <Td px={0} pb={0} pt={2.5}>
+                    <LinkCustom target="_blank" href={getTransactionHashUrl(e.transaction_hash)}>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        bg="rgba(237, 247, 255, 1)"
+                        h="90px"
+                        fontFamily="sfPro"
+                        fontWeight={800}
+                        textAlign="center"
+                      >
+                        {formatAddress(e.transaction_hash)}
+                      </Flex>
+                    </LinkCustom>
                   </Td>
                   <Td px={0} pb={0} pt={2.5}>
                     <Flex
@@ -68,12 +97,12 @@ export default function PoolView() {
                       fontWeight={800}
                       textAlign="center"
                     >
-                      18/10/2024
+                      {dayjs.utc(e.timestamp * 1000).format('DD/MM/YYYY')}
                     </Flex>
                   </Td>
                   <Td px={0} pb={0} pt={2.5}>
                     <Flex alignItems="center" bg="rgba(237, 247, 255, 1)" h="90px" roundedRight={10} px={5}>
-                      {true ? (
+                      {!e.remain ? (
                         <Button h={50} w="full" color="green" border="1px solid" borderColor="green" rounded={8}>
                           DEPOSITED
                         </Button>
