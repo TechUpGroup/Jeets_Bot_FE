@@ -7,14 +7,13 @@ import React, { useMemo } from 'react';
 import { appConfig } from '@/config';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 
 export default function SolanaProvider({ children }: React.PropsWithChildren) {
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-  const network = appConfig.isSolanaMainnet
-    ? WalletAdapterNetwork.Mainnet
-    : WalletAdapterNetwork.Devnet;
+  const network = appConfig.isSolanaMainnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet;
 
   // You can also provide a custom RPC endpoint.
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
@@ -22,13 +21,13 @@ export default function SolanaProvider({ children }: React.PropsWithChildren) {
   const wallets = useMemo(
     () => [new PhantomWalletAdapter()],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [network]
+    [network],
   );
 
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
-        {children}
+        <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
   );

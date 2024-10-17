@@ -6,34 +6,34 @@ import { useEffect, useRef } from 'react';
 import useAuth from '@/hooks/useAuth';
 import useWalletAddress from '@/hooks/useWalletAddress';
 import { getNonce, postLogin } from '@/services/api';
+import useListUserStore, { useListUserShallow } from '@/store/useListUserStore';
 import useUserStore, { useUserShallow } from '@/store/useUserStore';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 export function useAuthSignMessage() {
   const loading = useRef<boolean>(false);
 
-  const { address, network } = useWalletAddress();
+  const { address } = useWalletAddress();
   const { signMessage } = useWallet();
 
   const { logout } = useAuth();
 
-  const { setUser } = useUserShallow((state) => ({
-    setUser: state.setUser,
-  }));
+  const setUser = useUserShallow((s) => s.setUser);
+  const addUserToList = useListUserShallow((s) => s.addUserToList);
+  const listUser = useListUserStore((s) => s.listUser);
 
-  const { user } = useUserStore((state) => ({
-    user: state.user,
-  }));
+  const user = useUserStore((s) => s.user);
 
   useEffect(() => {
     const updateAuth = async () => {
-      if (loading.current || !address || !network) return;
+      if (loading.current || !address) return;
       try {
         loading.current = true;
-        const listAddress = user
-          ? [{ address: user.user.address, network: user.user.network }, ...user.user.address_secondaries]
-          : [];
-        if (listAddress.find((e) => e.address === address && e.network === network)) return;
+        const findUser = listUser.find((e) => e.user.address.toLowerCase() === address.toLowerCase());
+        if (findUser) {
+          setUser(findUser);
+          return;
+        }
 
         try {
           setUser(null);
@@ -46,8 +46,9 @@ export function useAuthSignMessage() {
             const signatureBuffer = await signMessage?.(new TextEncoder().encode(message));
             signature = bs58.encode(signatureBuffer);
           }
-          const login = await postLogin(network, address, signature ?? '', preMessage);
+          const login = await postLogin(address, signature ?? '', preMessage);
           setUser(login);
+          addUserToList(login);
         } catch (e) {
           console.error(e);
           logout();
@@ -57,7 +58,7 @@ export function useAuthSignMessage() {
       }
     };
     updateAuth();
-  }, [address, network, logout, setUser, signMessage, user]);
+  }, [address, logout, setUser, signMessage, user]);
 
   return null;
 }

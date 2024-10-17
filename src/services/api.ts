@@ -12,9 +12,8 @@ export const getNonce = async (address: string) => {
   return data.data;
 };
 
-export const postLogin = async (network: string, address: string, signature: string, message: string) => {
+export const postLogin = async (address: string, signature: string, message: string) => {
   const data = await axiosNoAuthInstance.post<IUserInfo>('/auth/login', {
-    network,
     address,
     signature,
     message,

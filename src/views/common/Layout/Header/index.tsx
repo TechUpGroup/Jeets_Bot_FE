@@ -3,9 +3,17 @@
 import { usePathname } from 'next/navigation';
 
 import { Button, FlexCenter, ImageRatio, LinkCustom } from '@/components';
-import { Box, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
+import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 
 export default function Header() {
+  const { setVisible } = useWalletModal();
+  const { buttonState, publicKey } = useWalletMultiButton({
+    onSelectWallet() {
+      setVisible(true);
+    },
+  });
   const pathname = usePathname();
   return (
     <Flex
@@ -19,13 +27,15 @@ export default function Header() {
       color="rgba(32, 27, 3, 1)"
       mx="auto"
     >
-      <ImageRatio src="/images/logo.png" ratio={271 / 108} w={{ base: 120, md: 271 }} />
+      <LinkCustom href="/">
+        <ImageRatio src="/images/logo.png" ratio={271 / 108} w={{ base: 120, md: 271 }} />
+      </LinkCustom>
 
       <FlexCenter gap={{ base: 2.5, md: '60px' }}>
         {[
           { name: 'Missions', href: '/missions' },
           { name: 'Voting', href: '/voting' },
-          { name: 'Pool', href: '/' },
+          { name: 'Pool', href: '/pool' },
         ].map((e) => (
           <LinkCustom
             key={e.name}
@@ -37,13 +47,15 @@ export default function Header() {
           </LinkCustom>
         ))}
 
-        {true ? (
+        {!publicKey ? (
           <Button
             px={{ base: 4, md: 7 }}
             h="50px"
             rounded={8}
             color="white"
             bg="linear-gradient(90deg, #1DF69D 0%, #904EEC 100%)"
+            onClick={() => setVisible(true)}
+            disabled={buttonState === 'connecting' || buttonState === 'connected'}
           >
             Connect Wallet
           </Button>
