@@ -6,22 +6,51 @@ import { Box, Center, Flex } from '@chakra-ui/react';
 export default function MissionsView() {
   return (
     <Flex flex={1} pt={{ base: 5, md: 30 }} justifyContent="center" lineHeight={1.145} pb={10}>
-      <FlexCol maxW={1517} w="full" rounded={24} pt={6} px={'44px'} pb={79} bg="white" alignItems="center" gap={30}>
-        <Box fontSize={82}>MISSIONS</Box>
-        <Flex gap={2.5} rounded={10} bg="rgba(29, 246, 157, 0.2)" w="full" px="25.43px">
-          <ImageRatio src="/images/people-pool.png" ratio={178 / 175} w={178} mt="15px" />
+      <FlexCol
+        maxW={1517}
+        w="full"
+        rounded={24}
+        pt={6}
+        px={{ base: 4, md: '44px' }}
+        pb={79}
+        bg="white"
+        alignItems="center"
+        gap={30}
+      >
+        <Box fontSize={{ base: 32, md: 82 }}>MISSIONS</Box>
+        <Flex
+          gap={2.5}
+          rounded={10}
+          bg="rgba(29, 246, 157, 0.2)"
+          w="full"
+          px={{ base: 2, md: '25.43px' }}
+          py={{ base: 4, md: 0 }}
+        >
+          <ImageRatio
+            src="/images/people-pool.png"
+            ratio={178 / 175}
+            w={{ base: 10, md: 178 }}
+            mt={{ base: 0, md: '15px' }}
+            alignSelf={{ base: 'center', md: 'start' }}
+          />
           <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
-            <Box fontSize={52} color="purple" textTransform="uppercase">
+            <Box fontSize={{ base: 24, md: 52 }} color="purple" textTransform="uppercase">
               congratulations
             </Box>
-            <Box fontFamily="sfPro" fontSize={20} fontWeight={800} color="black">
+            <Box
+              fontFamily="sfPro"
+              fontSize={{ base: 16, md: 20 }}
+              fontWeight={800}
+              color="black"
+              textAlign={{ base: 'center', md: 'start' }}
+            >
               You have been added to the whitelist. Let’s vote to find the winner
             </Box>
             <Button
               bg="linear-gradient(90deg, #1DF69D 0%, #904EEC 100%)"
               px="96px"
-              h="50px"
-              fontSize={20}
+              h={{ base: 10, md: '50px' }}
+              fontSize={{ base: 16, md: 20 }}
               color="white"
               rounded={8}
             >
@@ -31,8 +60,9 @@ export default function MissionsView() {
           <ImageRatio
             src="/images/people-pool.png"
             ratio={178 / 175}
-            w={178}
-            mt="15px"
+            w={{ base: 10, md: 178 }}
+            mt={{ base: 0, md: '15px' }}
+            alignSelf={{ base: 'center', md: 'start' }}
             transform="matrix(-1, 0, 0, 1, 0, 0)"
           />
         </Flex>
@@ -50,20 +80,21 @@ export default function MissionsView() {
             <Flex
               key={i}
               justifyContent="space-between"
-              p={5}
+              p={{ base: 3, md: 5 }}
               bg="rgba(237, 247, 255, 1)"
               rounded={10}
               alignItems="center"
+              gap={2.5}
             >
-              <FlexCol gap={2.5} fontFamily="sfPro" lineHeight={1.4}>
+              <FlexCol gap={{ base: 2, md: 2.5 }} fontFamily="sfPro" lineHeight={1.4}>
                 <Box fontSize={14} fontWeight={500}>
                   Mission #1
                 </Box>
-                <Box fontSize={20} fontWeight={800}>
+                <Box fontSize={{ base: 16, md: 20 }} fontWeight={800}>
                   Join SolJeetsBot Telegram Channel (10%)
                 </Box>
               </FlexCol>
-              <Box w={248} h="50px" fontSize={20}>
+              <Box w={248} h={{ base: 10, md: '50px' }} fontSize={{ base: 16, md: 20 }}>
                 {true ? (
                   <Button
                     w="full"

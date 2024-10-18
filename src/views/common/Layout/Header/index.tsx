@@ -55,8 +55,10 @@ export default function Header() {
 
         {!publicKey ? (
           <Button
-            px={{ base: 4, md: 7 }}
-            h="50px"
+            fontSize={{ base: 14, md: 24 }}
+            px={{ base: 3, md: 7 }}
+            h={{ base: '60px', md: '50px' }}
+            w={{ base: '100px', md: 'fit-content' }}
             rounded={8}
             color="white"
             bg="linear-gradient(90deg, #1DF69D 0%, #904EEC 100%)"
@@ -66,7 +68,7 @@ export default function Header() {
             Connect Wallet
           </Button>
         ) : (
-          <Button px={{ base: 4, md: 8 }} h="50px" rounded={8} border="1px solid black">
+          <Button fontSize={{ base: 14, md: 24 }} px={{ base: 4, md: 8 }} h="50px" rounded={8} border="1px solid black">
             Disconnect Wallet
           </Button>
         )}
