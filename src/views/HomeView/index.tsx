@@ -67,7 +67,7 @@ export default function HomeView() {
       }
     };
     handleConnectTelegram();
-  }, [tgAuthResult, code, user?.twitter_uid, address]);
+  }, [tgAuthResult, user?.telegram_uid, address]);
 
   return (
     <Flex
