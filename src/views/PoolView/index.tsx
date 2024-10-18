@@ -141,30 +141,18 @@ export default function PoolView() {
                       roundedRight={10}
                       px={5}
                     >
-                      {!e.remain ? (
-                        <Button
-                          h={{ base: 10, md: '50px' }}
-                          w="full"
-                          color="green"
-                          border="1px solid"
-                          borderColor="green"
-                          rounded={8}
-                          px={5}
-                        >
-                          DEPOSITED
-                        </Button>
-                      ) : (
-                        <Button
-                          h={{ base: 10, md: '50px' }}
-                          w="full"
-                          bg="disabled"
-                          color="rgba(239, 239, 239, 1)"
-                          rounded={8}
-                          px={5}
-                        >
-                          AIRDROPPED
-                        </Button>
-                      )}
+                      <Button
+                        h={{ base: 10, md: '50px' }}
+                        w="full"
+                        color="green"
+                        border="1px solid"
+                        borderColor="green"
+                        rounded={8}
+                        px={5}
+                        cursor="default"
+                      >
+                        AIRDROPPED
+                      </Button>
                     </Flex>
                   </Td>
                 </Tr>
