@@ -7,13 +7,15 @@ const useCodeSocial = () => {
   return useMemo(() => {
     const state = searchParams.get('state');
     const code = searchParams.get('code');
+    const tgAuthResult = searchParams.get('tgAuthResult');
     const isTwitter = !!code && state === 'twitter';
-    const isTelegram = !!code && state === 'telegram';
+    const isTelegram = !!tgAuthResult;
     return {
       state,
       code,
       isTwitter,
       isTelegram,
+      tgAuthResult,
     };
   }, [searchParams]);
 };

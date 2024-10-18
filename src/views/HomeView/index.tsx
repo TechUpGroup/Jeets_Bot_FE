@@ -6,6 +6,7 @@ import { Button, FlexCol, ImageRatio } from '@/components';
 import { TeleIcon, VerifiedIcon, XIcon } from '@/components/Icons';
 import { appConfig } from '@/config';
 import useCodeSocial from '@/hooks/useCodeSocial';
+import useWalletActive from '@/hooks/useWalletActive';
 import { postConnectTelegram, postConnectTwitter } from '@/services/api';
 import { incrementCount } from '@/store/useGlobalStore';
 import { useUser } from '@/store/useUserStore';
@@ -13,6 +14,7 @@ import { toastError } from '@/utils/toast';
 import { Box, Center, Flex } from '@chakra-ui/react';
 
 export default function HomeView() {
+  const { address } = useWalletActive();
   const openConnectTwitter = () => {
     window.open(`${appConfig.publicUrl}/users/twitter/start`, '_self');
   };
@@ -20,7 +22,7 @@ export default function HomeView() {
     window.open(`${appConfig.publicUrl}/users/telegram/start`, '_self');
   };
 
-  const { code, isTwitter, isTelegram } = useCodeSocial();
+  const { code, isTwitter, tgAuthResult } = useCodeSocial();
   const user = useUser();
   const isTwitterConnected = useMemo(() => !!user?.twitter_uid, [user?.twitter_uid]);
   const isTeleConnected = useMemo(() => !!user?.telegram_uid, [user?.telegram_uid]);
@@ -29,7 +31,7 @@ export default function HomeView() {
 
   useEffect(() => {
     const handleConnectTwitter = async () => {
-      if (isTwitter && code && !user?.twitter_uid) {
+      if (isTwitter && code && !!address && !user?.twitter_uid) {
         try {
           setLoadingTwitter(true);
           const res = await postConnectTwitter(code);
@@ -45,14 +47,14 @@ export default function HomeView() {
       }
     };
     handleConnectTwitter();
-  }, [isTwitter, code, user?.twitter_uid]);
+  }, [isTwitter, code, user?.twitter_uid, address]);
 
   useEffect(() => {
     const handleConnectTelegram = async () => {
-      if (isTelegram && code && !user?.telegram_uid) {
+      if (!!tgAuthResult && !!address && !user?.telegram_uid) {
         try {
           setLoadingTele(true);
-          const res = await postConnectTelegram(code);
+          const res = await postConnectTelegram(tgAuthResult);
           if (!res) {
             toastError('Connect telegram failed');
           }
@@ -65,7 +67,7 @@ export default function HomeView() {
       }
     };
     handleConnectTelegram();
-  }, [isTelegram, code, user?.twitter_uid]);
+  }, [tgAuthResult, code, user?.twitter_uid, address]);
 
   return (
     <Flex
@@ -104,8 +106,8 @@ export default function HomeView() {
             h="76px"
             bg="rgba(43, 162, 222, 1)"
             onClick={!isTeleConnected ? openConnectTelegram : undefined}
-            isLoading={!isTeleConnected && loadingTele && isTelegram}
-            disabled={!isTeleConnected && loadingTele}
+            isLoading={!isTeleConnected && loadingTele && !!tgAuthResult}
+            disabled={!address || (!isTeleConnected && loadingTele)}
           >
             <Center gap={{ base: 3, md: 22 }}>
               <TeleIcon />
@@ -120,7 +122,7 @@ export default function HomeView() {
             bg="rgba(32, 27, 3, 1)"
             onClick={!isTwitterConnected ? openConnectTwitter : undefined}
             isLoading={!isTwitterConnected && loadingTwitter && isTwitter}
-            disabled={!isTwitterConnected && loadingTwitter}
+            disabled={!address || (!isTwitterConnected && loadingTwitter)}
           >
             <Center gap={{ base: 3, md: 22 }}>
               <XIcon />
