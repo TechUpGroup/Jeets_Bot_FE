@@ -162,7 +162,7 @@ export default function PoolView() {
                           rounded={8}
                           px={5}
                         >
-                          AIDROPED
+                          AIRDROPPED
                         </Button>
                       )}
                     </Flex>
