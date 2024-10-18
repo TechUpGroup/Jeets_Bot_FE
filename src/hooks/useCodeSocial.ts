@@ -5,16 +5,18 @@ const useCodeSocial = () => {
   const searchParams = useSearchParams();
 
   return useMemo(() => {
+    const url = typeof window !== 'undefined' ? window.location.hash : undefined;
     const state = searchParams.get('state');
     const code = searchParams.get('code');
-    const tgAuthResult = searchParams.get('tgAuthResult');
+
+    const hashIndex = url?.indexOf('#tgAuthResult=');
+    const tgAuthResult = url?.slice(hashIndex ?? 0 + '#tgAuthResult='.length);
+
     const isTwitter = !!code && state === 'twitter';
-    const isTelegram = !!tgAuthResult;
     return {
       state,
       code,
       isTwitter,
-      isTelegram,
       tgAuthResult,
     };
   }, [searchParams]);
