@@ -108,7 +108,7 @@ export default function PoolView() {
                         </Button>
                       ) : (
                         <Button h={50} w="full" bg="disabled" color="rgba(239, 239, 239, 1)" rounded={8}>
-                          LOCKED
+                          AIDROPED
                         </Button>
                       )}
                     </Flex>
