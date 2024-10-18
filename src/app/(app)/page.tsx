@@ -1,5 +1,5 @@
-import HomeView from '@/views/HomeView';
+import PoolView from '@/views/PoolView';
 
 export default function Home() {
-  return <HomeView />;
+  return <PoolView />;
 }

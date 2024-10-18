@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 
 import { Button, FlexCenter, ImageRatio, LinkCustom } from '@/components';
+import { useIsLogin } from '@/hooks/useIsLogin';
 import { Flex } from '@chakra-ui/react';
 import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
@@ -15,6 +16,7 @@ export default function Header() {
     },
   });
   const pathname = usePathname();
+  const isLinked = useIsLogin(pathname !== '/login');
   return (
     <Flex
       maxW={1680}
@@ -27,7 +29,7 @@ export default function Header() {
       color="rgba(32, 27, 3, 1)"
       mx="auto"
     >
-      <LinkCustom href="/">
+      <LinkCustom href={!isLinked ? '/login' : '/'}>
         <ImageRatio
           src="/images/logo.png"
           ratio={271 / 108}
@@ -38,20 +40,21 @@ export default function Header() {
       </LinkCustom>
 
       <FlexCenter gap={{ base: 2.5, md: '60px' }}>
-        {[
-          // { name: 'Missions', href: '/missions' },
-          // { name: 'Voting', href: '/voting' },
-          { name: 'Pool', href: '/pool' },
-        ].map((e) => (
-          <LinkCustom
-            key={e.name}
-            href={e.href}
-            color={pathname === e.href ? 'purple' : undefined}
-            textDecor={pathname === e.href ? 'underline' : undefined}
-          >
-            {e.name}
-          </LinkCustom>
-        ))}
+        {isLinked &&
+          [
+            { name: 'Missions', href: '/missions' },
+            // { name: 'Voting', href: '/voting' },
+            { name: 'Pool', href: '/pool', sub: '/' },
+          ].map((e) => (
+            <LinkCustom
+              key={e.name}
+              href={e.href}
+              color={pathname === e.href || pathname === e.sub ? 'purple' : undefined}
+              textDecor={pathname === e.href || pathname === e.sub ? 'underline' : undefined}
+            >
+              {e.name}
+            </LinkCustom>
+          ))}
 
         {!publicKey ? (
           <Button

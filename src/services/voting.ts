@@ -6,6 +6,6 @@ export const getVoting = async () => {
 };
 
 export const postVoting = async (id: string) => {
-  const data = await axiosInstance.get<boolean>(`/votings/action/${id}`);
+  const data = await axiosInstance.post<boolean>(`/votings/action/${id}`);
   return data.data;
 };

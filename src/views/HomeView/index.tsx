@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { Button, FlexCol, ImageRatio } from '@/components';
+import { Button, FlexCol, ImageRatio, LinkCustom } from '@/components';
 import { TeleIcon, VerifiedIcon, XIcon } from '@/components/Icons';
 import { appConfig } from '@/config';
 import useCodeSocial from '@/hooks/useCodeSocial';
@@ -130,19 +130,21 @@ export default function HomeView() {
               {isTwitterConnected && <VerifiedIcon />}
             </Center>
           </Button>
-          <Button
-            rounded={10}
-            h="76px"
-            disabled={!isTwitterConnected || !isTeleConnected}
-            _disabled={{
-              bg: 'rgba(192, 192, 192, 1)',
-              color: 'rgba(239, 239, 239, 1)',
-            }}
-            bg="linear-gradient(90deg, #1EF69E 0%, #904FEC 100%)"
-            color="white"
-          >
-            CONTINUE
-          </Button>
+          <LinkCustom href="/">
+            <Button
+              rounded={10}
+              h="76px"
+              disabled={!isTwitterConnected || !isTeleConnected}
+              _disabled={{
+                bg: 'rgba(192, 192, 192, 1)',
+                color: 'rgba(239, 239, 239, 1)',
+              }}
+              bg="linear-gradient(90deg, #1EF69E 0%, #904FEC 100%)"
+              color="white"
+            >
+              CONTINUE
+            </Button>
+          </LinkCustom>
         </FlexCol>
       </FlexCol>
     </Flex>
