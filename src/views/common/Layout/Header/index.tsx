@@ -43,7 +43,7 @@ export default function Header() {
         {isLinked &&
           [
             { name: 'Missions', href: '/missions' },
-            // { name: 'Voting', href: '/voting' },
+            { name: 'Voting', href: '/voting' },
             { name: 'Pool', href: '/pool', sub: '/' },
           ].map((e) => (
             <LinkCustom

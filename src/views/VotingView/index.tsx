@@ -1,13 +1,30 @@
 'use client';
 
+import { useMemo, useState } from 'react';
+import { useInterval } from 'usehooks-ts';
+
 import { Button, FlexCenter, FlexCol, ImageRatio } from '@/components';
+import { useUser } from '@/store/useUserStore';
+import dayjs, { calculatorTextRemainTime } from '@/utils/dayjs';
 import { Box, Flex } from '@chakra-ui/react';
 
 import { useQueryVoting } from './hooks/useQueryVoting';
 
 export default function VotingView() {
   const { data } = useQueryVoting();
-  console.log('🚀 ~ VotingView ~ data:', data);
+  const user = useUser();
+
+  const [current, setCurrent] = useState(Date.now());
+
+  useInterval(() => setCurrent(() => Date.now()), 1000);
+
+  const timeCountDown = useMemo(() => {
+    if (!data?.current?.end_time || data.current.start_time < current) return undefined;
+    const remainTime = Math.floor((data.current.end_time - current) / 1000);
+
+    return calculatorTextRemainTime(remainTime < 0 ? 0 : remainTime);
+  }, [data, current]);
+
   return (
     <Flex flex={1} pt={{ base: 5, md: 30 }} justifyContent="center" lineHeight={1.145} pb={10}>
       <FlexCol
@@ -39,7 +56,7 @@ export default function VotingView() {
           />
           <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
             <Box fontSize={{ base: 24, md: 52 }} textAlign="center">
-              00:10:20
+              {timeCountDown ?? ''}
             </Box>
           </FlexCol>
           <ImageRatio
@@ -53,7 +70,7 @@ export default function VotingView() {
         </Flex>
 
         <FlexCol w="full" gap={2.5}>
-          {Array.from({ length: 10 }).map((_, i) => (
+          {data?.result?.map((e, i) => (
             <Flex
               key={i}
               justifyContent="space-between"
@@ -64,7 +81,7 @@ export default function VotingView() {
             >
               <FlexCenter gap={2.5} fontFamily="sfPro" lineHeight={1.4} fontWeight={800}>
                 <ImageRatio
-                  src="https://placehold.co/52x52/png"
+                  src={e.avatar ?? 'https://placehold.co/52x52/png'}
                   ratio={1}
                   w={{ base: 10, md: '52px' }}
                   rounded={999}
@@ -72,12 +89,14 @@ export default function VotingView() {
                 />
                 <Flex alignItems="end" gap={2.5}>
                   <FlexCol>
-                    <Box fontSize={14}>#40</Box>
-                    <Box fontSize={{ base: 16, md: 20 }}>Arlene McCoy</Box>
+                    <Box fontSize={14}>#{e.rank}</Box>
+                    <Box fontSize={{ base: 16, md: 20 }}>{e.name}</Box>
                   </FlexCol>
-                  <Box bg="rgba(144, 78, 236, 1)" py="5px" px={2.5} rounded={10} color="white" fontSize={14}>
-                    You
-                  </Box>
+                  {e._id === user?._id && (
+                    <Box bg="rgba(144, 78, 236, 1)" py="5px" px={2.5} rounded={10} color="white" fontSize={14}>
+                      You
+                    </Box>
+                  )}
                 </Flex>
               </FlexCenter>
               <Box w={{ base: 100, md: 248 }} h={{ base: 10, md: '50px' }} fontSize={{ base: 16, md: 20 }}>

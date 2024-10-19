@@ -130,8 +130,9 @@ export default function HomeView() {
               {isTwitterConnected && <VerifiedIcon />}
             </Center>
           </Button>
-          <LinkCustom href="/">
+          <LinkCustom href="/" w="full">
             <Button
+              w="full"
               rounded={10}
               h="76px"
               disabled={!isTwitterConnected || !isTeleConnected}
