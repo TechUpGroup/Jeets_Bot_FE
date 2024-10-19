@@ -27,3 +27,17 @@ export const getTransactionHashUrl = (txsHash: string | undefined) => {
   if (!txsHash) return '';
   return `https://explorer.solana.com/tx/${txsHash}${!appConfig.isSolanaMainnet ? '?cluster=devnet' : ''}`;
 };
+
+export const genrateEndOrdinalNumber = (stt: number) => {
+  if (stt.toString().endsWith('1')) {
+    return 'st';
+  } else if (stt.toString().endsWith('2')) {
+    return 'nd';
+  } else if (stt.toString().endsWith('3')) {
+    return 'rd';
+  }
+  return 'th';
+};
+export const genrateOrdinalNumber = (stt: number) => {
+  return `${stt}${genrateEndOrdinalNumber(stt)}`;
+};

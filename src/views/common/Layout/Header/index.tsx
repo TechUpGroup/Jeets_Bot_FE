@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 
 import { Button, FlexCenter, ImageRatio, LinkCustom } from '@/components';
+import useAuth from '@/hooks/useAuth';
 import { useIsLogin } from '@/hooks/useIsLogin';
 import { Flex } from '@chakra-ui/react';
 import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
@@ -15,6 +16,8 @@ export default function Header() {
       setVisible(true);
     },
   });
+
+  const { logout } = useAuth();
   const pathname = usePathname();
   const isLinked = useIsLogin(pathname !== '/login');
   return (
@@ -71,7 +74,14 @@ export default function Header() {
             Connect Wallet
           </Button>
         ) : (
-          <Button fontSize={{ base: 14, md: 24 }} px={{ base: 4, md: 8 }} h="50px" rounded={8} border="1px solid black">
+          <Button
+            fontSize={{ base: 14, md: 24 }}
+            px={{ base: 4, md: 8 }}
+            h="50px"
+            rounded={8}
+            border="1px solid black"
+            onClick={logout}
+          >
             Disconnect Wallet
           </Button>
         )}

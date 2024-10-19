@@ -5,6 +5,7 @@ import { useInterval } from 'usehooks-ts';
 
 import { Button, FlexCenter, FlexCol, ImageRatio } from '@/components';
 import { useUser } from '@/store/useUserStore';
+import { genrateOrdinalNumber } from '@/utils';
 import dayjs, { calculatorTextRemainTime } from '@/utils/dayjs';
 import { Box, Flex } from '@chakra-ui/react';
 
@@ -15,7 +16,6 @@ export default function VotingView() {
   const user = useUser();
 
   const [current, setCurrent] = useState(Date.now());
-  console.log('🚀 ~ VotingView ~ current:', current);
 
   useInterval(() => setCurrent(() => Date.now()), 1000);
 
@@ -90,7 +90,7 @@ export default function VotingView() {
                 />
                 <Flex alignItems="end" gap={2.5}>
                   <FlexCol>
-                    <Box fontSize={14}>#{e.rank}</Box>
+                    <Box fontSize={14}>{genrateOrdinalNumber(e.rank)}</Box>
                     <Box fontSize={{ base: 16, md: 20 }}>{e.name}</Box>
                   </FlexCol>
                   {e._id === user?._id && (
