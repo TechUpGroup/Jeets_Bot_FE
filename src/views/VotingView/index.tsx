@@ -15,11 +15,12 @@ export default function VotingView() {
   const user = useUser();
 
   const [current, setCurrent] = useState(Date.now());
+  console.log('🚀 ~ VotingView ~ current:', current);
 
   useInterval(() => setCurrent(() => Date.now()), 1000);
 
   const timeCountDown = useMemo(() => {
-    if (!data?.current?.end_time || data.current.start_time < current) return undefined;
+    if (!data?.current?.end_time || data.current.start_time > current) return undefined;
     const remainTime = Math.floor((data.current.end_time - current) / 1000);
 
     return calculatorTextRemainTime(remainTime < 0 ? 0 : remainTime);
