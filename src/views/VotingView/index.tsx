@@ -125,7 +125,7 @@ export default function VotingView() {
                 {e.countVote} Votes
               </Box>
               <Box w={{ base: 100, md: 248 }} h={{ base: 10, md: '50px' }} fontSize={{ base: 16, md: 20 }}>
-                {true ? (
+                {!e.status ? (
                   <Button
                     w="full"
                     h="full"
