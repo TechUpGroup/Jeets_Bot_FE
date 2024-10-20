@@ -5,17 +5,19 @@ import { useInterval } from 'usehooks-ts';
 
 import { Button, FlexCenter, FlexCol, ImageRatio } from '@/components';
 import { IVoting, postVoting } from '@/services/voting';
-import { useUser } from '@/store/useUserStore';
 import { genrateOrdinalNumber } from '@/utils';
-import dayjs, { calculatorTextRemainTime } from '@/utils/dayjs';
+import { calculatorTextRemainTime } from '@/utils/dayjs';
+import { toastError, toastSuccess } from '@/utils/toast';
 import { Box, Flex } from '@chakra-ui/react';
 
 import { useQueryVoting } from './hooks/useQueryVoting';
 import { useVoting } from './hooks/useVoting';
 
+const colors = ['rgba(255, 237, 237, 1)', 'rgba(238, 255, 237, 1)', 'rgba(255, 255, 237, 1)'];
+const borders = ['rgba(255, 107, 107, 1)', 'rgba(88, 211, 82, 1)', 'rgba(253, 214, 75, 1)'];
+
 export default function VotingView() {
   const { data } = useQueryVoting();
-  const user = useUser();
 
   const voting = useVoting();
 
@@ -35,6 +37,9 @@ export default function VotingView() {
       setLoading(vote.wid);
       const signature = await postVoting(vote.wid);
       await voting(signature);
+      toastSuccess('Vote success!');
+    } catch (e) {
+      toastError('Vote failed!', e);
     } finally {
       setLoading('');
     }
@@ -89,8 +94,10 @@ export default function VotingView() {
             <Flex
               key={i}
               justifyContent="space-between"
-              p={{ base: 4, md: 5 }}
-              bg="rgba(243, 235, 255, 1)"
+              p={{ base: '14px', md: '18px' }}
+              bg={colors[e.rank - 1] ?? 'rgba(243, 235, 255, 1)'}
+              border="2px solid"
+              borderColor={borders[e.rank - 1] ?? 'rgba(243, 235, 255, 1)'}
               rounded={10}
               alignItems="center"
             >
