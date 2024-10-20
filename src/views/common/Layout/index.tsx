@@ -11,7 +11,7 @@ import Header from './Header';
 export default function DefaultLayout({ children }: React.PropsWithChildren) {
   const pathname = usePathname();
   return (
-    <FlexCol as="main" minH="100vh" alignItems="center" bg="main" px={{ base: 2.5, md: 5 }}>
+    <FlexCol as="main" minH="100vh" alignItems="center" bg="main">
       <Header />
       <Flex
         flexDir="column"
@@ -22,6 +22,7 @@ export default function DefaultLayout({ children }: React.PropsWithChildren) {
         bgSize="contain"
         maxW={1920}
         w="full"
+        px={{ base: 2.5, md: 5 }}
       >
         {children}
       </Flex>

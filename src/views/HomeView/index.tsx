@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { Absolute, Button, FlexCol, ImageRatio, LinkCustom } from '@/components';
+import { Button, FlexCol, ImageRatio, LinkCustom } from '@/components';
 import { TeleIcon, VerifiedIcon, XIcon } from '@/components/Icons';
 import { appConfig } from '@/config';
 import useCodeSocial from '@/hooks/useCodeSocial';
@@ -87,6 +87,7 @@ export default function HomeView() {
       maxW={1524}
       mx="auto"
       alignItems="center"
+      zIndex={2}
     >
       <Box pos="relative" w={{ base: '50%', md: '43.25%' }} mx={{ base: 'auto', md: 'unset' }}>
         <ImageRatio
@@ -95,22 +96,6 @@ export default function HomeView() {
           w="full"
           // display={{ base: 'none', md: 'block' }}
         />
-        <Flex
-          pos="fixed"
-          bg="rgba(0, 25, 105, 1)"
-          w="100vw"
-          h={{ base: '60px', md: 140 }}
-          left={0}
-          bottom={0}
-          justifyContent="center"
-        >
-          <Flex maxW={1524} w="full">
-            <Flex gap={22} w={{ base: '50%', md: '43.25%' }} mx={{ base: 'auto', md: 'unset' }} justifyContent="center">
-              <XIcon />
-              <TeleIcon />
-            </Flex>
-          </Flex>
-        </Flex>
       </Box>
       <FlexCol
         w={{ base: ' full', md: '52.95%' }}
