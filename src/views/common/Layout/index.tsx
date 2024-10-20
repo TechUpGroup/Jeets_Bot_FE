@@ -26,7 +26,7 @@ export default function DefaultLayout({ children }: React.PropsWithChildren) {
       >
         {children}
       </Flex>
-      <Footer />
+      {pathname === '/login' && <Footer />}
     </FlexCol>
   );
 }

@@ -27,7 +27,7 @@ export default function HomeView() {
   const { code, isTwitter, tgAuthResult } = useCodeSocial();
   const user = useUser();
   const { setVisible } = useWalletModal();
-  const { buttonState, publicKey } = useWalletMultiButton({
+  const { buttonState } = useWalletMultiButton({
     onSelectWallet() {
       setVisible(true);
     },
