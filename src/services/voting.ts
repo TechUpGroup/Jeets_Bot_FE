@@ -1,5 +1,14 @@
 import { axiosInstance } from '@/utils/axios';
 
+export interface IVoting {
+  wid: string;
+  rank: number;
+  name: string;
+  avatar: string;
+  countVote: number;
+  status: boolean;
+}
+
 export const getVoting = async () => {
   const data = await axiosInstance.get<{
     current?: {
@@ -12,53 +21,12 @@ export const getVoting = async () => {
       updatedAt: string;
     };
     ratio?: number;
-    result?: [
-      {
-        _id: string;
-        rank: number;
-        name: string;
-        avatar: string;
-        countVote: number;
-        status: boolean;
-      },
-      {
-        _id: string;
-        rank: number;
-        name: string;
-        avatar: string;
-        countVote: number;
-        status: boolean;
-      },
-      {
-        _id: string;
-        rank: number;
-        name: string;
-        avatar: string;
-        countVote: number;
-        status: boolean;
-      },
-      {
-        _id: string;
-        rank: number;
-        name: string;
-        avatar: string;
-        countVote: number;
-        status: boolean;
-      },
-      {
-        _id: string;
-        rank: number;
-        name: string;
-        avatar: string;
-        countVote: number;
-        status: boolean;
-      },
-    ];
+    result?: IVoting[];
   }>(`/votings/user`);
   return data.data;
 };
 
-export const postVoting = async (id: string) => {
-  const data = await axiosInstance.post<boolean>(`/votings/action/${id}`);
+export const postVoting = async (wid: string) => {
+  const data = await axiosInstance.post<string>(`/votings/create-vote/${wid}`);
   return data.data;
 };

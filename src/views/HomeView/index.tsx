@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { Button, FlexCol, ImageRatio, LinkCustom } from '@/components';
+import { Absolute, Button, FlexCol, ImageRatio, LinkCustom } from '@/components';
 import { TeleIcon, VerifiedIcon, XIcon } from '@/components/Icons';
 import { appConfig } from '@/config';
 import useCodeSocial from '@/hooks/useCodeSocial';
@@ -12,6 +12,8 @@ import { incrementCount } from '@/store/useGlobalStore';
 import { useUser } from '@/store/useUserStore';
 import { toastError } from '@/utils/toast';
 import { Box, Center, Flex } from '@chakra-ui/react';
+import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 
 export default function HomeView() {
   const { address } = useWalletActive();
@@ -24,6 +26,12 @@ export default function HomeView() {
 
   const { code, isTwitter, tgAuthResult } = useCodeSocial();
   const user = useUser();
+  const { setVisible } = useWalletModal();
+  const { buttonState, publicKey } = useWalletMultiButton({
+    onSelectWallet() {
+      setVisible(true);
+    },
+  });
   const isTwitterConnected = useMemo(() => !!user?.twitter_uid, [user?.twitter_uid]);
   const isTeleConnected = useMemo(() => !!user?.telegram_uid, [user?.telegram_uid]);
   const [loadingTwitter, setLoadingTwitter] = useState(false);
@@ -78,15 +86,32 @@ export default function HomeView() {
       justifyContent="center"
       maxW={1524}
       mx="auto"
+      alignItems="center"
     >
-      <ImageRatio
-        src="/images/cry.png"
-        ratio={3744 / 3320}
-        w={{ base: ' 50%', md: '43.25%' }}
-        pt="30px"
-        mx={{ base: 'auto', md: 'unset' }}
-        // display={{ base: 'none', md: 'block' }}
-      />
+      <Box pos="relative" w={{ base: '50%', md: '43.25%' }} mx={{ base: 'auto', md: 'unset' }}>
+        <ImageRatio
+          src="/images/cry.png"
+          ratio={3744 / 3320}
+          w="full"
+          // display={{ base: 'none', md: 'block' }}
+        />
+        <Flex
+          pos="fixed"
+          bg="rgba(0, 25, 105, 1)"
+          w="100vw"
+          h={{ base: '60px', md: 140 }}
+          left={0}
+          bottom={0}
+          justifyContent="center"
+        >
+          <Flex maxW={1524} w="full">
+            <Flex gap={22} w={{ base: '50%', md: '43.25%' }} mx={{ base: 'auto', md: 'unset' }} justifyContent="center">
+              <XIcon />
+              <TeleIcon />
+            </Flex>
+          </Flex>
+        </Flex>
+      </Box>
       <FlexCol
         w={{ base: ' full', md: '52.95%' }}
         px={{ base: 5, md: '44px' }}
@@ -96,57 +121,74 @@ export default function HomeView() {
         rounded={24}
         alignItems="center"
         gap="30px"
+        h="fit-content"
       >
         <Box lineHeight={1.145} fontSize={{ base: 32, md: 82 }}>
           SUBMIT
         </Box>
-        <FlexCol gap="30px" fontSize={{ base: 20, md: 34 }} lineHeight={38.98 / 34} w="full" color="white">
-          <Button
-            rounded={10}
-            h="76px"
-            bg="rgba(43, 162, 222, 1)"
-            onClick={!isTeleConnected ? openConnectTelegram : undefined}
-            isLoading={!isTeleConnected && loadingTele && !!tgAuthResult}
-            disabled={!address || (!isTeleConnected && loadingTele)}
-          >
-            <Center gap={{ base: 3, md: 22 }}>
-              <TeleIcon />
-              {isTeleConnected ? user?.telegram_username : 'CONNECT TELEGRAM'}
-              {isTeleConnected && <VerifiedIcon />}
-            </Center>
-          </Button>
-
-          <Button
-            rounded={10}
-            h="76px"
-            bg="rgba(32, 27, 3, 1)"
-            onClick={!isTwitterConnected ? openConnectTwitter : undefined}
-            isLoading={!isTwitterConnected && loadingTwitter && isTwitter}
-            disabled={!address || (!isTwitterConnected && loadingTwitter)}
-          >
-            <Center gap={{ base: 3, md: 22 }}>
-              <XIcon />
-              {isTwitterConnected ? user?.twitter_username : 'CONNECT X'}
-              {isTwitterConnected && <VerifiedIcon />}
-            </Center>
-          </Button>
-          <LinkCustom href="/" w="full">
+        {!address ? (
+          <FlexCol w="full">
             <Button
               w="full"
               rounded={10}
               h="76px"
-              disabled={!isTwitterConnected || !isTeleConnected}
-              _disabled={{
-                bg: 'rgba(192, 192, 192, 1)',
-                color: 'rgba(239, 239, 239, 1)',
-              }}
               bg="linear-gradient(90deg, #1EF69E 0%, #904FEC 100%)"
               color="white"
+              onClick={() => setVisible(true)}
+              disabled={buttonState === 'connecting' || buttonState === 'connected'}
             >
-              CONTINUE
+              Connect wallet to continue
             </Button>
-          </LinkCustom>
-        </FlexCol>
+          </FlexCol>
+        ) : (
+          <FlexCol gap="30px" fontSize={{ base: 20, md: 34 }} lineHeight={38.98 / 34} w="full" color="white">
+            <Button
+              rounded={10}
+              h="76px"
+              bg="rgba(43, 162, 222, 1)"
+              onClick={!isTeleConnected ? openConnectTelegram : undefined}
+              isLoading={!isTeleConnected && loadingTele && !!tgAuthResult}
+              disabled={!address || (!isTeleConnected && loadingTele)}
+            >
+              <Center gap={{ base: 3, md: 22 }}>
+                <TeleIcon />
+                {isTeleConnected ? user?.telegram_username : 'CONNECT TELEGRAM'}
+                {isTeleConnected && <VerifiedIcon />}
+              </Center>
+            </Button>
+
+            <Button
+              rounded={10}
+              h="76px"
+              bg="rgba(32, 27, 3, 1)"
+              onClick={!isTwitterConnected ? openConnectTwitter : undefined}
+              isLoading={!isTwitterConnected && loadingTwitter && isTwitter}
+              disabled={!address || (!isTwitterConnected && loadingTwitter)}
+            >
+              <Center gap={{ base: 3, md: 22 }}>
+                <XIcon />
+                {isTwitterConnected ? user?.twitter_username : 'CONNECT X'}
+                {isTwitterConnected && <VerifiedIcon />}
+              </Center>
+            </Button>
+            <LinkCustom href="/" w="full">
+              <Button
+                w="full"
+                rounded={10}
+                h="76px"
+                disabled={!isTwitterConnected || !isTeleConnected}
+                _disabled={{
+                  bg: 'rgba(192, 192, 192, 1)',
+                  color: 'rgba(239, 239, 239, 1)',
+                }}
+                bg="linear-gradient(90deg, #1EF69E 0%, #904FEC 100%)"
+                color="white"
+              >
+                CONTINUE
+              </Button>
+            </LinkCustom>
+          </FlexCol>
+        )}
       </FlexCol>
     </Flex>
   );

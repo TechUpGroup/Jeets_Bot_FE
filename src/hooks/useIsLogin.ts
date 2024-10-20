@@ -7,11 +7,11 @@ export const useIsLogin = (isForceLogin?: boolean) => {
   const user = useUser();
   const router = useRouter();
   const isLinked = useMemo(() => !!user?.telegram_uid && !!user.twitter_uid, [user?.telegram_uid, user?.twitter_uid]);
-  useEffect(() => {
-    if (!!user && !isLinked && isForceLogin) {
-      router.replace('/login');
-    }
-  }, [user, isLinked, isForceLogin]);
+  // useEffect(() => {
+  //   if (!!user && !isLinked && isForceLogin) {
+  //     router.replace('/login');
+  //   }
+  // }, [user, isLinked, isForceLogin]);
 
   return isLinked;
 };

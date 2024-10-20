@@ -2,10 +2,12 @@
 
 import { usePathname } from 'next/navigation';
 
-import { Button, FlexCenter, ImageRatio, LinkCustom } from '@/components';
+import { Button, FlexCenter, FlexCol, ImageRatio, LinkCustom } from '@/components';
 import useAuth from '@/hooks/useAuth';
 import { useIsLogin } from '@/hooks/useIsLogin';
-import { Flex } from '@chakra-ui/react';
+import { formatAddress } from '@/utils/address';
+import { ChevronDownIcon } from '@chakra-ui/icons';
+import { Box, Flex, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 
@@ -74,6 +76,31 @@ export default function Header() {
             Connect Wallet
           </Button>
         ) : (
+          // <Flex p="9px" rounded={8} border="1px solid black" gap={5} alignItems="center">
+          //   <ImageRatio
+          //     src={'https://placehold.co/40x40/png'}
+          //     ratio={1}
+          //     w={{ base: 10, md: 10 }}
+          //     rounded={999}
+          //     overflow="hidden"
+          //   />
+          //   <FlexCol lineHeight={1.4}>
+          //     <Box fontSize={16}>Darlene Robertson</Box>
+          //     <Box fontSize={14} fontWeight={800} color="rgba(143, 81, 236, 1)" fontFamily="sfPro">
+          //       {formatAddress(publicKey.toBase58())}
+          //     </Box>
+          //   </FlexCol>
+          //   <Menu placement="bottom-end">
+          //     <MenuButton as={Button}>
+          //       <ChevronDownIcon />
+          //     </MenuButton>
+          //     <MenuList>
+          //       <MenuItem onClick={logout} fontSize={{ base: 14, md: 18 }}>
+          //         Disconnect Wallet
+          //       </MenuItem>
+          //     </MenuList>
+          //   </Menu>
+          // </Flex>
           <Button
             fontSize={{ base: 14, md: 24 }}
             px={{ base: 4, md: 8 }}

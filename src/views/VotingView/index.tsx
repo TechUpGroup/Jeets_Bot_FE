@@ -4,16 +4,20 @@ import { useMemo, useState } from 'react';
 import { useInterval } from 'usehooks-ts';
 
 import { Button, FlexCenter, FlexCol, ImageRatio } from '@/components';
+import { IVoting, postVoting } from '@/services/voting';
 import { useUser } from '@/store/useUserStore';
 import { genrateOrdinalNumber } from '@/utils';
 import dayjs, { calculatorTextRemainTime } from '@/utils/dayjs';
 import { Box, Flex } from '@chakra-ui/react';
 
 import { useQueryVoting } from './hooks/useQueryVoting';
+import { useVoting } from './hooks/useVoting';
 
 export default function VotingView() {
   const { data } = useQueryVoting();
   const user = useUser();
+
+  const voting = useVoting();
 
   const [current, setCurrent] = useState(Date.now());
 
@@ -25,6 +29,16 @@ export default function VotingView() {
 
     return calculatorTextRemainTime(remainTime < 0 ? 0 : remainTime);
   }, [data, current]);
+  const [loading, setLoading] = useState('');
+  const handleVoting = async (vote: IVoting) => {
+    try {
+      setLoading(vote.wid);
+      const signature = await postVoting(vote.wid);
+      await voting(signature);
+    } finally {
+      setLoading('');
+    }
+  };
 
   return (
     <Flex flex={1} pt={{ base: 5, md: 30 }} justifyContent="center" lineHeight={1.145} pb={10}>
@@ -93,16 +107,28 @@ export default function VotingView() {
                     <Box fontSize={14}>{genrateOrdinalNumber(e.rank)}</Box>
                     <Box fontSize={{ base: 16, md: 20 }}>{e.name}</Box>
                   </FlexCol>
-                  {e._id === user?._id && (
+                  {/* {e.wid === user?._id && (
                     <Box bg="rgba(144, 78, 236, 1)" py="5px" px={2.5} rounded={10} color="white" fontSize={14}>
                       You
                     </Box>
-                  )}
+                  )} */}
                 </Flex>
               </FlexCenter>
+              <Box fontSize={{ base: 18, md: 25 }} fontFamily="sfPro" fontWeight={800}>
+                {e.countVote} Votes
+              </Box>
               <Box w={{ base: 100, md: 248 }} h={{ base: 10, md: '50px' }} fontSize={{ base: 16, md: 20 }}>
                 {true ? (
-                  <Button w="full" h="full" bg="black" rounded={8} color="rgba(239, 239, 239, 1)">
+                  <Button
+                    w="full"
+                    h="full"
+                    bg="black"
+                    rounded={8}
+                    color="rgba(239, 239, 239, 1)"
+                    isLoading={loading === e.wid}
+                    disabled={!!loading}
+                    onClick={() => handleVoting(e)}
+                  >
                     <Box bg="linear-gradient(180deg, #1DF69D 0%, #904EEC 100%)" bgClip="text">
                       VOTE
                     </Box>

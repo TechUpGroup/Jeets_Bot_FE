@@ -1,5 +1,7 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
+
 import { FlexCol } from '@/components';
 import { Flex } from '@chakra-ui/react';
 
@@ -7,6 +9,7 @@ import Footer from './Footer';
 import Header from './Header';
 
 export default function DefaultLayout({ children }: React.PropsWithChildren) {
+  const pathname = usePathname();
   return (
     <FlexCol as="main" minH="100vh" alignItems="center" bg="main" px={{ base: 2.5, md: 5 }}>
       <Header />
@@ -15,7 +18,7 @@ export default function DefaultLayout({ children }: React.PropsWithChildren) {
         flex={1}
         bgImage="/images/bg-main.png"
         bgPos="top"
-        bgRepeat="repeat-y"
+        bgRepeat={pathname !== '/login' ? 'repeat-y' : 'no-repeat'}
         bgSize="contain"
         maxW={1920}
         w="full"
