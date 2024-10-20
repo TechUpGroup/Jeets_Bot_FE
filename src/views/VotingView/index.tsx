@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useInterval } from 'usehooks-ts';
 
 import { Button, FlexCenter, FlexCol, ImageRatio } from '@/components';
+import useWalletActive from '@/hooks/useWalletActive';
 import { IVoting, postVoting } from '@/services/voting';
 import { genrateOrdinalNumber } from '@/utils';
 import { calculatorTextRemainTime } from '@/utils/dayjs';
@@ -18,6 +19,7 @@ const borders = ['rgba(255, 107, 107, 1)', 'rgba(88, 211, 82, 1)', 'rgba(253, 21
 
 export default function VotingView() {
   const { data } = useQueryVoting();
+  const { address } = useWalletActive();
 
   const voting = useVoting();
 
@@ -133,7 +135,7 @@ export default function VotingView() {
                     rounded={8}
                     color="rgba(239, 239, 239, 1)"
                     isLoading={loading === e.wid}
-                    disabled={!!loading}
+                    disabled={!!loading || !address}
                     onClick={() => handleVoting(e)}
                   >
                     <Box bg="linear-gradient(180deg, #1DF69D 0%, #904EEC 100%)" bgClip="text">

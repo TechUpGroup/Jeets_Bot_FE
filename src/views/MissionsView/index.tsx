@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { Button, FlexBetween, FlexCol, ImageRatio, LinkCustom } from '@/components';
+import useWalletActive from '@/hooks/useWalletActive';
 import { IMission, postMissions } from '@/services/missions';
 import { sleep } from '@/utils';
 import { toastError } from '@/utils/toast';
@@ -13,6 +14,7 @@ import { useQueryMissions } from './hooks/useQueryMissions';
 export default function MissionsView() {
   const { data, refetch } = useQueryMissions();
   const [loading, setLoading] = useState('');
+  const { address } = useWalletActive();
 
   const handleActionJoin = async (mission: IMission) => {
     if (loading) return;
@@ -145,7 +147,7 @@ export default function MissionsView() {
                     rounded={8}
                     bg="linear-gradient(90deg, #1DF69D 0%, #904EEC 100%)"
                     color="white"
-                    disabled={!!loading}
+                    disabled={!!loading || !address}
                     isLoading={loading === e._id}
                     onClick={() => handleActionJoin(e)}
                   >
