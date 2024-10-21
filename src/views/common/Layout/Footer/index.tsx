@@ -1,5 +1,6 @@
 'use client';
 
+import { LinkCustom } from '@/components';
 import { TeleIcon, XIcon } from '@/components/Icons';
 import { Flex } from '@chakra-ui/react';
 
@@ -13,9 +14,19 @@ export default function Footer() {
       mx={{ base: -2.5, md: -5 }}
     >
       <Flex maxW={1524} w="full">
-        <Flex gap={22} w={{ base: '50%', md: '43.25%' }} mx={{ base: 'auto', md: 'unset' }} justifyContent="center">
-          <XIcon />
-          <TeleIcon />
+        <Flex
+          gap={22}
+          w={{ base: '50%', md: '43.25%' }}
+          mx={{ base: 'auto', md: 'unset' }}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <LinkCustom href="https://x.com/soljeets" target="_blank">
+            <XIcon />
+          </LinkCustom>
+          <LinkCustom href="https://t.me/soljeetscom" target="_blank">
+            <TeleIcon />
+          </LinkCustom>
         </Flex>
       </Flex>
     </Flex>
