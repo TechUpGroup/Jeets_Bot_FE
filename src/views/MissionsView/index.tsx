@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import { Button, FlexBetween, FlexCol, ImageRatio, LinkCustom } from '@/components';
 import useWalletActive from '@/hooks/useWalletActive';
-import { IMission, postMissions } from '@/services/missions';
+import { IMission, postMissions, postMissionsStart } from '@/services/missions';
 import { sleep } from '@/utils';
 import { toastError } from '@/utils/toast';
 import { Box, Center, Flex } from '@chakra-ui/react';
@@ -20,17 +21,22 @@ export default function MissionsView() {
     if (loading) return;
     try {
       setLoading(mission._id);
-      window.open(mission.action_link);
-      const expired = Date.now() + 60_000;
-      let isDone = false;
-      await sleep(5_000);
-      while (expired > Date.now() && !isDone) {
-        const done = await postMissions(mission._id);
-        if (done === true) {
-          isDone = true;
-          refetch();
-        } else {
-          await sleep(5_000);
+      if (mission.type === 'X') {
+        const url = await postMissionsStart(mission._id);
+        window.open(url.redirectUrl, '_self');
+      } else {
+        window.open(mission.action_link);
+        const expired = Date.now() + 60_000;
+        let isDone = false;
+        await sleep(5_000);
+        while (expired > Date.now() && !isDone) {
+          const done = await postMissions(mission._id);
+          if (done === true) {
+            isDone = true;
+            refetch();
+          } else {
+            await sleep(5_000);
+          }
         }
       }
     } catch (e) {
@@ -39,6 +45,28 @@ export default function MissionsView() {
       setLoading('');
     }
   };
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const handleMissionX = async () => {
+      const state = searchParams.get('state');
+      const code = searchParams.get('code');
+      if (state && state.startsWith('mission-x-') && code && !!address) {
+        try {
+          const missionId = state.slice('mission-x-'.length);
+          setLoading(missionId);
+          await postMissions(missionId, code);
+          refetch();
+        } catch (e: any) {
+          toastError('Mission x failed', e);
+        } finally {
+          setLoading('');
+        }
+      }
+    };
+    handleMissionX();
+  }, [searchParams, address]);
 
   return (
     <Flex flex={1} pt={{ base: 5, md: 30 }} justifyContent="center" lineHeight={1.145} pb={10}>

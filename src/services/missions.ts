@@ -22,7 +22,12 @@ export const getMissions = async () => {
   return data.data;
 };
 
-export const postMissions = async (id: string) => {
-  const data = await axiosInstance.post<boolean>(`/missions/action/${id}`);
+export const postMissions = async (id: string, code?: string) => {
+  const data = await axiosInstance.post<boolean>(`/missions/action/${id}`, code ? { code } : undefined);
+  return data.data;
+};
+
+export const postMissionsStart = async (id: string) => {
+  const data = await axiosInstance.post<{ redirectUrl: string }>(`/missions/action/${id}/start`);
   return data.data;
 };
