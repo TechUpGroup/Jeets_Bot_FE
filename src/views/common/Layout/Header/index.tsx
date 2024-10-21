@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Button, FlexCenter, FlexCol, ImageRatio, LinkCustom } from '@/components';
 import useAuth from '@/hooks/useAuth';
 import { useIsLogin } from '@/hooks/useIsLogin';
+import { useUser } from '@/store/useUserStore';
 import { formatAddress } from '@/utils/address';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Flex, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
@@ -12,6 +13,7 @@ import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 
 export default function Header() {
+  const user = useUser();
   const { setVisible } = useWalletModal();
   const { buttonState, publicKey } = useWalletMultiButton({
     onSelectWallet() {
@@ -96,9 +98,23 @@ export default function Header() {
                 </Flex>
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={logout} fontSize={{ base: 14, md: 18 }}>
+                <MenuItem onClick={logout} fontSize={{ base: 14, md: 16 }} py={1}>
                   Disconnect Wallet
                 </MenuItem>
+                {!!user?.twitter_username && (
+                  <MenuItem fontSize={{ base: 14, md: 14 }} py={1}>
+                    <LinkCustom href={`https://x.com/${user?.twitter_username}`} target="_blank">
+                      X: {user?.twitter_username}
+                    </LinkCustom>
+                  </MenuItem>
+                )}
+                {!!user?.telegram_username && (
+                  <MenuItem fontSize={{ base: 14, md: 14 }} py={1}>
+                    <LinkCustom href={`https://t.me/${user?.telegram_username}`} target="_blank">
+                      Telegram: {user?.telegram_username}
+                    </LinkCustom>
+                  </MenuItem>
+                )}
               </MenuList>
             </Menu>
             // <Button
