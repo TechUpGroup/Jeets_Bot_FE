@@ -159,7 +159,7 @@ export default function MissionsView() {
               alignItems="center"
               gap={2.5}
             >
-              <FlexCol gap={{ base: 2, md: 2.5 }} fontFamily="sfPro" lineHeight={1.4}>
+              <FlexCol gap={{ base: 2, md: 2.5 }} fontFamily="sfPro" lineHeight={1.4} flex={1}>
                 <Box fontSize={14} fontWeight={500}>
                   Mission #{e.mid}
                 </Box>
@@ -167,7 +167,7 @@ export default function MissionsView() {
                   {e.name} ({e.ratio}%)
                 </Box>
               </FlexCol>
-              <Box w={248} h={{ base: 10, md: '50px' }} fontSize={{ base: 16, md: 20 }}>
+              <Box w={{ base: 120, md: 248 }} h={{ base: 10, md: '50px' }} fontSize={{ base: 16, md: 20 }}>
                 {!e.status ? (
                   <Button
                     w="full"
