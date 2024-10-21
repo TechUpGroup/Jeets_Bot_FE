@@ -9,7 +9,7 @@ import { formatAddress } from '@/utils/address';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Flex, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
-import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { useWalletModal } from '@tiplink/wallet-adapter-react-ui';
 
 export default function Header() {
   const { setVisible } = useWalletModal();

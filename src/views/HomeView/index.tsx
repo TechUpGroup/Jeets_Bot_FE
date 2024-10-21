@@ -13,7 +13,7 @@ import { useUser } from '@/store/useUserStore';
 import { toastError } from '@/utils/toast';
 import { Box, Center, Flex } from '@chakra-ui/react';
 import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
-import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { useWalletModal } from '@tiplink/wallet-adapter-react-ui';
 
 export default function HomeView() {
   const { address } = useWalletActive();
