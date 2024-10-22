@@ -3,7 +3,7 @@
 import { Icon, IconProps } from '@chakra-ui/icons';
 
 export const TeleIcon = (props: IconProps) => (
-  <Icon w="57px" h="auto" viewBox="0 0 57 56" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <Icon w="47px" h="auto" viewBox="0 0 57 56" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

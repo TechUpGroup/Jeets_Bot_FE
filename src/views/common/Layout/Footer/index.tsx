@@ -15,7 +15,7 @@ export default function Footer() {
     >
       <Flex maxW={1524} w="full">
         <Flex
-          gap={22}
+          gap={10}
           w={{ base: '50%', md: '43.25%' }}
           mx={{ base: 'auto', md: 'unset' }}
           justifyContent="center"

@@ -3,7 +3,7 @@
 import { Icon, IconProps } from '@chakra-ui/icons';
 
 export const XIcon = (props: IconProps) => (
-  <Icon w="57px" h="auto" viewBox="0 0 57 56" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <Icon w="47px" h="auto" viewBox="0 0 57 56" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <g clipPath="url(#clip0_1032_4956)">
       <mask
         id="mask0_1032_4956"
@@ -11,7 +11,7 @@ export const XIcon = (props: IconProps) => (
         maskUnits="userSpaceOnUse"
         x="0"
         y="0"
-        width="57"
+        width="47"
         height="56"
       >
         <path d="M0.5 0H56.5V56H0.5V0Z" fill="white" />
