@@ -1,17 +1,10 @@
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useUser } from '@/store/useUserStore';
 
-export const useIsLogin = (isForceLogin?: boolean) => {
+export const useIsLogin = () => {
   const user = useUser();
-  const router = useRouter();
-  const isLinked = useMemo(() => !!user?.telegram_uid && !!user.twitter_uid, [user?.telegram_uid, user?.twitter_uid]);
-  useEffect(() => {
-    if (!!user && !isLinked && isForceLogin) {
-      router.replace('/login');
-    }
-  }, [user, isLinked, isForceLogin]);
+  const isLinked = useMemo(() => !!user && !!user?.telegram_uid && !!user.twitter_uid, [user]);
 
   return isLinked;
 };

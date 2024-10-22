@@ -23,7 +23,7 @@ export default function Header() {
 
   const { logout } = useAuth();
   const pathname = usePathname();
-  const isLinked = useIsLogin(pathname !== '/login');
+  const isLinked = useIsLogin();
   return (
     <Box px={{ base: 2.5, md: 5 }} w="full">
       <Flex
