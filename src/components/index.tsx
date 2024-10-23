@@ -9,3 +9,5 @@ export * from './Image';
 export * from './Line';
 export * from './Link';
 export * from './ModalBase';
+export * from './Title';
+export * from './Wrapper';

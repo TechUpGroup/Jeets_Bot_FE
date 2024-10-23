@@ -47,12 +47,14 @@ export default function Header() {
           <ImageRatio src="/images/cry.png" ratio={3744 / 3320} w={'60px'} display={{ base: 'block', md: 'none' }} />
         </LinkCustom>
 
-        <FlexCenter gap={{ base: 2.5, md: '60px' }}>
+        <FlexCenter gap={{ base: 2.5, md: '40px' }}>
           {isLinked &&
             [
               { name: 'Missions', href: '/missions', sub: '/' },
               { name: 'Voting', href: '/voting' },
               { name: 'Pool', href: '/pool' },
+              { name: 'Campaign', href: '/campaign' },
+              { name: 'OTC Exchange', href: '/exchange' },
             ].map((e) => (
               <LinkCustom
                 key={e.name}
@@ -100,6 +102,9 @@ export default function Header() {
               <MenuList>
                 <MenuItem onClick={logout} fontSize={{ base: 14, md: 16 }} py={1}>
                   Disconnect Wallet
+                </MenuItem>
+                <MenuItem fontSize={{ base: 14, md: 16 }} py={1}>
+                  <LinkCustom href="/profile">Profile</LinkCustom>
                 </MenuItem>
                 {!!user?.twitter_username && (
                   <MenuItem fontSize={{ base: 14, md: 14 }} py={1}>

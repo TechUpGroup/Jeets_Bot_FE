@@ -1,49 +1,26 @@
 'use client';
 
-import {
-  Button,
-  Currency,
-  FlexBanner,
-  FlexCenter,
-  FlexCol,
-  ImageRatio,
-  LinkCustom,
-  Title,
-  Wrapper,
-} from '@/components';
+import { Currency, FlexBanner, FlexCol, LinkCustom, Title, Wrapper } from '@/components';
 import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
 import dayjs from '@/utils/dayjs';
-import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { Box, Button, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
-import { useQueryHistories, useQueryHistoriesRemain } from './hooks/useQueryHistories';
+import { useQueryHistories } from '../PoolView/hooks/useQueryHistories';
 
-export default function PoolView() {
+export default function CampaignView() {
   const { data: histories } = useQueryHistories();
-  const { data: remaining } = useQueryHistoriesRemain();
+
   return (
     <Wrapper>
-      <Title>POOL</Title>
+      <Title>CAMPAIGN</Title>
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
-          <Flex
-            flexDir={{ base: 'column', md: 'row' }}
-            fontSize={{ base: 24, md: 52 }}
-            textAlign="center"
-            color="purple"
-            gap={2.5}
-            alignItems="center"
-          >
-            <Currency value={remaining} isWei />{' '}
-            <FlexCenter gap={2.5}>
-              <Box as="span" color="rgba(32, 27, 3, 1)">
-                $MOON
-              </Box>
-              <ImageRatio src="/icons/moon.png" ratio={1} w={10} />
-            </FlexCenter>
-          </Flex>
-          <Box fontSize={20} flexFlow="sfPro" color="rgba(16, 16, 16, 1)">
-            Locked
+          <Box fontSize={30} fontFamily="sfPro" fontWeight={800}>
+            Campaign in week
+          </Box>
+          <Box color="rgba(143, 81, 236, 1)" fontSize={42}>
+            Oct 21 - oct 27, 2024
           </Box>
         </FlexCol>
       </FlexBanner>
@@ -53,13 +30,13 @@ export default function PoolView() {
           <Thead>
             <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
               <Td p={0} lineHeight={1.4} w={288}>
-                Amount
+                Campaign
               </Td>
               <Td p={0} lineHeight={1.4} textAlign="center">
-                Transactions
+                Time
               </Td>
               <Td p={0} lineHeight={1.4} textAlign="center">
-                Deposit time
+                Jeets Score Rewards
               </Td>
               <Td p={0} lineHeight={1.4} textAlign="center" w={288}>
                 Status
