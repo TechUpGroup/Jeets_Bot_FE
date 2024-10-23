@@ -12,10 +12,11 @@ export type ImageRatioProps = Omit<ImageProps, 'alt'> &
     disableLoading?: boolean;
     alt?: string;
     fallbackSrc?: string;
+    originalImage?: boolean;
   };
 
-const imageLoader = ({ src, width, quality }: ImageLoaderProps) => {
-  return `${src}?w=${width}&q=${quality || 75}`;
+const imageLoader = ({ src }: ImageLoaderProps) => {
+  return `${src}`;
 };
 
 const AspectRatioWrap = ({
@@ -41,6 +42,7 @@ export const ImageRatio = (props: ImageRatioProps) => {
     quality,
     ratio,
     disableLoading,
+    originalImage,
     ...rest
   } = props;
 
@@ -59,7 +61,7 @@ export const ImageRatio = (props: ImageRatioProps) => {
         <Skeleton position="absolute" top="0" left="0" width="100%" height="100%" isLoaded={disableLoading || isLoaded}>
           <Image
             src={isError ? fallbackSrc : getAssetUrl(src)}
-            // loader={imageLoader}
+            loader={originalImage ? imageLoader : undefined}
             alt={alt}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

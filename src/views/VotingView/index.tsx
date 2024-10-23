@@ -105,6 +105,7 @@ export default function VotingView() {
             >
               <FlexCenter gap={2.5} fontFamily="sfPro" lineHeight={1.4} fontWeight={800}>
                 <ImageRatio
+                  originalImage
                   src={e.avatar ?? 'https://placehold.co/52x52/png'}
                   ratio={1}
                   w={{ base: 10, md: '52px' }}
