@@ -12,7 +12,7 @@ export default function ProfileView() {
           <Box fontSize={30} fontFamily="sfPro" fontWeight={800}>
             Total Jeets Score
           </Box>
-          <Box color="rgba(143, 81, 236, 1)" fontSize={42}>
+          <Box color="purple" fontSize={42}>
             <Currency value={4_000_000} />
           </Box>
         </FlexCol>

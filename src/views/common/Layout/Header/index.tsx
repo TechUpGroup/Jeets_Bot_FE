@@ -12,7 +12,7 @@ import { Box, Flex, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/reac
 import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
 import { useWalletModal } from '@tiplink/wallet-adapter-react-ui';
 
-export default function Header() {
+const Header = () => {
   const user = useUser();
   const { setVisible } = useWalletModal();
   const { buttonState, publicKey } = useWalletMultiButton({
@@ -24,6 +24,7 @@ export default function Header() {
   const { logout } = useAuth();
   const pathname = usePathname();
   const isLinked = useIsLogin();
+
   return (
     <Box px={{ base: 2.5, md: 5 }} w="full">
       <Flex
@@ -54,12 +55,12 @@ export default function Header() {
               { name: 'Voting', href: '/voting' },
               { name: 'Pool', href: '/pool' },
               { name: 'Campaign', href: '/campaign' },
-              // { name: 'OTC Exchange', href: '/exchange' },
+              { name: 'OTC Exchange', href: '/exchange' },
             ].map((e) => (
               <LinkCustom
                 key={e.name}
                 href={e.href}
-                color={pathname === e.href || pathname === e.sub ? 'purple' : undefined}
+                color={pathname === e.href || pathname === e.sub ? 'purple2' : undefined}
                 textDecor={pathname === e.href || pathname === e.sub ? 'underline' : undefined}
               >
                 {e.name}
@@ -74,7 +75,7 @@ export default function Header() {
               w={{ base: '100px', md: 'fit-content' }}
               rounded={8}
               color="white"
-              bg="linear-gradient(90deg, #1DF69D 0%, #904EEC 100%)"
+              bg="makeColor"
               onClick={() => setVisible(true)}
               disabled={buttonState === 'connecting' || buttonState === 'connected'}
             >
@@ -92,7 +93,7 @@ export default function Header() {
                 overflow="hidden"
               /> */}
                   <FlexCol lineHeight={1}>
-                    <Box fontSize={14} fontWeight={800} color="rgba(143, 81, 236, 1)" fontFamily="sfPro">
+                    <Box fontSize={14} fontWeight={800} color="purple" fontFamily="sfPro">
                       {formatAddress(publicKey.toBase58())}
                     </Box>
                   </FlexCol>
@@ -137,4 +138,6 @@ export default function Header() {
       </Flex>
     </Box>
   );
-}
+};
+
+export default Header;

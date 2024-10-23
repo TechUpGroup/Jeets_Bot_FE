@@ -66,7 +66,7 @@ export default function MissionsView() {
       }
     };
     handleMissionX();
-  }, [searchParams, address]);
+  }, [searchParams, address, refetch]);
 
   return (
     <Wrapper>
@@ -74,7 +74,7 @@ export default function MissionsView() {
       {!!data?.ratio && data?.ratio >= 100 && (
         <FlexBanner bg="rgba(29, 246, 157, 0.2)">
           <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
-            <Box fontSize={{ base: 24, md: 52 }} color="purple" textTransform="uppercase">
+            <Box fontSize={{ base: 24, md: 52 }} color="purple2" textTransform="uppercase">
               congratulations
             </Box>
             <Box
@@ -88,7 +88,7 @@ export default function MissionsView() {
             </Box>
             <LinkCustom href="/voting">
               <Button
-                bg="linear-gradient(90deg, #1DF69D 0%, #904EEC 100%)"
+                bg="makeColor"
                 px="96px"
                 h={{ base: 10, md: '50px' }}
                 fontSize={{ base: 16, md: 20 }}
@@ -107,12 +107,7 @@ export default function MissionsView() {
           <Box>{data?.ratio ?? 0}%</Box>
         </FlexBetween>
         <Box w="full" bg="rgba(214, 231, 246, 1)" rounded={100} overflow="hidden" h={4}>
-          <Box
-            w={`${data?.ratio ?? 0}%`}
-            h="full"
-            rounded={100}
-            bg="linear-gradient(90deg, #1DF69D 0%, #904EEC 100%)"
-          />
+          <Box w={`${data?.ratio ?? 0}%`} h="full" rounded={100} bg="makeColor" />
         </Box>
       </FlexCol>
       <FlexCol w="full" gap="30px">
@@ -140,7 +135,7 @@ export default function MissionsView() {
                   w="full"
                   h="full"
                   rounded={8}
-                  bg="linear-gradient(90deg, #1DF69D 0%, #904EEC 100%)"
+                  bg="makeColor"
                   color="white"
                   disabled={!!loading || !address}
                   isLoading={loading === e._id}

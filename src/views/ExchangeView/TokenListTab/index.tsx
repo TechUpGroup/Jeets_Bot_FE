@@ -1,36 +1,33 @@
-'use client';
-
 import {
-  Button,
   Currency,
   FlexBanner,
   FlexCenter,
   FlexCol,
+  FlexContent,
   ImageRatio,
   LinkCustom,
   Title,
-  Wrapper,
+  Title2,
 } from '@/components';
 import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
 import dayjs from '@/utils/dayjs';
-import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { useQueryHistories, useQueryHistoriesRemain } from '@/views/PoolView/hooks/useQueryHistories';
+import { Box, Button, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
-import { useQueryHistories, useQueryHistoriesRemain } from './hooks/useQueryHistories';
-
-export default function PoolView() {
+export default function TokenListTab() {
   const { data: histories } = useQueryHistories();
   const { data: remaining } = useQueryHistoriesRemain();
   return (
-    <Wrapper>
-      <Title>POOL</Title>
+    <FlexContent>
+      <Title2>TOKEN LIST</Title2>
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
           <Flex
             flexDir={{ base: 'column', md: 'row' }}
             fontSize={{ base: 24, md: 52 }}
             textAlign="center"
-            color="purple2"
+            color="purple"
             gap={2.5}
             alignItems="center"
           >
@@ -137,6 +134,6 @@ export default function PoolView() {
           </Tbody>
         </Table>
       </TableContainer>
-    </Wrapper>
+    </FlexContent>
   );
 }

@@ -6,6 +6,7 @@ export * from './CopyButton';
 export * from './Currency';
 export * from './Flex';
 export * from './Image';
+export * from './InputCurrency';
 export * from './Line';
 export * from './Link';
 export * from './ModalBase';

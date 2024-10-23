@@ -1,29 +1,16 @@
-'use client';
-
-import {
-  Button,
-  Currency,
-  FlexBanner,
-  FlexCenter,
-  FlexCol,
-  ImageRatio,
-  LinkCustom,
-  Title,
-  Wrapper,
-} from '@/components';
+import { Currency, FlexBanner, FlexCenter, FlexCol, FlexContent, ImageRatio, LinkCustom, Title } from '@/components';
 import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
 import dayjs from '@/utils/dayjs';
-import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { useQueryHistories, useQueryHistoriesRemain } from '@/views/PoolView/hooks/useQueryHistories';
+import { Box, Button, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
-import { useQueryHistories, useQueryHistoriesRemain } from './hooks/useQueryHistories';
-
-export default function PoolView() {
+export default function MyTokenTab() {
   const { data: histories } = useQueryHistories();
   const { data: remaining } = useQueryHistoriesRemain();
   return (
-    <Wrapper>
-      <Title>POOL</Title>
+    <FlexContent>
+      <Title>OTC Exchange</Title>
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
           <Flex
@@ -137,6 +124,6 @@ export default function PoolView() {
           </Tbody>
         </Table>
       </TableContainer>
-    </Wrapper>
+    </FlexContent>
   );
 }
