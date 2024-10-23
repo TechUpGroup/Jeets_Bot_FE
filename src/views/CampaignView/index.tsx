@@ -1,16 +1,11 @@
 'use client';
 
-import { Currency, FlexBanner, FlexCol, LinkCustom, Title, Wrapper } from '@/components';
-import { getTransactionHashUrl } from '@/utils';
-import { formatAddress } from '@/utils/address';
-import dayjs from '@/utils/dayjs';
-import { Box, Button, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { Button, Currency, FlexBanner, FlexCol, Title, Wrapper } from '@/components';
+import { Box, Collapse, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
-import { useQueryHistories } from '../PoolView/hooks/useQueryHistories';
+import { CollapseItem } from './CollapseItem';
 
 export default function CampaignView() {
-  const { data: histories } = useQueryHistories();
-
   return (
     <Wrapper>
       <Title>CAMPAIGN</Title>
@@ -26,86 +21,54 @@ export default function CampaignView() {
       </FlexBanner>
 
       <TableContainer w="full" pb={4}>
-        <Table variant="unstyled">
+        <Table variant="unstyled" style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}>
           <Thead>
             <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              <Td p={0} lineHeight={1.4} w={288}>
+              <Td p={0} lineHeight={1.4} w={288} pr={5}>
                 Campaign
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center">
+              <Td p={0} lineHeight={1.4} textAlign="center" px={5}>
                 Time
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center">
+              <Td p={0} lineHeight={1.4} textAlign="center" px={5}>
                 Jeets Score Rewards
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" w={288}>
+              <Td p={0} lineHeight={1.4} textAlign="center" w={288} px={5}>
                 Status
               </Td>
             </Tr>
           </Thead>
-          <Tbody fontSize={{ base: 16, md: 20 }}>
-            {histories?.docs?.map((e, i) => (
+          <Tbody fontSize={{ base: 16, md: 20 }} fontFamily="sfPro" fontWeight={800}>
+            {Array.from({ length: 10 }).map((_, i) => (
               <Tr key={i}>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex
-                    alignItems="center"
-                    bg="rgba(237, 247, 255, 1)"
-                    h={{ base: '72px', md: '90px' }}
-                    roundedLeft={10}
-                    px={5}
-                    fontFamily="sfPro"
-                    fontWeight={800}
-                  >
-                    <Currency value={e.transfer_amount} isWei />
+                <Td p={5} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
+                  <CollapseItem />
+                </Td>
+                <Td p={5} bg="rgba(237, 247, 255, 1)">
+                  <Flex alignItems="center" justifyContent="center" textAlign="center">
+                    Oct 21 - Oct 27, 2024
                   </Flex>
                 </Td>
-                <Td px={0} pb={0} pt={2.5}>
-                  <LinkCustom target="_blank" href={getTransactionHashUrl(e.transaction_hash)}>
-                    <Flex
-                      alignItems="center"
-                      justifyContent="center"
-                      bg="rgba(237, 247, 255, 1)"
-                      h={{ base: '72px', md: '90px' }}
-                      fontFamily="sfPro"
-                      fontWeight={800}
-                      textAlign="center"
-                    >
-                      {formatAddress(e.transaction_hash)}
-                    </Flex>
-                  </LinkCustom>
-                </Td>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex
-                    alignItems="center"
-                    justifyContent="center"
-                    bg="rgba(237, 247, 255, 1)"
-                    h={{ base: '72px', md: '90px' }}
-                    fontFamily="sfPro"
-                    fontWeight={800}
-                    textAlign="center"
-                  >
-                    {dayjs.utc(e.timestamp * 1000).format('DD/MM/YYYY')}
+                <Td p={5} bg="rgba(237, 247, 255, 1)">
+                  <Flex alignItems="center" justifyContent="center" textAlign="center">
+                    <Currency value={2_000} />
                   </Flex>
                 </Td>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex
-                    alignItems="center"
-                    bg="rgba(237, 247, 255, 1)"
-                    h={{ base: '72px', md: '90px' }}
-                    roundedRight={10}
-                    px={5}
-                  >
+
+                <Td p={5} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
+                  <Flex alignItems="center">
                     <Button
-                      h={{ base: 10, md: '50px' }}
+                      h={{ base: 10 }}
                       w="full"
-                      color="green"
+                      color="rgba(253, 214, 75, 1)"
                       border="1px solid"
-                      borderColor="green"
+                      borderColor="rgba(253, 214, 75, 1)"
                       rounded={8}
+                      bg="white"
                       px={5}
                       cursor="default"
                     >
-                      AIRDROPPED
+                      On Going
                     </Button>
                   </Flex>
                 </Td>

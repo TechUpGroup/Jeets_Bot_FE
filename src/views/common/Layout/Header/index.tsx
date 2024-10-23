@@ -54,7 +54,7 @@ export default function Header() {
               { name: 'Voting', href: '/voting' },
               { name: 'Pool', href: '/pool' },
               { name: 'Campaign', href: '/campaign' },
-              { name: 'OTC Exchange', href: '/exchange' },
+              // { name: 'OTC Exchange', href: '/exchange' },
             ].map((e) => (
               <LinkCustom
                 key={e.name}
