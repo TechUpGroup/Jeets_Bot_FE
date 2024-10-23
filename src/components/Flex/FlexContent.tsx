@@ -11,7 +11,7 @@ export const FlexContent = forwardRef<FlexProps, 'div'>((props, ref) => {
       w="full"
       rounded={24}
       py={6}
-      px={{ base: 4, md: '44px' }}
+      px={{ base: 4, md: 6, lg: 8, xl: 9, '2xl': '44px' }}
       bg="white"
       alignItems="center"
       gap={30}

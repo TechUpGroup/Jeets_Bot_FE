@@ -110,7 +110,7 @@ export default function MissionsView() {
           <Box w={`${data?.ratio ?? 0}%`} h="full" rounded={100} bg="makeColor" />
         </Box>
       </FlexCol>
-      <FlexCol w="full" gap="30px">
+      <FlexCol w="full" gap={{ base: 5, md: '30px' }}>
         {data?.result.map((e, i) => (
           <Flex
             key={i}

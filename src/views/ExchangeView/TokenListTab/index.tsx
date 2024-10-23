@@ -1,4 +1,5 @@
 import {
+  Button,
   Currency,
   FlexBanner,
   FlexCenter,
@@ -6,20 +7,19 @@ import {
   FlexContent,
   ImageRatio,
   LinkCustom,
-  Title,
   Title2,
 } from '@/components';
 import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
 import dayjs from '@/utils/dayjs';
 import { useQueryHistories, useQueryHistoriesRemain } from '@/views/PoolView/hooks/useQueryHistories';
-import { Box, Button, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 export default function TokenListTab() {
   const { data: histories } = useQueryHistories();
   const { data: remaining } = useQueryHistoriesRemain();
   return (
-    <FlexContent>
+    <FlexContent w="full">
       <Title2>TOKEN LIST</Title2>
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
@@ -27,9 +27,11 @@ export default function TokenListTab() {
             flexDir={{ base: 'column', md: 'row' }}
             fontSize={{ base: 24, md: 52 }}
             textAlign="center"
-            color="purple"
+            color="purple2"
             gap={2.5}
             alignItems="center"
+            justifyContent="center"
+            flexWrap="wrap"
           >
             <Currency value={remaining} isWei />{' '}
             <FlexCenter gap={2.5}>
@@ -49,16 +51,16 @@ export default function TokenListTab() {
         <Table variant="unstyled">
           <Thead>
             <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              <Td p={0} lineHeight={1.4} w={288}>
+              <Td p={0} lineHeight={1.4} w={288} pr={{ base: 2, md: 5 }}>
                 Amount
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center">
+              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
                 Transactions
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center">
+              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
                 Deposit time
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" w={288}>
+              <Td p={0} lineHeight={1.4} textAlign="center" w={288} px={{ base: 2, md: 5 }}>
                 Status
               </Td>
             </Tr>
@@ -72,7 +74,7 @@ export default function TokenListTab() {
                     bg="rgba(237, 247, 255, 1)"
                     h={{ base: '72px', md: '90px' }}
                     roundedLeft={10}
-                    px={5}
+                    px={{ base: 2, md: 5 }}
                     fontFamily="sfPro"
                     fontWeight={800}
                   >
@@ -89,6 +91,7 @@ export default function TokenListTab() {
                       fontFamily="sfPro"
                       fontWeight={800}
                       textAlign="center"
+                      px={{ base: 2, md: 5 }}
                     >
                       {formatAddress(e.transaction_hash)}
                     </Flex>
@@ -103,6 +106,7 @@ export default function TokenListTab() {
                     fontFamily="sfPro"
                     fontWeight={800}
                     textAlign="center"
+                    px={{ base: 2, md: 5 }}
                   >
                     {dayjs.utc(e.timestamp * 1000).format('DD/MM/YYYY')}
                   </Flex>
@@ -113,7 +117,7 @@ export default function TokenListTab() {
                     bg="rgba(237, 247, 255, 1)"
                     h={{ base: '72px', md: '90px' }}
                     roundedRight={10}
-                    px={5}
+                    px={{ base: 2, md: 5 }}
                   >
                     <Button
                       h={{ base: 10, md: '50px' }}

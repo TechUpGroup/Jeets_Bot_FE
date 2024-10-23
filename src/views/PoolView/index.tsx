@@ -33,6 +33,8 @@ export default function PoolView() {
             color="purple2"
             gap={2.5}
             alignItems="center"
+            justifyContent="center"
+            flexWrap="wrap"
           >
             <Currency value={remaining} isWei />{' '}
             <FlexCenter gap={2.5}>
@@ -49,19 +51,24 @@ export default function PoolView() {
       </FlexBanner>
 
       <TableContainer w="full" pb={4}>
-        <Table variant="unstyled">
+        <Table
+          variant="unstyled"
+          style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}
+          fontFamily="sfPro"
+          fontWeight={800}
+        >
           <Thead>
-            <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              <Td p={0} lineHeight={1.4} w={288}>
+            <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
+              <Td p={0} lineHeight={1.4} w={288} pr={{ base: 2, md: 5 }}>
                 Amount
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center">
+              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
                 Transactions
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center">
+              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
                 Deposit time
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" w={288}>
+              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }} w={288}>
                 Status
               </Td>
             </Tr>
@@ -69,55 +76,25 @@ export default function PoolView() {
           <Tbody fontSize={{ base: 16, md: 20 }}>
             {histories?.docs?.map((e, i) => (
               <Tr key={i}>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex
-                    alignItems="center"
-                    bg="rgba(237, 247, 255, 1)"
-                    h={{ base: '72px', md: '90px' }}
-                    roundedLeft={10}
-                    px={5}
-                    fontFamily="sfPro"
-                    fontWeight={800}
-                  >
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
+                  <Flex alignItems="center" roundedLeft={10}>
                     <Currency value={e.transfer_amount} isWei />
                   </Flex>
                 </Td>
-                <Td px={0} pb={0} pt={2.5}>
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
                   <LinkCustom target="_blank" href={getTransactionHashUrl(e.transaction_hash)}>
-                    <Flex
-                      alignItems="center"
-                      justifyContent="center"
-                      bg="rgba(237, 247, 255, 1)"
-                      h={{ base: '72px', md: '90px' }}
-                      fontFamily="sfPro"
-                      fontWeight={800}
-                      textAlign="center"
-                    >
+                    <Flex alignItems="center" justifyContent="center" textAlign="center">
                       {formatAddress(e.transaction_hash)}
                     </Flex>
                   </LinkCustom>
                 </Td>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex
-                    alignItems="center"
-                    justifyContent="center"
-                    bg="rgba(237, 247, 255, 1)"
-                    h={{ base: '72px', md: '90px' }}
-                    fontFamily="sfPro"
-                    fontWeight={800}
-                    textAlign="center"
-                  >
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
+                  <Flex alignItems="center" justifyContent="center" textAlign="center">
                     {dayjs.utc(e.timestamp * 1000).format('DD/MM/YYYY')}
                   </Flex>
                 </Td>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex
-                    alignItems="center"
-                    bg="rgba(237, 247, 255, 1)"
-                    h={{ base: '72px', md: '90px' }}
-                    roundedRight={10}
-                    px={5}
-                  >
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
+                  <Flex alignItems="center">
                     <Button
                       h={{ base: 10, md: '50px' }}
                       w="full"
