@@ -1,3 +1,5 @@
+'use client';
+
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field';
 
 import styled from '@emotion/styled';

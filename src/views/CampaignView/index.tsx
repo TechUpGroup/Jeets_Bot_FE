@@ -6,7 +6,6 @@ import { Button, Currency, FlexBanner, FlexCol, InputCurrency, Title, Title2, Wr
 import {
   Box,
   Flex,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -67,16 +66,16 @@ export default function CampaignView() {
         <Table variant="unstyled" style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}>
           <Thead>
             <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              <Td p={0} lineHeight={1.4} w={288} pr={5}>
+              <Td p={0} lineHeight={1.4} w={288} pr={{ base: 2, md: 5 }}>
                 Campaign
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" px={5}>
+              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
                 Time
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" px={5}>
+              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
                 Jeets Score Rewards
               </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" w={288} px={5}>
+              <Td p={0} lineHeight={1.4} textAlign="center" w={288} px={{ base: 2, md: 5 }}>
                 Status
               </Td>
             </Tr>
@@ -84,31 +83,31 @@ export default function CampaignView() {
           <Tbody fontSize={{ base: 16, md: 20 }} fontFamily="sfPro" fontWeight={800}>
             {Array.from({ length: 10 }).map((_, i) => (
               <Tr key={i}>
-                <Td p={5} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
                   <CollapseItem />
                 </Td>
-                <Td p={5} bg="rgba(237, 247, 255, 1)">
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
                   <Flex alignItems="center" justifyContent="center" textAlign="center">
                     Oct 21 - Oct 27, 2024
                   </Flex>
                 </Td>
-                <Td p={5} bg="rgba(237, 247, 255, 1)">
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
                   <Flex alignItems="center" justifyContent="center" textAlign="center">
                     <Currency value={2_000} />
                   </Flex>
                 </Td>
 
-                <Td p={5} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
                   <Flex alignItems="center">
                     <Button
-                      h={{ base: 10 }}
+                      h={{ base: 9, md: 10 }}
                       w="full"
                       color="rgba(253, 214, 75, 1)"
                       border="1px solid"
                       borderColor="rgba(253, 214, 75, 1)"
                       rounded={8}
                       bg="white"
-                      px={5}
+                      px={{ base: 3, md: 5 }}
                       cursor="default"
                     >
                       On Going
@@ -293,7 +292,7 @@ export default function CampaignView() {
                 fontSize={{ base: 16, md: 20 }}
                 fontWeight={400}
                 rounded={8}
-                px={5}
+                px={{ base: 3, md: 5 }}
                 h={{ base: 10, md: 10 }}
                 color="white"
                 fontFamily="titanOne"
