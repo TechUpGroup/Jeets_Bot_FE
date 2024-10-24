@@ -1,135 +1,92 @@
-import {
-  Button,
-  Currency,
-  FlexBanner,
-  FlexCenter,
-  FlexCol,
-  FlexContent,
-  ImageRatio,
-  LinkCustom,
-  Title2,
-} from '@/components';
+import { Button, Currency, FlexCenter, FlexContent, ImageRatio, LinkCustom, Pagination, Title2 } from '@/components';
 import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
 import dayjs from '@/utils/dayjs';
-import { useQueryHistories, useQueryHistoriesRemain } from '@/views/PoolView/hooks/useQueryHistories';
-import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { Box, Flex, Select, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+
+const tableHeaders = [
+  { name: 'Token', center: false },
+  { name: 'Price/Token' },
+  { name: 'Holder' },
+  { name: 'Sale Progress' },
+  { name: '', w: 209 },
+];
 
 export default function TokenListTab() {
-  const { data: histories } = useQueryHistories();
-  const { data: remaining } = useQueryHistoriesRemain();
   return (
     <FlexContent w="full">
       <Title2>TOKEN LIST</Title2>
-      <FlexBanner>
-        <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
-          <Flex
-            flexDir={{ base: 'column', md: 'row' }}
-            fontSize={{ base: 24, md: 52 }}
-            textAlign="center"
-            color="purple2"
-            gap={2.5}
-            alignItems="center"
-            justifyContent="center"
-            flexWrap="wrap"
-          >
-            <Currency value={remaining} isWei />{' '}
-            <FlexCenter gap={2.5}>
-              <Box as="span" color="rgba(32, 27, 3, 1)">
-                $MOON
-              </Box>
-              <ImageRatio src="/icons/moon.png" ratio={1} w={10} />
-            </FlexCenter>
-          </Flex>
-          <Box fontSize={20} flexFlow="sfPro" color="rgba(16, 16, 16, 1)">
-            Locked
-          </Box>
-        </FlexCol>
-      </FlexBanner>
-
+      <Flex justifyContent="space-between" alignItems="center" w="full" fontFamily="sfPro" fontWeight={400}>
+        <Box>Search</Box>
+        <FlexCenter gap={2.5}>
+          <Box style={{ textWrap: 'nowrap' }}>Sort by</Box>
+          <Select fontSize={14} borderColor="black" rounded={12}>
+            <option value="1">Price</option>
+          </Select>
+        </FlexCenter>
+      </Flex>
       <TableContainer w="full" pb={4}>
-        <Table variant="unstyled">
+        <Table variant="unstyled" style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}>
           <Thead>
             <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              <Td p={0} lineHeight={1.4} w={288} pr={{ base: 2, md: 5 }}>
-                Amount
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
-                Transactions
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
-                Deposit time
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" w={288} px={{ base: 2, md: 5 }}>
-                Status
-              </Td>
+              {tableHeaders.map((e, i) => (
+                <Td
+                  key={i}
+                  p={0}
+                  lineHeight={1.4}
+                  textAlign={e.center === false ? undefined : 'center'}
+                  pr={i === 0 ? { base: 2, md: 5 } : undefined}
+                  px={i !== 0 ? { base: 2, md: 5 } : undefined}
+                  w={e.w}
+                >
+                  {e.name}
+                </Td>
+              ))}
             </Tr>
           </Thead>
-          <Tbody fontSize={{ base: 16, md: 20 }}>
-            {histories?.docs?.map((e, i) => (
+          <Tbody fontSize={{ base: 16, md: 16 }} fontFamily="sfPro" fontWeight={800}>
+            {Array.from({ length: 5 }).map((_, i) => (
               <Tr key={i}>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex
-                    alignItems="center"
-                    bg="rgba(237, 247, 255, 1)"
-                    h={{ base: '72px', md: '90px' }}
-                    roundedLeft={10}
-                    px={{ base: 2, md: 5 }}
-                    fontFamily="sfPro"
-                    fontWeight={800}
-                  >
-                    <Currency value={e.transfer_amount} isWei />
-                  </Flex>
+                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
+                  <FlexCenter gap={2.5}>
+                    <ImageRatio
+                      src="https://placehold.co/30x30/png"
+                      ratio={1}
+                      w="30px"
+                      rounded={999}
+                      overflow="hidden"
+                    />
+                    ordi
+                  </FlexCenter>
                 </Td>
-                <Td px={0} pb={0} pt={2.5}>
-                  <LinkCustom target="_blank" href={getTransactionHashUrl(e.transaction_hash)}>
-                    <Flex
-                      alignItems="center"
-                      justifyContent="center"
-                      bg="rgba(237, 247, 255, 1)"
-                      h={{ base: '72px', md: '90px' }}
-                      fontFamily="sfPro"
-                      fontWeight={800}
-                      textAlign="center"
-                      px={{ base: 2, md: 5 }}
-                    >
-                      {formatAddress(e.transaction_hash)}
-                    </Flex>
-                  </LinkCustom>
+                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
+                  <Currency value={37.281} prefix="$" />
                 </Td>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex
-                    alignItems="center"
-                    justifyContent="center"
-                    bg="rgba(237, 247, 255, 1)"
-                    h={{ base: '72px', md: '90px' }}
-                    fontFamily="sfPro"
-                    fontWeight={800}
-                    textAlign="center"
-                    px={{ base: 2, md: 5 }}
-                  >
-                    {dayjs.utc(e.timestamp * 1000).format('DD/MM/YYYY')}
-                  </Flex>
+                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
+                  <Currency value={100} />
                 </Td>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex
-                    alignItems="center"
-                    bg="rgba(237, 247, 255, 1)"
-                    h={{ base: '72px', md: '90px' }}
-                    roundedRight={10}
-                    px={{ base: 2, md: 5 }}
-                  >
+                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
+                  70%
+                </Td>
+                <Td
+                  px={{ base: 2, md: 5 }}
+                  py={{ base: 1.5, md: 2.5 }}
+                  bg="rgba(237, 247, 255, 1)"
+                  roundedBottomRight={10}
+                >
+                  <Flex justifyContent="end">
                     <Button
-                      h={{ base: 10, md: '50px' }}
+                      bg="makeColor"
+                      h={10}
+                      maxW={169}
                       w="full"
-                      color="green"
-                      border="1px solid"
-                      borderColor="green"
+                      fontFamily="titanOne"
+                      fontWeight={400}
+                      fontSize={20}
+                      color="white"
                       rounded={8}
-                      px={5}
-                      cursor="default"
                     >
-                      AIRDROPPED
+                      BUY
                     </Button>
                   </Flex>
                 </Td>
@@ -138,6 +95,8 @@ export default function TokenListTab() {
           </Tbody>
         </Table>
       </TableContainer>
+
+      <Pagination total={10} initialPage={1} />
     </FlexContent>
   );
 }

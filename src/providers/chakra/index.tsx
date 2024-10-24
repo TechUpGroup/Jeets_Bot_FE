@@ -1,6 +1,6 @@
 'use client';
 
-import { titanOne } from '@/utils/fonts';
+import { inter, titanOne } from '@/utils/fonts';
 import { ChakraProvider as ChakraBaseProvider, ChakraProviderProps, extendTheme } from '@chakra-ui/react';
 
 const customTheme = extendTheme({
@@ -10,6 +10,7 @@ const customTheme = extendTheme({
     nunito: titanOne.style.fontFamily,
     sfPro: 'SF Pro Display',
     titanOne: titanOne.style.fontFamily,
+    inter: inter.style.fontFamily,
   },
   colors: {
     main: 'rgba(214, 231, 246, 1)',

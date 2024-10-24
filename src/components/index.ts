@@ -10,5 +10,6 @@ export * from './InputCurrency';
 export * from './Line';
 export * from './Link';
 export * from './ModalBase';
+export * from './Pagination';
 export * from './Title';
 export * from './Wrapper';
