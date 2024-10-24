@@ -3,6 +3,8 @@
 import { useState } from 'react';
 
 import { Button, Currency, FlexBanner, FlexCol, InputCurrency, Title, Title2, Wrapper } from '@/components';
+import { useCurrentTime } from '@/hooks/useCurrentTime';
+import dayjs from '@/utils/dayjs';
 import {
   Box,
   Flex,
@@ -28,18 +30,22 @@ import {
 } from '@chakra-ui/react';
 
 import { CollapseItem } from './CollapseItem';
+import { useQueryCampaign } from './hooks/useQueryCampaign';
 
 export default function CampaignView() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(0);
   const [totalSol, setTotalSol] = useState(1);
   const [showTooltip, setShowTooltip] = useState(false);
+  const currentTime = useCurrentTime();
+
+  const { data } = useQueryCampaign();
 
   return (
     <Wrapper>
-      <Flex justifyContent="space-between" w="full" gap={1}>
+      <Flex justifyContent="center" w="full" gap={1}>
         <Title>CAMPAIGN</Title>
-        <Button
+        {/* <Button
           bg="makeColor"
           fontSize={{ base: 16, md: 20 }}
           h={{ base: 10, md: 10 }}
@@ -49,16 +55,16 @@ export default function CampaignView() {
           onClick={onOpen}
         >
           CREATE CAMPAIGN
-        </Button>
+        </Button> */}
       </Flex>
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
           <Box fontSize={30} fontFamily="sfPro" fontWeight={800}>
-            Campaign in week
+            List campaign
           </Box>
-          <Box color="purple" fontSize={42}>
+          {/* <Box color="purple" fontSize={42}>
             Oct 21 - oct 27, 2024
-          </Box>
+          </Box> */}
         </FlexCol>
       </FlexBanner>
 
@@ -81,41 +87,78 @@ export default function CampaignView() {
             </Tr>
           </Thead>
           <Tbody fontSize={{ base: 16, md: 20 }} fontFamily="sfPro" fontWeight={800}>
-            {Array.from({ length: 10 }).map((_, i) => (
-              <Tr key={i}>
-                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
-                  <CollapseItem />
-                </Td>
-                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                  <Flex alignItems="center" justifyContent="center" textAlign="center">
-                    Oct 21 - Oct 27, 2024
-                  </Flex>
-                </Td>
-                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                  <Flex alignItems="center" justifyContent="center" textAlign="center">
-                    <Currency value={2_000} />
-                  </Flex>
-                </Td>
+            {data?.docs.map((campaign, i) => {
+              const startTime = dayjs.utc(campaign.start_time);
+              const endTime = dayjs.utc(campaign.end_time);
+              return (
+                <Tr key={i}>
+                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
+                    <CollapseItem campaign={campaign} />
+                  </Td>
+                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
+                    <Flex alignItems="center" justifyContent="center" textAlign="center">
+                      {startTime.isSame(endTime, 'year')
+                        ? startTime.format('MMM DD')
+                        : startTime.format('MMM DD, YYYY')}{' '}
+                      - {endTime.format('MMM DD, YYYY')}
+                    </Flex>
+                  </Td>
+                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
+                    <Flex alignItems="center" justifyContent="center" textAlign="center">
+                      <Currency value={campaign.score} />
+                    </Flex>
+                  </Td>
 
-                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
-                  <Flex alignItems="center">
-                    <Button
-                      h={{ base: 9, md: 10 }}
-                      w="full"
-                      color="rgba(253, 214, 75, 1)"
-                      border="1px solid"
-                      borderColor="rgba(253, 214, 75, 1)"
-                      rounded={8}
-                      bg="white"
-                      px={{ base: 3, md: 5 }}
-                      cursor="default"
-                    >
-                      On Going
-                    </Button>
-                  </Flex>
-                </Td>
-              </Tr>
-            ))}
+                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
+                    <Flex alignItems="center">
+                      {currentTime > campaign.end_time ? (
+                        <Button
+                          h={{ base: 9, md: 10 }}
+                          w="full"
+                          color="rgba(23, 210, 133, 1)"
+                          border="1px solid"
+                          borderColor="rgba(23, 210, 133, 1)"
+                          rounded={8}
+                          bg="white"
+                          px={{ base: 3, md: 5 }}
+                          cursor="default"
+                        >
+                          Finished
+                        </Button>
+                      ) : currentTime < campaign.start_time ? (
+                        <Button
+                          h={{ base: 9, md: 10 }}
+                          w="full"
+                          color="rgba(253, 214, 75, 1)"
+                          border="1px solid"
+                          borderColor="rgba(253, 214, 75, 1)"
+                          rounded={8}
+                          bg="white"
+                          px={{ base: 3, md: 5 }}
+                          cursor="default"
+                        >
+                          Comming Soon
+                        </Button>
+                      ) : (
+                        <Button
+                          h={{ base: 9, md: 10 }}
+                          w="full"
+                          color="rgba(253, 214, 75, 1)"
+                          border="1px solid"
+                          borderColor="rgba(253, 214, 75, 1)"
+                          rounded={8}
+                          bg="white"
+                          px={{ base: 3, md: 5 }}
+                          cursor="default"
+                        >
+                          On Going
+                        </Button>
+                      )}
+                    </Flex>
+                  </Td>
+                </Tr>
+              );
+            })}
           </Tbody>
         </Table>
       </TableContainer>

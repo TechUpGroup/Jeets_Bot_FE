@@ -1,20 +1,25 @@
+import { Currency } from '@/components';
+import { ICampaign } from '@/services/campaign';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
-import { Box, Collapse, Flex, List, ListItem, useDisclosure } from '@chakra-ui/react';
+import { Box, Collapse, Flex, List, ListItem, UnorderedList, useDisclosure } from '@chakra-ui/react';
 
-export const CollapseItem = () => {
+export const CollapseItem = ({ campaign }: { campaign: ICampaign }) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
     <>
       <Flex onClick={onToggle} gap={1}>
         <Box>{isOpen ? <ChevronUpIcon boxSize={5} /> : <ChevronDownIcon boxSize={5} />}</Box>
-        Hold $MOON & $SUN
+        {campaign.name}
       </Flex>
       <Collapse in={isOpen} animateOpacity>
-        <List pt={2.5} fontWeight={400} lineHeight={1.4}>
-          <ListItem>Hold 10,000 $MOON</ListItem>
-          <ListItem>Hold 5,000 $SUN</ListItem>
-        </List>
+        <UnorderedList pt={2.5} fontWeight={400} lineHeight={1.4}>
+          {campaign.details.map((e) => (
+            <ListItem ml={1.5} key={e.symbol}>
+              Hold <Currency value={e.amount} decimalNumber={e.decimal} /> {e.symbol}
+            </ListItem>
+          ))}
+        </UnorderedList>
       </Collapse>
     </>
   );

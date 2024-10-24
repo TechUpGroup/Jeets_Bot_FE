@@ -1,9 +1,14 @@
 'use client';
 
-import { Currency, FlexBanner, FlexCol, Title, Wrapper } from '@/components';
+import { Currency, FlexBanner, FlexCenter, FlexCol, Title, Wrapper } from '@/components';
+import { useUser } from '@/store/useUserStore';
 import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
+import { useQueryCampaignHistories } from './hooks/useQueryCampaignHistories';
+
 export default function ProfileView() {
+  const { data } = useQueryCampaignHistories();
+  const user = useUser();
   return (
     <Wrapper>
       <Title>PROFILE</Title>
@@ -13,13 +18,13 @@ export default function ProfileView() {
             Total Jeets Score
           </Box>
           <Box color="purple" fontSize={42}>
-            <Currency value={4_000_000} />
+            <Currency value={user?.score} />
           </Box>
         </FlexCol>
       </FlexBanner>
 
       <TableContainer w="full" pb={4}>
-        <Table variant="unstyled">
+        <Table variant="unstyled" style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}>
           <Thead>
             <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
               <Td p={0} lineHeight={1.4} px={5}>
@@ -31,23 +36,26 @@ export default function ProfileView() {
             </Tr>
           </Thead>
           <Tbody fontSize={{ base: 16, md: 20 }} fontFamily="sfPro" fontWeight={800}>
-            {Array.from({ length: 5 }).map((_, i) => (
+            {data?.docs.map((his, i) => (
               <Tr key={i}>
-                <Td px={0} pb={0} pt={2.5}>
-                  <Flex roundedLeft={10} p={5} bg="rgba(237, 247, 255, 1)" lineHeight={1.4}>
-                    Hold 10,000 $MOON
+                <Td p={5} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
+                  <Flex lineHeight={1.4} gap={1} alignContent="center">
+                    Hold
+                    {his.campaign.details.map((e, i) => (
+                      <Box key={i} gap={1}>
+                        {i !== 0 && ' & '}
+                        <Currency value={e.amount} decimalNumber={e.decimal} /> {e.symbol}
+                      </Box>
+                    ))}
                   </Flex>
                 </Td>
-                <Td px={0} pb={0} pt={2.5}>
+                <Td p={5} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
                   <Flex
-                    roundedLeft={10}
-                    p={5}
-                    bg="rgba(237, 247, 255, 1)"
                     lineHeight={1.4}
-                    color="rgba(23, 210, 133, 1)"
+                    color={his.score < 0 ? 'rgba(242, 48, 48, 1)' : 'rgba(23, 210, 133, 1)'}
                     justifyContent="center"
                   >
-                    <Currency value={2_000} prefix="+" />
+                    <Currency value={his.score} prefix={his.score < 0 ? '' : '+'} />
                   </Flex>
                 </Td>
               </Tr>
