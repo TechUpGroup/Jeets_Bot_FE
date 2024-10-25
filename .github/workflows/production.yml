@@ -3,7 +3,7 @@ name: release
 on:
   push:
     branches:
-      - 'develop'
+      - 'master'
 
 jobs:
   build-push-full:
@@ -31,8 +31,8 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Copy env develop
-        run: cp .env.development .env
+      - name: Copy env master
+        run: cp .env.production .env
 
       - name: Docker meta
         id: meta
@@ -79,8 +79,8 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: Deploy develop
-        if: github.ref == 'refs/heads/develop'
-        run: ssh dev "cd /home/$SSH_USER/soljeets_fe_test && ./deploy.sh"
+      - name: Deploy master
+        if: github.ref == 'refs/heads/master'
+        run: ssh dev "cd /home/$SSH_USER/soljeets_fe && ./deploy.sh"
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
