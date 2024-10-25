@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'develop'
+      - 'test'
 
 jobs:
   build-push-full:
@@ -82,5 +83,11 @@ jobs:
       - name: Deploy develop
         if: github.ref == 'refs/heads/develop'
         run: ssh dev "cd /home/$SSH_USER/soljeets_fe && ./deploy.sh"
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+
+      - name: Deploy test
+        if: github.ref == 'refs/heads/test'
+        run: ssh dev "cd /home/$SSH_USER/soljeets_fe_test && ./deploy.sh"
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
