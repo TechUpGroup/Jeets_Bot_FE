@@ -40,6 +40,7 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
+import { Keypair } from '@solana/web3.js';
 
 import { useCreateToken } from './hooks/useCreateToken';
 
@@ -107,18 +108,19 @@ export default function TokenDevelopmentTab() {
           .multipliedBy(1e18)
           .toFixed(0),
       );
+      const mint = Keypair.generate(); // tạo địa chỉ token
       const res = await postCreateMintToken(
         {
           network,
-          mint: '',
+          mint: mint.publicKey.toBase58(),
           name: values.name,
           symbol: values.symbol,
           description: values.description,
 
           target_score: maxScore,
           max_buy_per_address: maxBuyPerAddress || undefined,
-          total_sol_receive: totalSol ? BigNumber(totalSol).multipliedBy(1e9).toNumber() : undefined,
-          price_sol_per_token: priceToken ? BigNumber(priceToken).multipliedBy(1e9).toNumber() : undefined,
+          total_sol_receive: BigNumber(totalSol).multipliedBy(1e9).toNumber(),
+          price_sol_per_token: BigNumber(priceToken ?? 0).toNumber(),
 
           twitter: values.twitterLink,
           telegram: values.telegramLink,
@@ -126,20 +128,18 @@ export default function TokenDevelopmentTab() {
         },
         values.image[0],
       );
-      await createToken({
-        symbol: res.mintoken.symbol,
-        name: res.mintoken.name,
-        fundingGoal: BigInt(res.mintoken.milestone_pushed),
-        maxHolding: BigInt(BigNumber(maxHolding).multipliedBy(1e18).toFixed(0)),
-        nonce: res.signature.nonce,
-        price: BigInt(res.signature.price),
-        signTime: BigInt(res.signature.signTime),
-        signature: res.signature.signature,
-        isAntiRugPool: res.mintoken.anti_rug_pool,
-        ethAmount,
-      });
+      // await createToken({
+      //   symbol: res.mintoken.symbol,
+      //   name: res.mintoken.name,
+      //   fundingGoal: BigInt(res.mintoken.milestone_pushed),
+      //   maxHolding: BigInt(BigNumber(maxHolding).multipliedBy(1e18).toFixed(0)),
+      //   nonce: res.signature.nonce,
+      //   price: BigInt(res.signature.price),
+      //   signTime: BigInt(res.signature.signTime),
+      //   signature: res.signature.signature,
+      // });
       onClose();
-      push(`/pairs/${res.mintoken.mint}`);
+      // push(`/pairs/${res.mintoken.mint}`);
     } catch (e) {
       toastError('create token failed', e);
       console.error(e);

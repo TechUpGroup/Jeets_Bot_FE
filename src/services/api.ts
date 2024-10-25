@@ -4,8 +4,6 @@ import { axiosInstance, axiosNoAuthInstance } from '@/utils/axios';
 
 export const getAccountInfo = async () => {
   const data = await axiosInstance.get<IUser>(`/users/me`);
-  data.data.twitter_uid = '236236236236';
-  data.data.twitter_username = 'fdhdfhdfh';
   return data.data;
 };
 

@@ -1,16 +1,41 @@
 type Address = string;
 
 export interface ICreateTokenSignature {
-  mintoken: ITokenCreate;
-
-  signature: {
-    nonce: Address;
-    caller: Address;
-    ethAmount: string;
-    price: string;
-    signTime: number;
-    signature: Address;
-  };
+  network: string;
+  username: string;
+  name: string;
+  symbol: string;
+  description: string;
+  image_uri: string;
+  metadata_uri: string;
+  target_score: number;
+  price_sol_per_token: number;
+  total_sol_receive: number;
+  mint: string;
+  creator: string;
+  created_timestamp: number;
+  complete: false;
+  trade_completed: false;
+  total_supply: number;
+  virtual_sol_reserves: number;
+  virtual_token_reserves: number;
+  real_sol_reserves: number;
+  real_token_reserves: number;
+  current_price: number;
+  market_cap: number;
+  fee_create_market_pool: number;
+  last_trade_timestamp: number;
+  show_name: boolean;
+  is_withdraw: boolean;
+  is_burned_lp: boolean;
+  is_minted_onchain: boolean;
+  call_withdraw: number;
+  call_create_market: number;
+  call_create_pool: number;
+  call_burn_lp: number;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ITokenHolder {

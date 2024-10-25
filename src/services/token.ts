@@ -26,8 +26,8 @@ export const postCreateMintToken = async (
 
     target_score?: number;
     max_buy_per_address?: number;
-    price_sol_per_token?: number;
-    total_sol_receive?: number;
+    price_sol_per_token: number;
+    total_sol_receive: number;
 
     twitter?: string;
     telegram?: string;
