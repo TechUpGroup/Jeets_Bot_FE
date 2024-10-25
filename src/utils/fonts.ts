@@ -1,9 +1,9 @@
-import { Rubik } from 'next/font/google';
+import { Titan_One } from 'next/font/google';
 
-export const inter = Rubik({
+export const titanOne = Titan_One({
   style: 'normal',
-  subsets: ['latin'],
-  weight: ['500'],
+  subsets: ['latin', 'latin-ext'],
+  weight: ['400'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-titan',
 });

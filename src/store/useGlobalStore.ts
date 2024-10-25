@@ -14,3 +14,5 @@ const useGlobalStore = createWithEqualityFn<GlobalState>(
 );
 
 export default useGlobalStore;
+
+export const { incrementCount } = useGlobalStore.getState();

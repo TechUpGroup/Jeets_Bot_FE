@@ -2,7 +2,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { Slide, ToastContainer } from 'react-toastify';
 
-import { CloseToastIcon } from '@/components/Icons';
+import { CloseIcon } from '@chakra-ui/icons';
 import styled from '@emotion/styled';
 
 const ToastContainerStyled = styled(ToastContainer)`
@@ -35,7 +35,7 @@ const ToastContainerStyled = styled(ToastContainer)`
 
   .Toastify__toast--info {
     color: white;
-    background: rgba(0, 52, 154, 1);
+    background: #49cc90;
     padding: 12px;
   }
 
@@ -46,7 +46,7 @@ const ToastContainerStyled = styled(ToastContainer)`
 
   .Toastify__toast--success {
     color: white;
-    background: green;
+    background: #49cc90;
   }
 `;
 
@@ -61,7 +61,7 @@ export default function ToastContainerGlobal() {
         containerId="toastError"
         closeButton={({ closeToast }) => (
           <button type="button" onClick={closeToast} className="absolute right-2.5 top-2.5">
-            <CloseToastIcon />
+            <CloseIcon />
           </button>
         )}
         icon={false}
@@ -74,7 +74,7 @@ export default function ToastContainerGlobal() {
         hideProgressBar
         closeButton={({ closeToast }) => (
           <button type="button" onClick={closeToast} className="absolute right-2.5 top-2.5">
-            <CloseToastIcon />
+            <CloseIcon />
           </button>
         )}
         icon={false}

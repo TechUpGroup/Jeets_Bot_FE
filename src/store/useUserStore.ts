@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
@@ -26,3 +27,8 @@ const useUserStore = createWithEqualityFn<UserState>(
 export default useUserStore;
 
 export const useUserShallow = <U>(selector: (state: UserState) => U) => useUserStore(useShallow(selector));
+
+export const useUser = () => {
+  const user = useUserStore((s) => s.user, deepCompareState);
+  return useMemo(() => user?.user, [user?.user]);
+};

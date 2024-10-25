@@ -5,6 +5,21 @@ dayjs.extend(utc);
 
 export default dayjs;
 
-export const dateTimeFormat = 'DD/MM/YYYY · hh:mm A';
+export const calculatorRemainTime = (remain: number) => {
+  const d = Math.floor(remain / (60 * 60 * 24));
+  const h = Math.floor((remain % (60 * 60 * 24)) / (60 * 60));
+  const m = Math.floor((remain % (60 * 60)) / 60);
+  const s = Math.floor(remain % 60);
+  return { d, h, m, s };
+};
 
-export const dateTimeFormat2 = 'MM/DD/YYYY · hh:mm:ss';
+export const calculatorTextRemainTime = (remain: number) => {
+  const { d, h, m, s } = calculatorRemainTime(remain);
+  const arr = d > 0 ? [`${d}`] : [];
+  for (const x of [h, m, s]) {
+    // if (arr.length > 0 || x > 0) {
+    arr.push(`00${x}`.slice(-2));
+    // }
+  }
+  return arr.join(':');
+};

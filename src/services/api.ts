@@ -12,9 +12,8 @@ export const getNonce = async (address: string) => {
   return data.data;
 };
 
-export const postLogin = async (network: string, address: string, signature: string, message: string) => {
+export const postLogin = async (address: string, signature: string, message: string) => {
   const data = await axiosNoAuthInstance.post<IUserInfo>('/auth/login', {
-    network,
     address,
     signature,
     message,
@@ -29,5 +28,19 @@ export const postSignIn = async (body: {
   message: string;
 }) => {
   const data = await axiosNoAuthInstance.post<IUserInfo>('/auth/sign-in', body);
+  return data.data;
+};
+
+export const postConnectTwitter = async (code: string) => {
+  const data = await axiosInstance.post<boolean>('/users/twitter/connect', {
+    code,
+  });
+  return data.data;
+};
+
+export const postConnectTelegram = async (code: string) => {
+  const data = await axiosInstance.post<boolean>('/users/telegram/connect', {
+    code,
+  });
   return data.data;
 };

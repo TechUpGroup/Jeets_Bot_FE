@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { AnchorProvider } from '@project-serum/anchor';
+import { AnchorProvider } from '@coral-xyz/anchor';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 
 export function useAnchorProvider() {

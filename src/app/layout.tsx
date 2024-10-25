@@ -1,8 +1,9 @@
 import 'resize-observer-polyfill';
+import '@/providers/chakra/fonts/SF-Pro-Display/stylesheet.css';
 import './globals.scss';
 
 import { GlobalLayout } from '@/components/GlobalLayout';
-import { inter } from '@/utils/fonts';
+import { titanOne } from '@/utils/fonts';
 
 import type { Metadata } from 'next';
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={titanOne.className}>
         <GlobalLayout>{children}</GlobalLayout>
       </body>
     </html>
