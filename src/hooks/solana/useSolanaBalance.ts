@@ -1,44 +1,36 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey, TokenAmount } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
+import { useQuery } from '@tanstack/react-query';
 
 export const useSolanaBalance = () => {
   const { publicKey } = useWallet();
-  const [balance, setBalance] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
   const { connection } = useConnection();
 
-  useEffect(() => {
-    const getBalance = () => {
+  const { data: balance, isLoading: loading } = useQuery({
+    queryKey: ['solana-balance', publicKey],
+    queryFn: async () => {
       if (publicKey) {
-        connection
-          .getBalance(publicKey)
-          .then((balance) => {
-            setBalance(balance);
-            setLoading(false);
-          })
-          .catch((error) => {
-            setLoading(false);
-          });
+        try {
+          const balance = await connection.getBalance(publicKey);
+          return balance;
+        } catch {
+          return null;
+        }
       } else {
-        setBalance(null);
+        return null;
       }
-    };
-
-    getBalance();
-    const interval = setInterval(getBalance, 5000);
-    return () => clearInterval(interval);
-  }, [publicKey, connection]);
+    },
+    refetchInterval: 5000,
+  });
 
   return { balance, loading };
 };
 
 export const useSolanaBalanceToken = (tokenAddress: PublicKey | string, isToken2002?: boolean) => {
   const { publicKey } = useWallet();
-  const [balance, setBalance] = useState<TokenAmount | null>(null);
-  const [loading, setLoading] = useState(true);
   const { connection } = useConnection();
 
   const tokenUserATA = useMemo(
@@ -54,28 +46,22 @@ export const useSolanaBalanceToken = (tokenAddress: PublicKey | string, isToken2
     [publicKey, tokenAddress, isToken2002],
   );
 
-  useEffect(() => {
-    const getBalance = () => {
+  const { data: balance, isLoading: loading } = useQuery({
+    queryKey: ['solana-balance-token', tokenUserATA],
+    queryFn: async () => {
       if (tokenUserATA) {
-        connection
-          .getTokenAccountBalance(tokenUserATA)
-          .then((res) => {
-            setBalance(res.value);
-            setLoading(false);
-          })
-          .catch((error) => {
-            console.log('🚀 ~ getBalance ~ error:', error);
-            setLoading(false);
-          });
+        try {
+          const balance = await connection.getTokenAccountBalance(tokenUserATA);
+          return balance.value;
+        } catch {
+          return null;
+        }
       } else {
-        setBalance(null);
+        return null;
       }
-    };
-
-    getBalance();
-    const interval = setInterval(getBalance, 5000);
-    return () => clearInterval(interval);
-  }, [tokenUserATA, connection]);
+    },
+    refetchInterval: 5000,
+  });
 
   return { balance, loading };
 };

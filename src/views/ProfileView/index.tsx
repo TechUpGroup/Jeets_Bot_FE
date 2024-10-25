@@ -24,18 +24,25 @@ export default function ProfileView() {
       </FlexBanner>
 
       <TableContainer w="full" pb={4}>
-        <Table variant="unstyled" style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}>
+        <Table
+          variant="unstyled"
+          style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}
+          fontFamily="sfPro"
+          fontWeight={800}
+        >
           <Thead>
-            <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              <Td p={0} lineHeight={1.4} px={5}>
-                History
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" w={300} px={5}>
-                Jeets Score
-              </Td>
+            <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
+              {[
+                { name: 'History', center: false, w: 288 },
+                { name: 'Jeets Score', w: 300 },
+              ].map((e, i) => (
+                <Td key={i} lineHeight={1.4} textAlign={e.center === false ? undefined : 'center'} p={0} px={5} w={e.w}>
+                  {e.name}
+                </Td>
+              ))}
             </Tr>
           </Thead>
-          <Tbody fontSize={{ base: 16, md: 20 }} fontFamily="sfPro" fontWeight={800}>
+          <Tbody fontSize={{ base: 16, md: 20 }}>
             {data?.docs.map((his, i) => (
               <Tr key={i}>
                 <Td p={5} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>

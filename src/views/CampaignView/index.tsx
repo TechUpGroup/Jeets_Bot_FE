@@ -69,24 +69,35 @@ export default function CampaignView() {
       </FlexBanner>
 
       <TableContainer w="full" pb={4}>
-        <Table variant="unstyled" style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}>
+        <Table
+          variant="unstyled"
+          style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}
+          fontFamily="sfPro"
+          fontWeight={800}
+        >
           <Thead>
-            <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              <Td p={0} lineHeight={1.4} w={288} pr={{ base: 2, md: 5 }}>
-                Campaign
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
-                Time
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
-                Jeets Score Rewards
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" w={288} px={{ base: 2, md: 5 }}>
-                Status
-              </Td>
+            <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
+              {[
+                { name: 'Campaign', center: false, w: 288 },
+                { name: 'Time' },
+                { name: 'Jeets Score Rewards' },
+                { name: 'Status', w: 288 },
+              ].map((e, i) => (
+                <Td
+                  key={i}
+                  p={0}
+                  lineHeight={1.4}
+                  textAlign={e.center === false ? undefined : 'center'}
+                  pr={i === 0 ? { base: 2, md: 5 } : undefined}
+                  px={i !== 0 ? { base: 2, md: 5 } : undefined}
+                  w={e.w}
+                >
+                  {e.name}
+                </Td>
+              ))}
             </Tr>
           </Thead>
-          <Tbody fontSize={{ base: 16, md: 20 }} fontFamily="sfPro" fontWeight={800}>
+          <Tbody fontSize={{ base: 16, md: 20 }}>
             {data?.docs.map((campaign, i) => {
               const startTime = dayjs.utc(campaign.start_time);
               const endTime = dayjs.utc(campaign.end_time);

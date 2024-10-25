@@ -6,7 +6,7 @@ import { FC } from 'react';
 
 import { Tooltip } from '@chakra-ui/react';
 
-type Value = string | number | undefined | BigNumber | bigint;
+type Value = string | number | undefined | null | BigNumber | bigint;
 
 type Props = {
   value: Value;

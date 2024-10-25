@@ -1,16 +1,7 @@
-import { Button, Currency, FlexCenter, FlexContent, ImageRatio, LinkCustom, Pagination, Title2 } from '@/components';
-import { getTransactionHashUrl } from '@/utils';
-import { formatAddress } from '@/utils/address';
-import dayjs from '@/utils/dayjs';
-import { Box, Flex, Select, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+'use client';
 
-const tableHeaders = [
-  { name: 'Token', center: false },
-  { name: 'Price/Token' },
-  { name: 'Holder' },
-  { name: 'Sale Progress' },
-  { name: '', w: 209 },
-];
+import { Button, Currency, FlexCenter, FlexContent, ImageRatio, Pagination, Title2 } from '@/components';
+import { Box, Flex, Select, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 export default function TokenListTab() {
   return (
@@ -26,10 +17,21 @@ export default function TokenListTab() {
         </FlexCenter>
       </Flex>
       <TableContainer w="full" pb={4}>
-        <Table variant="unstyled" style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}>
+        <Table
+          variant="unstyled"
+          style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}
+          fontFamily="sfPro"
+          fontWeight={800}
+        >
           <Thead>
-            <Tr fontFamily="sfPro" fontWeight={800} fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              {tableHeaders.map((e, i) => (
+            <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
+              {[
+                { name: 'Token', center: false },
+                { name: 'Price/Token' },
+                { name: 'Holder' },
+                { name: 'Sale Progress' },
+                { name: '', w: 209 },
+              ].map((e, i) => (
                 <Td
                   key={i}
                   p={0}
@@ -44,7 +46,7 @@ export default function TokenListTab() {
               ))}
             </Tr>
           </Thead>
-          <Tbody fontSize={{ base: 16, md: 16 }} fontFamily="sfPro" fontWeight={800}>
+          <Tbody fontSize={{ base: 16, md: 16 }}>
             {Array.from({ length: 5 }).map((_, i) => (
               <Tr key={i}>
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>

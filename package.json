@@ -43,6 +43,8 @@
     "react": "^18",
     "react-currency-input-field": "^3.8.0",
     "react-dom": "^18",
+    "react-hook-form": "^7.53.1",
+    "react-select": "^5.8.1",
     "react-toastify": "^10.0.6",
     "resize-observer-polyfill": "^1.5.1",
     "sharp": "^0.33.4",

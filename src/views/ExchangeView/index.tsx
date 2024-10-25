@@ -21,6 +21,7 @@ export default function ExchangeView() {
       alignItems="start"
       px={0}
       pt={{ base: 0, md: 6 }}
+      isLazy
     >
       <FlexContent
         as={TabList}

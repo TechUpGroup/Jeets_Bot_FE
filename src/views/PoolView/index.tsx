@@ -59,25 +59,31 @@ export default function PoolView() {
         >
           <Thead>
             <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              <Td p={0} lineHeight={1.4} w={288} pr={{ base: 2, md: 5 }}>
-                Amount
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
-                Transactions
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }}>
-                Deposit time
-              </Td>
-              <Td p={0} lineHeight={1.4} textAlign="center" px={{ base: 2, md: 5 }} w={288}>
-                Status
-              </Td>
+              {[
+                { name: 'Amount', center: false, w: 288 },
+                { name: 'Transactions' },
+                { name: 'Deposit time' },
+                { name: 'Status', w: 288 },
+              ].map((e, i) => (
+                <Td
+                  key={i}
+                  p={0}
+                  lineHeight={1.4}
+                  textAlign={e.center === false ? undefined : 'center'}
+                  pr={i === 0 ? { base: 2, md: 5 } : undefined}
+                  px={i !== 0 ? { base: 2, md: 5 } : undefined}
+                  w={e.w}
+                >
+                  {e.name}
+                </Td>
+              ))}
             </Tr>
           </Thead>
           <Tbody fontSize={{ base: 16, md: 20 }}>
             {histories?.docs?.map((e, i) => (
               <Tr key={i}>
                 <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
-                  <Flex alignItems="center" roundedLeft={10}>
+                  <Flex alignItems="center">
                     <Currency value={e.transfer_amount} isWei />
                   </Flex>
                 </Td>
