@@ -87,30 +87,18 @@ export default function TokenDevelopmentTab() {
   const [showTooltipModal, setShowTooltipModal] = useState(false);
 
   const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(1_000_000);
-  const [totalSol, setTotalSol] = useState(1);
 
-  const maxTotalReceive = useMemo(() => {
+  const totalSol = useMemo(() => {
     return BigNumber(
       BigNumber(100)
         .minus(amount || 0)
-        .multipliedBy(20)
+        .minus(20)
+        .dividedBy(100)
         .multipliedBy(1e9)
         .multipliedBy(priceToken || 0)
         .toFixed(9),
     );
   }, [amount, priceToken]);
-
-  const minTotalReceive = useMemo(() => {
-    return BigNumber(maxTotalReceive).gt(1) ? BigNumber(1) : maxTotalReceive;
-  }, [maxTotalReceive]);
-
-  useEffect(() => {
-    if (maxTotalReceive.lt(totalSol)) {
-      setTotalSol(maxTotalReceive.toNumber());
-    } else if (minTotalReceive.gt(totalSol)) {
-      setTotalSol(minTotalReceive.toNumber());
-    }
-  }, [maxTotalReceive, minTotalReceive, totalSol]);
 
   const watchImage = watch('image');
   const watchSymbol = watch('symbol');
@@ -481,8 +469,8 @@ export default function TokenDevelopmentTab() {
                 style={{ paddingRight: '40px' }}
                 value={amount}
                 onValueChange={(val) => {
-                  if (Number(val) > 100) {
-                    setAmount('100');
+                  if (Number(val) > 80) {
+                    setAmount('80');
                   } else if (Number(val) < 0) {
                     setAmount('0');
                   } else {
@@ -564,7 +552,7 @@ export default function TokenDevelopmentTab() {
                     fontSize={14}
                     transform="translateX(-50%)"
                   >
-                    <Currency value={maxBuyPerAddress} />
+                    <Currency value={maxBuyPerAddress} isKmb />
                   </SliderMark>
                 </Box>
               </Box>
@@ -594,9 +582,13 @@ export default function TokenDevelopmentTab() {
             </Box>
           </FlexCol>
 
-          <Box fontSize={{ base: 16, md: 18 }}>Total SOL Receive</Box>
+          <Box fontSize={{ base: 16, md: 18 }}>Total SOL will add liquidity</Box>
 
-          <Box pb={'30px'}>
+          <Box>
+            <Currency value={totalSol} /> SOL
+          </Box>
+
+          {/* <Box pb={'30px'}>
             <Slider
               value={totalSol}
               min={minTotalReceive.toNumber()}
@@ -658,7 +650,7 @@ export default function TokenDevelopmentTab() {
                 </Box>
               </Box>
             </Slider>
-          </Box>
+          </Box> */}
 
           <Button
             bg="makeColor"
