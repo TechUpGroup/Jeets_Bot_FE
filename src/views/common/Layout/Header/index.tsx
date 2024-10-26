@@ -14,7 +14,7 @@ const menus = [
   { name: 'Voting', href: '/voting' },
   { name: 'Pool', href: '/pool' },
   { name: 'Campaign', href: '/campaign' },
-  { name: 'OTC Exchange', href: '/exchange' },
+  { name: 'Launch', href: '/launch' },
 ];
 
 const Header = () => {
@@ -38,7 +38,7 @@ const Header = () => {
         mx="auto"
       >
         <Box display={{ base: 'block', md: 'none' }}>
-          <IconButton aria-label="Menu" icon={<HamburgerIcon />} onClick={onOpen} />
+          {isLinked && <IconButton aria-label="Menu" icon={<HamburgerIcon />} onClick={onOpen} />}
           <Drawer
             isOpen={isOpen}
             placement="left"

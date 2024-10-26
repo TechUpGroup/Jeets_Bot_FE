@@ -13,7 +13,7 @@ import TokenListTab from './TokenListTab';
 
 const tabs = ['Token List', 'Token Development', 'My Token'];
 
-export default function ExchangeView() {
+export default function LaunchView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -45,7 +45,7 @@ export default function ExchangeView() {
         flex="unset"
         gap={5}
       >
-        <Title2>OTC Exchange</Title2>
+        <Title2>Launch</Title2>
         <SimpleGrid columns={{ base: 3, md: 1 }} gap={5} w="full">
           {tabs.map((name) => (
             <Tab
@@ -58,6 +58,7 @@ export default function ExchangeView() {
               px={{ base: 2, md: 5 }}
               py={{ base: 3, md: 5 }}
               rounded={10}
+              textAlign="center"
             >
               {name}
             </Tab>

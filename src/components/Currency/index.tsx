@@ -26,7 +26,7 @@ const getValue = (props: Props) => {
     value,
     isWei,
     rounded,
-    decimal = 5,
+    decimal = 7,
     decimalNumber,
     isPositive,
     roundingMode = BigNumber.ROUND_FLOOR,

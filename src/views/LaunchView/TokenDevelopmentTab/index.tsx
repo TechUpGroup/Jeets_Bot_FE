@@ -157,7 +157,7 @@ export default function TokenDevelopmentTab() {
       });
       onClose();
       await sleep(5_000);
-      push(`/exchange/${res.mint}`);
+      push(`/launch/${res.mint}`);
     } catch (e) {
       toastError('create token failed', e);
       console.error(e);

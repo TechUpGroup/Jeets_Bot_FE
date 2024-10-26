@@ -272,7 +272,7 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
             bg: 'rgba(131, 131, 131, 1)',
             cursor: 'not-allowed',
           }}
-          disabled={isDisableSwap}
+          disabled={isDisableSwap || token.trade_completed}
         >
           SWAP
         </Button>

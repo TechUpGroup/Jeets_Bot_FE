@@ -14,15 +14,14 @@ import { SwapToken } from './SwapToken';
 import { TradeComponent } from './TradeComponent';
 
 const tabs = [
-  { name: 'Token List', href: '/exchange?tab=0' },
-  { name: 'Token Development', href: '/exchange?tab=1' },
-  { name: 'My Token', href: '/exchange?tab=2' },
+  { name: 'Token List', href: '/launch?tab=0' },
+  { name: 'Token Development', href: '/launch?tab=1' },
+  { name: 'My Token', href: '/launch?tab=2' },
 ];
 
-export default function ExchangeDetailView({ mint }: { mint: string }) {
+export default function LaunchDetailView({ mint }: { mint: string }) {
   const router = useRouter();
   const { data: solPrice } = useQuerySolPrice();
-  console.log('solPrice', solPrice);
   const { data, isLoading } = useQueryTokenDetail(mint);
   return (
     <Wrapper
@@ -36,9 +35,10 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
       px={0}
       pt={{ base: 0, md: 6 }}
       index={0}
+      lineHeight={1.4}
     >
       <FlexContent maxW={{ base: 'full', md: 300, lg: 320, xl: 350, '2xl': 402 }} w="full" flex="unset" gap={5}>
-        <Title2>OTC Exchange</Title2>
+        <Title2>Launch</Title2>
         <SimpleGrid columns={{ base: 3, md: 1 }} gap={5} w="full">
           {tabs.map((tab) => (
             <Tab
@@ -53,6 +53,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
               px={{ base: 2, md: 5 }}
               py={{ base: 3, md: 5 }}
               rounded={10}
+              textAlign="center"
             >
               {tab.name}
             </Tab>
@@ -64,7 +65,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
           {isLoading ? <Spinner /> : <Box>Token not found</Box>}
         </FlexContent>
       ) : (
-        <FlexContent w="full" fontFamily="sfPro" fontWeight={600}>
+        <FlexContent w="full" fontFamily="sfPro" fontWeight={600} lineHeight={1.4}>
           <Flex justifyContent="space-between" alignItems="center" w="full">
             <Button fontSize={20} fontWeight={600} onClick={router.back} color="purple" textDecor="underline">
               Back
@@ -117,7 +118,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
             px={{ base: 2.5, md: 6 }}
             py={{ base: 2.5, md: 4 }}
             w="full"
-            gap={{ base: 4, md: 10 }}
+            gap={{ base: 3, md: 10 }}
             flexDir={{ base: 'column', md: 'row' }}
           >
             <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
@@ -134,7 +135,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
                 Status
               </Box>
               <Box fontSize={16} fontWeight={600}>
-                Opening
+                {data.mintToken?.trade_completed ? 'Closed' : 'Opening'}
               </Box>
             </FlexCol>
             <LineCustom />
@@ -179,7 +180,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
             </FlexCol>
           </Flex>
 
-          <Flex w="full" gap={{ base: 4, md: '30px' }} flexDir={{ base: 'column', md: 'row' }}>
+          <Flex w="full" gap={{ base: 4, md: '30px' }} flexDir={{ base: 'column-reverse', md: 'row' }}>
             <Box flex={1}>{data.mintToken && <TradeComponent token={data.mintToken} />}</Box>
             <FlexCol w="full" maxW={356} gap="30px">
               {data.mintToken && <SwapToken token={data.mintToken} />}

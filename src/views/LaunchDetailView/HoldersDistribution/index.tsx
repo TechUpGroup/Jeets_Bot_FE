@@ -1,4 +1,4 @@
-import { FlexBetween, FlexCol, LinkCustom } from '@/components';
+import { Currency, FlexBetween, FlexCol, LinkCustom } from '@/components';
 import { ITokenInfo } from '@/types/token.type';
 import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
@@ -37,7 +37,9 @@ export const HoldersDistribution = ({ token }: { token: ITokenInfo }) => {
               </Box>
             )}
           </Flex>
-          <Box fontWeight={500}>{(0.2 * 100).toFixed(2)}%</Box>
+          <Box fontWeight={500}>
+            <Currency value={item.ratio * 100} decimal={2} suffix="%" />
+          </Box>
         </FlexBetween>
       ))}
     </FlexCol>

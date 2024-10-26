@@ -1,4 +1,4 @@
-import { FlexCol, ImageRatio } from '@/components';
+import { Currency, FlexCol, ImageRatio } from '@/components';
 import { ITokenInfo } from '@/types/token.type';
 import dayjs from '@/utils/dayjs';
 import { Box, Flex } from '@chakra-ui/react';
@@ -28,7 +28,8 @@ export const TradeComponent = ({ token }: { token: ITokenInfo }) => {
           <FlexCol gap={2}>
             <Flex alignItems="center" gap={1.5}>
               <ImageRatio
-                src={'https://placehold.co/100x100/png'}
+                originalImage
+                src={item.avatar ?? 'https://placehold.co/100x100/png'}
                 ratio={1}
                 w={4}
                 rounded="full"
@@ -36,11 +37,13 @@ export const TradeComponent = ({ token }: { token: ITokenInfo }) => {
                 alt=""
               />
               <Box fontSize={14} fontWeight={500} color="purple">
-                {'username'}
+                {item.username}
               </Box>
             </Flex>
             <Box py={2} px={3} fontWeight={500} bg="white" roundedEnd={16} roundedBottomStart={16} minW={100}>
-              {'description'}
+              {item.is_buy ? `Bought ` : `Sold `}
+              <Currency value={item.is_buy ? item.sol_amount : item.token_amount} decimalNumber={item.is_buy ? 9 : 6} />
+              {item.is_buy ? ` SOL` : ` ${item.token_symbol}`}
             </Box>
           </FlexCol>
           <Box fontSize={12} color="light.400" fontWeight={600}>

@@ -1,20 +1,35 @@
 'use client';
 
+import BigNumber from 'bignumber.js';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
-import { Currency, FlexCenter, FlexContent, ImageRatio, InputForm, Pagination, SelectForm, Title2 } from '@/components';
+import {
+  Button,
+  Currency,
+  FlexCenter,
+  FlexContent,
+  ImageRatio,
+  InputForm,
+  LinkCustom,
+  Pagination,
+  SelectForm,
+  Title2,
+} from '@/components';
+import { SearchIcon } from '@/components/Icons';
 import { useDebounce } from '@/hooks/useDebounce';
-import { SearchIcon } from '@chakra-ui/icons';
 import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 import { useQueryTokenList } from './hooks/useQueryTokenList';
 
 const options = [
   { value: 'current_price', label: 'Price' },
-  { value: 'myAmount', label: 'My Amount' },
+  { value: 'totalHolders', label: 'Holder' },
+  { value: 'saleProgress', label: 'Sale Progress' },
 ];
-export default function MyTokenTab() {
+
+export default function TokenListTab() {
+  const router = useRouter();
   const [sortBy, setSortBy] = useState(options[0]);
   const [sortType, setSortType] = useState<string>('desc');
   const [search, setSearch] = useState<string>('');
@@ -28,12 +43,10 @@ export default function MyTokenTab() {
   );
   const { data } = useQueryTokenList(params);
 
-  const router = useRouter();
-
   return (
     <FlexContent w="full">
-      <Title2>MY Token</Title2>
-      <Flex justifyContent="space-between" alignItems="center" w="full" fontFamily="sfPro" fontWeight={400}>
+      <Title2>TOKEN LIST</Title2>
+      <Flex justifyContent="space-between" alignItems="center" w="full" fontFamily="sfPro" fontWeight={400} gap={2}>
         <Box pos="relative">
           <Flex alignItems="center" pos="absolute" left={0} top={0} h="full" pl={3} zIndex={2}>
             <SearchIcon />
@@ -46,6 +59,7 @@ export default function MyTokenTab() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </Box>
+
         <FlexCenter gap={2.5}>
           <Box style={{ textWrap: 'nowrap' }}>Sort by</Box>
           <SelectForm options={options} value={sortBy} onChange={(e: any) => setSortBy(e)} />
@@ -60,7 +74,13 @@ export default function MyTokenTab() {
         >
           <Thead>
             <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              {[{ name: 'Token', center: false }, { name: 'Amount' }, { name: 'Price/Token' }].map((e, i) => (
+              {[
+                { name: 'Token', center: false },
+                { name: 'Price/Token' },
+                { name: 'Holder' },
+                { name: 'Sale Progress' },
+                { name: '', w: 209 },
+              ].map((e, i) => (
                 <Td
                   key={i}
                   p={0}
@@ -68,6 +88,7 @@ export default function MyTokenTab() {
                   textAlign={e.center === false ? undefined : 'center'}
                   pr={i === 0 ? { base: 2, md: 5 } : undefined}
                   px={i !== 0 ? { base: 2, md: 5 } : undefined}
+                  w={e.w}
                 >
                   {e.name}
                 </Td>
@@ -76,7 +97,7 @@ export default function MyTokenTab() {
           </Thead>
           <Tbody fontSize={{ base: 16, md: 16 }}>
             {data?.docs.map((token, i) => (
-              <Tr key={i} onClick={() => router.push(`/exchange/${token.mint}`)} cursor="pointer">
+              <Tr key={i} onClick={() => router.push(`/launch/${token.mint}`)} cursor="pointer">
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
                   <FlexCenter gap={2.5}>
                     <ImageRatio
@@ -90,17 +111,35 @@ export default function MyTokenTab() {
                   </FlexCenter>
                 </Td>
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
-                  <Currency value={token.myAmount} isWei />
+                  <Currency value={token.price_sol_per_token} suffix=" SOL" />
                 </Td>
-
+                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
+                  <Currency value={token.totalHolders} />
+                </Td>
+                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
+                  <Currency value={BigNumber(token.saleProgress).multipliedBy(100)} decimal={2} suffix="%" />
+                </Td>
                 <Td
                   px={{ base: 2, md: 5 }}
                   py={{ base: 1.5, md: 2.5 }}
                   bg="rgba(237, 247, 255, 1)"
                   roundedBottomRight={10}
-                  textAlign="center"
                 >
-                  <Currency value={token.price_sol_per_token} suffix=" SOL" />
+                  <Flex justifyContent="end">
+                    <Button
+                      bg="makeColor"
+                      h={10}
+                      w="full"
+                      fontFamily="titanOne"
+                      fontWeight={400}
+                      fontSize={20}
+                      color="white"
+                      rounded={8}
+                      px={5}
+                    >
+                      BUY
+                    </Button>
+                  </Flex>
                 </Td>
               </Tr>
             ))}

@@ -102,26 +102,26 @@ export interface ITokenTrade {
   network: string;
   transaction_hash: string;
   log_index: number;
-  user: {
-    username: string;
-    avatar: string;
-  };
+  username: string;
+  avatar?: string;
   token_name: string;
   token_symbol: string;
   token_image_uri: string;
   mint: string;
   account: string;
+  sol_amount: number;
+  token_amount: number;
+  virtual_sol_reserves: number;
+  virtual_token_reserves: number;
   current_price: number;
+  market_cap: number;
   usd_market_cap: number;
-  usd_eth_amount: number;
+  usd_sol_amount: number;
   is_buy: boolean;
   timestamp: number;
-  eth_amount: string;
-  token_amount: string;
-  virtual_eth_reserves: string;
-  virtual_token_reserves: string;
-  market_cap: string;
-  isNew?: boolean;
+  __v: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ITokenInfo {
