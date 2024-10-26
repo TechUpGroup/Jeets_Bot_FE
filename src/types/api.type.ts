@@ -15,3 +15,9 @@ export interface IPaginationParams {
   page: number;
   limit: number;
 }
+
+export interface ITokenPaginationParams {
+  network: string;
+  page: number;
+  limit: number;
+}

@@ -5,40 +5,37 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalContentProps,
   ModalOverlay,
   ModalOverlayProps,
   ModalProps,
 } from '@chakra-ui/react';
 
-import { ImageCustom } from '../Image';
+type Props = ModalProps & {
+  hideClose?: boolean;
+  bgOverlay?: ModalOverlayProps['bg'];
+  minW?: ModalContentProps['minW'];
+};
 
-type Props = ModalProps & { hideClose?: boolean; bgOverlay?: ModalOverlayProps['bg'] };
-
-export const ModalBase = ({ children, hideClose, bgOverlay, ...props }: Props) => {
+export const ModalBase = ({ children, hideClose, bgOverlay, minW, ...props }: Props) => {
   return (
-    <Modal closeOnOverlayClick={false} {...props}>
-      <ModalOverlay bg={bgOverlay ?? 'rgba(0, 0, 0, 0.75)'} />
-      <ModalContent maxW={384} bg="main" rounded={16} mx={5}>
-        {!hideClose && (
-          <ModalCloseButton>
-            <ImageCustom src="/icons/close-modal.svg" alt="" width={30} height={30} />
-          </ModalCloseButton>
-        )}
-        <ModalBody
-          p={0}
-          border="1px solid"
-          borderColor={'borderColor.1'}
-          bg="bgGradient.2"
-          style={{ backgroundOrigin: 'border-box' }}
-          rounded={16}
-          color="primary.1"
-        >
+    <Modal closeOnOverlayClick={!hideClose} {...props}>
+      <ModalOverlay />
+      <ModalContent
+        maxW="530px"
+        w="full"
+        mx={2.5}
+        p={{ base: 4, md: 6 }}
+        minW={minW ?? 300}
+        color="colorMain"
+        bg="white"
+        rounded={{ base: 8, md: 24 }}
+      >
+        {!hideClose && <ModalCloseButton />}
+        <ModalBody p={0} fontFamily="sfPro" fontWeight={800} lineHeight={1.4}>
           {children}
         </ModalBody>
       </ModalContent>
     </Modal>
   );
 };
-
-{
-}

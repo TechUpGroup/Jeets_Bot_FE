@@ -2,41 +2,70 @@
 
 import { usePathname } from 'next/navigation';
 
-import { Button, FlexCenter, FlexCol, ImageRatio, LinkCustom } from '@/components';
-import useAuth from '@/hooks/useAuth';
+import { FlexCenter, FlexCol, ImageRatio, LinkCustom } from '@/components';
 import { useIsLogin } from '@/hooks/useIsLogin';
-import { useUser } from '@/store/useUserStore';
-import { formatAddress } from '@/utils/address';
-import { ChevronDownIcon } from '@chakra-ui/icons';
-import { Box, Flex, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
-import { useWalletModal } from '@tiplink/wallet-adapter-react-ui';
+import { HamburgerIcon } from '@chakra-ui/icons';
+import { Box, Drawer, DrawerCloseButton, DrawerContent, IconButton, SimpleGrid, useDisclosure } from '@chakra-ui/react';
 
-export default function Header() {
-  const user = useUser();
-  const { setVisible } = useWalletModal();
-  const { buttonState, publicKey } = useWalletMultiButton({
-    onSelectWallet() {
-      setVisible(true);
-    },
-  });
+import { ProfileMenu } from './ProfileMenu';
 
-  const { logout } = useAuth();
+const menus = [
+  { name: 'Missions', href: '/missions', sub: '/' },
+  { name: 'Voting', href: '/voting' },
+  { name: 'Pool', href: '/pool' },
+  { name: 'Campaign', href: '/campaign' },
+  { name: 'OTC Exchange', href: '/exchange' },
+];
+
+const Header = () => {
   const pathname = usePathname();
   const isLinked = useIsLogin();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box px={{ base: 2.5, md: 5 }} w="full">
-      <Flex
+      <SimpleGrid
+        columns={3}
+        display={{ base: 'grid', md: 'flex' }}
         maxW={1680}
         w="full"
         justifyContent="space-between"
         alignItems="center"
-        fontSize={{ base: 16, md: 24 }}
-        pt={{ base: 4, md: '25px' }}
+        fontSize={{ base: 16, md: 18, lg: 20, xl: 24 }}
+        pt={{ base: 3, md: '25px' }}
         gap={2.5}
         color="rgba(32, 27, 3, 1)"
         mx="auto"
       >
+        <Box display={{ base: 'block', md: 'none' }}>
+          <IconButton aria-label="Menu" icon={<HamburgerIcon />} onClick={onOpen} />
+          <Drawer
+            isOpen={isOpen}
+            placement="left"
+            onClose={onClose}
+            returnFocusOnClose={false}
+            onOverlayClick={onClose}
+            size="full"
+          >
+            <DrawerContent>
+              <DrawerCloseButton />
+              <FlexCol gap={5} pt={10} px={5} fontSize={24}>
+                {isLinked &&
+                  menus.map((e) => (
+                    <LinkCustom
+                      key={e.name}
+                      href={e.href}
+                      color={pathname === e.href || pathname === e.sub ? 'purple2' : undefined}
+                      textDecor={pathname === e.href || pathname === e.sub ? 'underline' : undefined}
+                      onClick={onClose}
+                    >
+                      {e.name}
+                    </LinkCustom>
+                  ))}
+              </FlexCol>
+            </DrawerContent>
+          </Drawer>
+        </Box>
         <LinkCustom href={!isLinked ? '/login' : '/'}>
           <ImageRatio
             src="/images/logo.png"
@@ -44,92 +73,34 @@ export default function Header() {
             w={{ base: 120, md: 271 }}
             display={{ base: 'none', md: 'block' }}
           />
-          <ImageRatio src="/images/cry.png" ratio={3744 / 3320} w={'60px'} display={{ base: 'block', md: 'none' }} />
+          <ImageRatio
+            src="/images/cry.png"
+            ratio={3744 / 3320}
+            w={'60px'}
+            display={{ base: 'block', md: 'none' }}
+            mx="auto"
+          />
         </LinkCustom>
 
-        <FlexCenter gap={{ base: 2.5, md: '60px' }}>
-          {isLinked &&
-            [
-              { name: 'Missions', href: '/missions', sub: '/' },
-              { name: 'Voting', href: '/voting' },
-              { name: 'Pool', href: '/pool' },
-            ].map((e) => (
-              <LinkCustom
-                key={e.name}
-                href={e.href}
-                color={pathname === e.href || pathname === e.sub ? 'purple' : undefined}
-                textDecor={pathname === e.href || pathname === e.sub ? 'underline' : undefined}
-              >
-                {e.name}
-              </LinkCustom>
-            ))}
-
-          {!publicKey ? (
-            <Button
-              fontSize={{ base: 14, md: 24 }}
-              px={{ base: 3, md: 7 }}
-              h={{ base: '60px', md: '50px' }}
-              w={{ base: '100px', md: 'fit-content' }}
-              rounded={8}
-              color="white"
-              bg="linear-gradient(90deg, #1DF69D 0%, #904EEC 100%)"
-              onClick={() => setVisible(true)}
-              disabled={buttonState === 'connecting' || buttonState === 'connected'}
-            >
-              Connect Wallet
-            </Button>
-          ) : (
-            <Menu placement="bottom-end">
-              <MenuButton as={Button}>
-                <Flex px="9px" rounded={8} border="1px solid black" gap={5} alignItems="center" minH="50px">
-                  {/* <ImageRatio
-                src={'https://placehold.co/40x40/png'}
-                ratio={1}
-                w={{ base: 10, md: 10 }}
-                rounded={999}
-                overflow="hidden"
-              /> */}
-                  <FlexCol lineHeight={1}>
-                    <Box fontSize={14} fontWeight={800} color="rgba(143, 81, 236, 1)" fontFamily="sfPro">
-                      {formatAddress(publicKey.toBase58())}
-                    </Box>
-                  </FlexCol>
-                  <ChevronDownIcon />
-                </Flex>
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={logout} fontSize={{ base: 14, md: 16 }} py={1}>
-                  Disconnect Wallet
-                </MenuItem>
-                {!!user?.twitter_username && (
-                  <MenuItem fontSize={{ base: 14, md: 14 }} py={1}>
-                    <LinkCustom href={`https://x.com/${user?.twitter_username}`} target="_blank">
-                      X: {user?.twitter_username}
-                    </LinkCustom>
-                  </MenuItem>
-                )}
-                {!!user?.telegram_username && (
-                  <MenuItem fontSize={{ base: 14, md: 14 }} py={1}>
-                    <LinkCustom href={`https://t.me/${user?.telegram_username}`} target="_blank">
-                      Telegram: {user?.telegram_username}
-                    </LinkCustom>
-                  </MenuItem>
-                )}
-              </MenuList>
-            </Menu>
-            // <Button
-            //   fontSize={{ base: 14, md: 24 }}
-            //   px={{ base: 4, md: 8 }}
-            //   h="50px"
-            //   rounded={8}
-            //   border="1px solid black"
-            //   onClick={logout}
-            // >
-            //   Disconnect Wallet
-            // </Button>
-          )}
+        <FlexCenter gap={{ base: 2.5, md: 3, lg: 5, xl: '40px' }} justifyContent="end">
+          <FlexCenter gap={{ base: 2.5, md: 3, lg: 5, xl: '40px' }} display={{ base: 'none', md: 'flex' }}>
+            {isLinked &&
+              menus.map((e) => (
+                <LinkCustom
+                  key={e.name}
+                  href={e.href}
+                  color={pathname === e.href || pathname === e.sub ? 'purple2' : undefined}
+                  textDecor={pathname === e.href || pathname === e.sub ? 'underline' : undefined}
+                >
+                  {e.name}
+                </LinkCustom>
+              ))}
+          </FlexCenter>
+          <ProfileMenu />
         </FlexCenter>
-      </Flex>
+      </SimpleGrid>
     </Box>
   );
-}
+};
+
+export default Header;
