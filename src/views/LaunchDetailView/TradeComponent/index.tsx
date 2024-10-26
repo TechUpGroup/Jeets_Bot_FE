@@ -7,7 +7,6 @@ import { useQueryTrades } from './hooks/useQueryTrades';
 
 export const TradeComponent = ({ token }: { token: ITokenInfo }) => {
   const { data } = useQueryTrades(token.mint);
-  console.log('data', data);
   return (
     <FlexCol w="full" bg="rgba(249, 252, 255, 1)" rounded={16} p={5} gap={4}>
       <Box fontSize={16} fontWeight={600} pb={2}>
