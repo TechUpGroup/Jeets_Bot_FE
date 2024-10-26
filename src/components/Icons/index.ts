@@ -1,3 +1,4 @@
+export * from './SearchIcon';
 export * from './SettingIcon';
 export * from './Social';
 export * from './SwapIcon';

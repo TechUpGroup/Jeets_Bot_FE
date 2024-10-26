@@ -2,14 +2,32 @@
 
 import { useMemo, useState } from 'react';
 
-import { Button, Currency, FlexCenter, FlexContent, ImageRatio, LinkCustom, Pagination, Title2 } from '@/components';
+import {
+  Button,
+  Currency,
+  FlexCenter,
+  FlexContent,
+  ImageRatio,
+  InputForm,
+  LinkCustom,
+  Pagination,
+  SelectForm,
+  Title2,
+} from '@/components';
+import { SearchIcon } from '@/components/Icons';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Box, Flex, Select, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 import { useQueryTokenList } from './hooks/useQueryTokenList';
 
+const options = [
+  { value: 'current_price', label: 'Price' },
+  { value: 'totalHolders', label: 'Holder' },
+  { value: 'saleProgress', label: 'Sale Progress' },
+];
+
 export default function TokenListTab() {
-  const [sortBy, setSortBy] = useState<string>('current_price');
+  const [sortBy, setSortBy] = useState(options[0]);
   const [sortType, setSortType] = useState<string>('desc');
   const [search, setSearch] = useState<string>('');
   const [page, setPage] = useState(1);
@@ -17,7 +35,7 @@ export default function TokenListTab() {
   const searchDeb = useDebounce(search, 300);
 
   const params = useMemo(
-    () => ({ page, limit: 10, sortBy, sortType, search: searchDeb }),
+    () => ({ page, limit: 10, sortBy: sortBy.value, sortType, search: searchDeb }),
     [page, sortBy, sortType, searchDeb],
   );
   const { data } = useQueryTokenList(params);
@@ -26,12 +44,22 @@ export default function TokenListTab() {
     <FlexContent w="full">
       <Title2>TOKEN LIST</Title2>
       <Flex justifyContent="space-between" alignItems="center" w="full" fontFamily="sfPro" fontWeight={400}>
-        <Box>Search</Box>
+        <Box pos="relative">
+          <Flex alignItems="center" pos="absolute" left={0} top={0} h="full" pl={3} zIndex={2}>
+            <SearchIcon />
+          </Flex>
+          <InputForm
+            pl="44px"
+            placeholder="Search token..."
+            borderColor="black"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </Box>
+
         <FlexCenter gap={2.5}>
           <Box style={{ textWrap: 'nowrap' }}>Sort by</Box>
-          <Select fontSize={14} borderColor="black" rounded={12}>
-            <option value="1">Price</option>
-          </Select>
+          <SelectForm options={options} value={sortBy} onChange={(e: any) => setSortBy(e)} />
         </FlexCenter>
       </Flex>
       <TableContainer w="full" pb={4}>
@@ -117,7 +145,9 @@ export default function TokenListTab() {
         </Table>
       </TableContainer>
 
-      <Pagination page={page} onChange={setPage} total={data?.totalPages ?? 0} />
+      {!!data?.totalPages && data?.totalPages > 1 && (
+        <Pagination page={page} onChange={setPage} total={data?.totalPages ?? 0} />
+      )}
     </FlexContent>
   );
 }

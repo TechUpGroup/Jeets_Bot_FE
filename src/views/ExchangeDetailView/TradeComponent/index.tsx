@@ -1,14 +1,19 @@
 import { FlexCol, ImageRatio } from '@/components';
+import { ITokenInfo } from '@/types/token.type';
 import dayjs from '@/utils/dayjs';
 import { Box, Flex } from '@chakra-ui/react';
 
-export const TradeComponent = () => {
+import { useQueryTrades } from './hooks/useQueryTrades';
+
+export const TradeComponent = ({ token }: { token: ITokenInfo }) => {
+  const { data } = useQueryTrades(token.mint);
+  console.log('data', data);
   return (
     <FlexCol w="full" bg="rgba(249, 252, 255, 1)" rounded={16} p={5} gap={4}>
       <Box fontSize={16} fontWeight={600} pb={2}>
         Trades
       </Box>
-      {Array.from({ length: 10 }).map((_, index) => (
+      {data?.docs.map((item, index) => (
         <Flex
           justify="space-between"
           alignItems="center"

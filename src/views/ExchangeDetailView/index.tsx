@@ -12,9 +12,9 @@ import { SwapToken } from './SwapToken';
 import { TradeComponent } from './TradeComponent';
 
 const tabs = [
-  { name: 'Token List', href: '/exchange?tab=1' },
-  { name: 'Token Development', href: '/exchange?tab=2' },
-  { name: 'My Token', href: '/exchange?tab=3' },
+  { name: 'Token List', href: '/exchange?tab=0' },
+  { name: 'Token Development', href: '/exchange?tab=1' },
+  { name: 'My Token', href: '/exchange?tab=2' },
 ];
 
 export default function ExchangeDetailView({ mint }: { mint: string }) {
@@ -164,12 +164,10 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
           </Flex>
 
           <Flex w="full" gap={{ base: 4, md: '30px' }} flexDir={{ base: 'column', md: 'row' }}>
-            <Box flex={1}>
-              <TradeComponent />
-            </Box>
+            <Box flex={1}>{data.mintToken && <TradeComponent token={data.mintToken} />}</Box>
             <FlexCol w="full" maxW={356} gap="30px">
               {data.mintToken && <SwapToken token={data.mintToken} />}
-              <HoldersDistribution />
+              {data.mintToken && <HoldersDistribution token={data.mintToken} />}
             </FlexCol>
           </Flex>
         </FlexContent>

@@ -1,23 +1,29 @@
 import { FlexBetween, FlexCol, LinkCustom } from '@/components';
+import { ITokenInfo } from '@/types/token.type';
+import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
 import { Box, Flex } from '@chakra-ui/react';
 
-export const HoldersDistribution = () => {
+import { useQueryHolders } from './hooks/useQueryHolders';
+
+export const HoldersDistribution = ({ token }: { token: ITokenInfo }) => {
+  const { data } = useQueryHolders(token.mint);
+
   return (
     <FlexCol w="full" bg="rgba(249, 252, 255, 1)" rounded={16} p={5} gap={6} fontSize={14}>
       <Box fontSize={20} fontWeight={600} pb={2}>
         Holders Distribution
       </Box>
-      {Array.from({ length: 10 }).map((_, i) => (
+      {data?.docs.map((item, i) => (
         <FlexBetween key={i}>
           <Flex alignItems="center" gap={2}>
             <Box minW={5} fontWeight={500}>
               {i + 1}.
             </Box>
-            <LinkCustom href={'#'} target="_blank" color="purple">
-              {formatAddress('sdgdsgsdgsdgdgdggggggg')}
+            <LinkCustom href={getTransactionHashUrl(item.account, 'address')} target="_blank" color="purple">
+              {formatAddress(item.account)}
             </LinkCustom>
-            {true && (
+            {item.account === token.creator && (
               <Box
                 fontSize={10}
                 fontWeight={600}

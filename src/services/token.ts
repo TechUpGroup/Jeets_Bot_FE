@@ -91,19 +91,25 @@ export const getMintTokenInfo = async (nodeId: string) => {
 };
 
 export const getTradeHistory = async (mint: string, params: ITokenPaginationParams) => {
-  const data = await axiosNoAuthInstance.get<IPaginationResponse<ITokenTrade>>(`/trades/histories/${mint}`, { params });
+  const data = await axiosNoAuthInstance.get<IPaginationResponse<ITokenTrade>>(
+    appConfig.publicUrlV2 + `/trades/histories/${mint}`,
+    { params },
+  );
   return data.data;
 };
 
 export const getTokenHolders = async (mint: string, params: ITokenPaginationParams) => {
-  const data = await axiosNoAuthInstance.get<IPaginationResponse<ITokenHolder>>(`/mint-token/holder/${mint}`, {
-    params,
-  });
+  const data = await axiosNoAuthInstance.get<IPaginationResponse<ITokenHolder>>(
+    appConfig.publicUrlV2 + `/mint-token/holder/${mint}`,
+    {
+      params,
+    },
+  );
   return data.data;
 };
 
 export const getSolPrice = async () => {
-  const data = await axiosNoAuthInstance.get<{ SOL: number }>(`/price-token/sol-price`);
+  const data = await axiosNoAuthInstance.get<{ SOL: number }>(appConfig.publicUrlV2 + `/price-token/sol-price`);
   return data.data;
 };
 

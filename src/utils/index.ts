@@ -23,9 +23,9 @@ export function formatUnits(value: BigNumber.Value, decimal: number) {
   }
 }
 
-export const getTransactionHashUrl = (txsHash: string | undefined) => {
+export const getTransactionHashUrl = (txsHash: string | undefined, type: 'tx' | 'address' = 'tx') => {
   if (!txsHash) return '';
-  return `https://explorer.solana.com/tx/${txsHash}${!appConfig.isSolanaMainnet ? '?cluster=devnet' : ''}`;
+  return `https://explorer.solana.com/${type}/${txsHash}${!appConfig.isSolanaMainnet ? '?cluster=devnet' : ''}`;
 };
 
 export const genrateEndOrdinalNumber = (stt: number) => {

@@ -1,5 +1,9 @@
 'use client';
 
+import { includes } from 'lodash';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
+
 import { FlexCol, FlexContent, Title2, Wrapper } from '@/components';
 import { SimpleGrid, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
@@ -10,6 +14,15 @@ import TokenListTab from './TokenListTab';
 const tabs = ['Token List', 'Token Development', 'My Token'];
 
 export default function ExchangeView() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const tabIndex = useMemo(() => {
+    const tab = Number(searchParams.get('tab'));
+    if ([0, 1, 2].includes(tab)) return tab;
+    return 0;
+  }, [searchParams]);
+
   return (
     <Wrapper
       as={Tabs}
@@ -21,6 +34,8 @@ export default function ExchangeView() {
       alignItems="start"
       px={0}
       pt={{ base: 0, md: 6 }}
+      index={tabIndex}
+      onChange={(index) => router.push(`${pathname}?tab=${index}`)}
       isLazy
     >
       <FlexContent

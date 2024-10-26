@@ -44,10 +44,9 @@ export interface ITokenHolder {
   network: string;
   mint: string;
   account: string;
-  token_amount: {
-    $numberDecimal: string;
-  };
+  token_amount: number;
   mint_account: string;
+  __v: number;
   createdAt: string;
   updatedAt: string;
   ratio: number;
