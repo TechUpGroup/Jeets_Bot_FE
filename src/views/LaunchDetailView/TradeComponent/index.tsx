@@ -46,7 +46,7 @@ export const TradeComponent = ({ token }: { token: ITokenInfo }) => {
             </Box>
           </FlexCol>
           <Box fontSize={12} color="light.400" fontWeight={600}>
-            {dayjs(new Date()).fromNow()}
+            {dayjs(item.timestamp * 1000).fromNow()}
           </Box>
         </Flex>
       ))}
