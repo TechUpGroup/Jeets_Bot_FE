@@ -582,10 +582,8 @@ export default function TokenDevelopmentTab() {
             </Box>
           </FlexCol>
 
-          <Box fontSize={{ base: 16, md: 18 }}>Total SOL will add liquidity</Box>
-
-          <Box>
-            <Currency value={totalSol} /> SOL
+          <Box fontSize={{ base: 16, md: 18 }}>
+            Total SOL will add liquidity: <Currency value={totalSol} suffix=" SOL" />
           </Box>
 
           {/* <Box pb={'30px'}>
