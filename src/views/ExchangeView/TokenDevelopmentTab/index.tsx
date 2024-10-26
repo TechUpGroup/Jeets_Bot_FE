@@ -60,7 +60,6 @@ type ITokenDeployer = {
 
 export default function TokenDevelopmentTab() {
   const { push } = useRouter();
-  const ethPrice = 200;
   const { address, network } = useWalletActive();
   const [amount, setAmount] = useState<string>();
   const [priceToken, setPriceToken] = useState<string>();
@@ -110,7 +109,7 @@ export default function TokenDevelopmentTab() {
 
   const onSubmit: SubmitHandler<ITokenDeployer> = async (values) => {
     try {
-      if (!address || !network || !values.image[0]) return;
+      if (!address || !network || !values.image[0] || !Number(priceToken)) return;
       const mint = Keypair.generate(); // tạo địa chỉ token
       const res = await postCreateMintToken(
         {
@@ -506,7 +505,12 @@ export default function TokenDevelopmentTab() {
           </Box>
           <Box w="full" borderBottom="1px solid rgba(99, 99, 102, 1)" />
           <FlexCol w="full" gap={2.5}>
-            <Box>Price SOL/Token</Box>
+            <Box>
+              Price SOL/Token{' '}
+              <Box as="span" color="red">
+                *
+              </Box>
+            </Box>
             <Box position="relative" w="full">
               <InputCurrency style={{ paddingRight: '52px' }} value={priceToken} onValueChange={setPriceToken} />
               <Flex

@@ -19,6 +19,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import useWalletActive from '@/hooks/useWalletActive';
 import { postBuyToken } from '@/services/token';
 import useListUserStore from '@/store/useListUserStore';
+import { useUser } from '@/store/useUserStore';
 import { ITokenInfo } from '@/types/token.type';
 import { toastError, toastSuccess } from '@/utils/toast';
 import {
@@ -39,6 +40,7 @@ import { useSellToken } from './hooks/useSellToken';
 
 export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
   const { address, network } = useWalletActive();
+  const user = useUser();
   const slippage = useListUserStore((s) => s.slippage);
   const setSlippage = useListUserStore((s) => s.setSlippage);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -108,12 +110,6 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
     return false;
   }, [amount, ethBalanceFormated, isBuy, tokenBalanceFormated]);
 
-  const isDisableSwap = useMemo(() => {
-    if (Number(amount || '0') === 0) return true;
-    if (isOutValue) return true;
-    return false;
-  }, [amount, isOutValue]);
-
   const handleOnMaxAmount = () => {
     if (isBuy && solBalance) {
       setAmount(BigNumber(solBalance.toString()).dividedBy(1e9).toFixed());
@@ -121,6 +117,20 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
       setAmount(BigNumber(tokenBalance.toString()).dividedBy(1e6).toFixed());
     }
   };
+
+  const messageError = useMemo(() => {
+    if (isBuy && Number(estReceive) / 1e9 > token.max_buy_per_address / 100)
+      return 'Exceeded maximum number of tokens purchased';
+    if (token.target_score > (user?.score ?? 0)) return `You don't have enough score to buy a token`;
+    if (isOutValue) return 'Insufficient balance';
+    return '';
+  }, [token.target_score, token.max_buy_per_address, user?.score, isOutValue, isBuy, estReceive]);
+
+  const isDisableSwap = useMemo(() => {
+    if (Number(amount || '0') === 0) return true;
+    if (isOutValue || messageError) return true;
+    return false;
+  }, [amount, isOutValue, messageError]);
 
   return (
     <>
@@ -247,6 +257,7 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
         
           </Flex>
         </FlexBetween> */}
+        {!!messageError && <Box color="red">{messageError}</Box>}
         <Button
           rounded={8}
           onClick={handleSwap}
