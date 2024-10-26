@@ -17,6 +17,7 @@ export const useCreateToken = () => {
       totalSolReceive: string | number;
       maxTokenCanBuy: string | number;
       mint: Keypair;
+      amountBuy: string | number;
     }) => {
       const { mint } = params;
       if (!anchorProvider) throw new Error('Provider not found');
@@ -59,6 +60,16 @@ export const useCreateToken = () => {
         })
         .instruction();
       txs.add(ix2);
+      if (Number(params.amountBuy) > 0) {
+        const ix3 = await program.methods
+          .creatorBuy(new BN(params.amountBuy))
+          .accounts({
+            buyer: publicKey,
+            mint: mint.publicKey,
+          })
+          .instruction();
+        txs.add(ix3);
+      }
 
       txs.partialSign(mint);
       const signedTransaction = await wallet.signTransaction(txs);

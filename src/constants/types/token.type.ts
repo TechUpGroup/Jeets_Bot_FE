@@ -285,6 +285,181 @@ export type JeetsSolana = {
       ];
     },
     {
+      name: 'creatorBuy';
+      discriminator: [73, 28, 100, 36, 99, 99, 116, 197];
+      accounts: [
+        {
+          name: 'buyer';
+          writable: true;
+          signer: true;
+        },
+        {
+          name: 'config';
+          pda: {
+            seeds: [
+              {
+                kind: 'const';
+                value: [106, 101, 101, 116, 115, 95, 99, 111, 110, 102, 105, 103];
+              },
+            ];
+          };
+        },
+        {
+          name: 'mint';
+        },
+        {
+          name: 'vault';
+          writable: true;
+          pda: {
+            seeds: [
+              {
+                kind: 'const';
+                value: [118, 97, 117, 108, 116];
+              },
+              {
+                kind: 'account';
+                path: 'mint';
+              },
+            ];
+          };
+        },
+        {
+          name: 'associateVault';
+          writable: true;
+          pda: {
+            seeds: [
+              {
+                kind: 'const';
+                value: [97, 115, 115, 111, 99, 105, 97, 116, 101];
+              },
+              {
+                kind: 'account';
+                path: 'mint';
+              },
+            ];
+          };
+        },
+        {
+          name: 'associateUser';
+          writable: true;
+          pda: {
+            seeds: [
+              {
+                kind: 'account';
+                path: 'buyer';
+              },
+              {
+                kind: 'const';
+                value: [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169,
+                ];
+              },
+              {
+                kind: 'account';
+                path: 'mint';
+              },
+            ];
+            program: {
+              kind: 'const';
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89,
+              ];
+            };
+          };
+        },
+        {
+          name: 'feeReceiver';
+          writable: true;
+          relations: ['config'];
+        },
+        {
+          name: 'fund';
+          writable: true;
+          relations: ['config'];
+        },
+        {
+          name: 'systemProgram';
+          address: '11111111111111111111111111111111';
+        },
+        {
+          name: 'tokenProgram';
+          address: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
+        },
+        {
+          name: 'associatedTokenProgram';
+          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL';
+        },
+      ];
+      args: [
+        {
+          name: 'amountSol';
+          type: 'u64';
+        },
+      ];
+    },
+    {
       name: 'initialize';
       discriminator: [175, 175, 109, 31, 13, 152, 155, 237];
       accounts: [
@@ -652,6 +827,12 @@ export type JeetsSolana = {
             option: 'pubkey';
           };
         },
+        {
+          name: 'newOperator';
+          type: {
+            option: 'pubkey';
+          };
+        },
       ];
     },
     {
@@ -993,6 +1174,11 @@ export type JeetsSolana = {
       name: 'exceedMaximum';
       msg: 'Buy: Exceed max token can hold';
     },
+    {
+      code: 6010;
+      name: 'buyOnce';
+      msg: 'Creator 1st buy: already bought';
+    },
   ];
   types: [
     {
@@ -1151,6 +1337,10 @@ export type JeetsSolana = {
           {
             name: 'creator';
             type: 'pubkey';
+          },
+          {
+            name: 'creatorBuy';
+            type: 'bool';
           },
           {
             name: 'price';

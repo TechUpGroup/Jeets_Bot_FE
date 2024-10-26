@@ -1,8 +1,10 @@
 'use client';
 
+import BigNumber from 'bignumber.js';
 import { useRouter } from 'next/navigation';
 
 import { Button, Currency, FlexCol, FlexContent, ImageRatio, LinkCustom, Title2, Wrapper } from '@/components';
+import { useQuerySolPrice } from '@/hooks/useQuerySolPrice';
 import { formatAddress } from '@/utils/address';
 import { Box, Flex, SimpleGrid, Spinner, Tab, Tabs } from '@chakra-ui/react';
 
@@ -19,6 +21,8 @@ const tabs = [
 
 export default function ExchangeDetailView({ mint }: { mint: string }) {
   const router = useRouter();
+  const { data: solPrice } = useQuerySolPrice();
+  console.log('solPrice', solPrice);
   const { data, isLoading } = useQueryTokenDetail(mint);
   return (
     <Wrapper
@@ -139,7 +143,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
                 Price/Token
               </Box>
               <Box fontSize={16} fontWeight={600}>
-                <Currency value={data.mintToken?.current_price} />
+                <Currency value={data.mintToken?.price_sol_per_token} />
                 SOL/MEME
               </Box>
             </FlexCol>
@@ -149,7 +153,13 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
                 Sold
               </Box>
               <Box fontSize={16} fontWeight={600}>
-                <Currency value={data.mintToken?.virtual_sol_reserves} isWei prefix="$" />
+                <Currency
+                  value={BigNumber(data.mintToken?.virtual_sol_reserves ?? 0)
+                    .multipliedBy(solPrice ?? 0)
+                    .toString()}
+                  isWei
+                  prefix="$"
+                />
               </Box>
             </FlexCol>
             <LineCustom />
@@ -158,7 +168,13 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
                 Target
               </Box>
               <Box fontSize={16} fontWeight={600}>
-                <Currency value={data.mintToken?.total_sol_receive} isWei prefix="$" />
+                <Currency
+                  value={BigNumber(data.mintToken?.total_sol_receive ?? 0)
+                    .multipliedBy(solPrice ?? 0)
+                    .toString()}
+                  isWei
+                  prefix="$"
+                />
               </Box>
             </FlexCol>
           </Flex>

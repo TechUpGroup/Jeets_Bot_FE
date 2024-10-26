@@ -108,7 +108,7 @@ export default function TokenListTab() {
                   </FlexCenter>
                 </Td>
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
-                  <Currency value={token.current_price} prefix="$" />
+                  <Currency value={token.price_sol_per_token} suffix=" SOL" />
                 </Td>
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
                   <Currency value={token.totalHolders} />

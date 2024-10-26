@@ -77,7 +77,6 @@ export default function TokenDevelopmentTab() {
   });
 
   const [maxScore, setMaxScore] = useState(0);
-  const [maxHolding, setMaxHolding] = useState(0);
   const balanceSolana = useSolanaBalance();
   const [showTooltip, setShowTooltip] = useState(false);
   const [showTooltipModal, setShowTooltipModal] = useState(false);
@@ -107,6 +106,21 @@ export default function TokenDevelopmentTab() {
       .toFixed();
   }, [amount]);
 
+  const amountSolBuy = useMemo(() => {
+    return BigNumber(estimatedReceive)
+      .multipliedBy(priceToken || 0)
+      .multipliedBy(1e9)
+      .toFixed(0);
+  }, [estimatedReceive, priceToken]);
+
+  const estimatedCost = useMemo(() => {
+    return BigNumber(amountSolBuy).plus(0.02 * 1e9);
+  }, [amountSolBuy]);
+
+  const isNotEnoughBalance = useMemo(() => {
+    return estimatedCost.isGreaterThan(balanceSolana.balance ?? 0);
+  }, [balanceSolana, estimatedCost]);
+
   const onSubmit: SubmitHandler<ITokenDeployer> = async (values) => {
     try {
       if (!address || !network || !values.image[0] || !Number(priceToken)) return;
@@ -130,6 +144,7 @@ export default function TokenDevelopmentTab() {
         },
         values.image[0],
       );
+
       await createToken({
         mint,
         symbol: res.symbol,
@@ -138,6 +153,7 @@ export default function TokenDevelopmentTab() {
         priceSolPerToken: BigNumber(res.price_sol_per_token).multipliedBy(1e9).toFixed(0),
         totalSolReceive: res.total_sol_receive,
         maxTokenCanBuy: BigNumber(maxBuyPerAddress).dividedBy(100).multipliedBy(1e6).multipliedBy(1e9).toFixed(0),
+        amountBuy: amountSolBuy,
       });
       onClose();
       await sleep(5_000);
@@ -589,6 +605,10 @@ export default function TokenDevelopmentTab() {
               </Box>
             </Slider>
           </Box>
+
+          <Box color={isNotEnoughBalance ? 'red' : undefined}>
+            cost estimate: <Currency value={estimatedCost} isWei /> SOL
+          </Box>
           <Button
             bg="makeColor"
             fontSize={{ base: 16, md: 20 }}
@@ -598,7 +618,7 @@ export default function TokenDevelopmentTab() {
             h={{ base: 10, md: 10 }}
             color="white"
             fontFamily="titanOne"
-            disabled={!!Object.keys(errors).length}
+            disabled={isNotEnoughBalance || !!Object.keys(errors).length}
             onClick={handleSubmit(onSubmit)}
             isLoading={isSubmitting}
           >

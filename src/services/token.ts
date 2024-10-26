@@ -72,7 +72,7 @@ export const getTokenList = async (params: {
 export const getTokenListOfUser = async (params: {
   page: number;
   limit: number;
-  sortBy: 'current_price' | 'totalHolders' | 'saleProgress' | string;
+  sortBy: 'current_price' | 'myAmount' | string;
   sortType: 'asc' | 'desc' | string;
   search: string;
 }) => {
@@ -110,7 +110,7 @@ export const getTokenHolders = async (mint: string, params: ITokenPaginationPara
 
 export const getSolPrice = async () => {
   const data = await axiosNoAuthInstance.get<{ SOL: number }>(appConfig.publicUrlV2 + `/price-token/sol-price`);
-  return data.data;
+  return data.data.SOL;
 };
 
 export const postBuyToken = async (body: { network: string; mint: string; solAmount: string }) => {

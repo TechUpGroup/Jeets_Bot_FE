@@ -3,28 +3,16 @@
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
-import {
-  Button,
-  Currency,
-  FlexCenter,
-  FlexContent,
-  ImageRatio,
-  InputForm,
-  LinkCustom,
-  Pagination,
-  SelectForm,
-  Title2,
-} from '@/components';
+import { Currency, FlexCenter, FlexContent, ImageRatio, InputForm, Pagination, SelectForm, Title2 } from '@/components';
 import { useDebounce } from '@/hooks/useDebounce';
 import { SearchIcon } from '@chakra-ui/icons';
-import { Box, Flex, Select, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 import { useQueryTokenList } from './hooks/useQueryTokenList';
 
 const options = [
   { value: 'current_price', label: 'Price' },
-  { value: 'totalHolders', label: 'Holder' },
-  { value: 'saleProgress', label: 'Sale Progress' },
+  { value: 'myAmount', label: 'My Amount' },
 ];
 export default function MyTokenTab() {
   const [sortBy, setSortBy] = useState(options[0]);
@@ -112,7 +100,7 @@ export default function MyTokenTab() {
                   roundedBottomRight={10}
                   textAlign="center"
                 >
-                  <Currency value={token.current_price} prefix="$" />
+                  <Currency value={token.price_sol_per_token} suffix=" SOL" />
                 </Td>
               </Tr>
             ))}
