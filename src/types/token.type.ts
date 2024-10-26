@@ -8,7 +8,8 @@ export interface ICreateTokenSignature {
   description: string;
   image_uri: string;
   metadata_uri: string;
-  target_score: number;
+  min_target_score: number;
+  max_target_score: number;
   max_buy_per_address: number;
   price_sol_per_token: number;
   total_sol_receive: number;
@@ -61,7 +62,8 @@ export interface ITokenCreate {
   description: string;
   image_uri: string;
   metadata_uri: string;
-  target_score: number;
+  min_target_score: number;
+  max_target_score: number;
   max_buy_per_address: number;
   price_sol_per_token: number;
   total_sol_receive: number;
@@ -133,7 +135,8 @@ export interface ITokenInfo {
   description: string;
   image_uri: string;
   metadata_uri: string;
-  target_score: number;
+  min_target_score: number;
+  max_target_score: number;
   max_buy_per_address: number;
   price_sol_per_token: number;
   total_sol_receive: number;

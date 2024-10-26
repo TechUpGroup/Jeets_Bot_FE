@@ -51,12 +51,7 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
   const [isBuy, setIsBuy] = useState(true);
   // const [amount, setAmount] = useState<string>();
   const amount = useMemo(() => {
-    if (isBuy)
-      return BigNumber(token.max_buy_per_address)
-        .dividedBy(100)
-        .multipliedBy(1e9)
-        .multipliedBy(token.price_sol_per_token)
-        .toFixed();
+    if (isBuy) return BigNumber(token.max_buy_per_address).multipliedBy(token.price_sol_per_token).toFixed();
     return BigNumber(tokenBalance?.amount ?? 0)
       .dividedBy(1 ** (tokenBalance?.decimals ?? 1))
       .toFixed();
@@ -132,8 +127,7 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
   // };
 
   const messageError = useMemo(() => {
-    if (isBuy && Number(estReceive) / 1e9 > token.max_buy_per_address / 100)
-      return 'Exceeded maximum number of tokens purchased';
+    if (isBuy && Number(estReceive) > token.max_buy_per_address) return 'Exceeded maximum number of tokens purchased';
     if (token.target_score > (user?.score ?? 0)) return `You don't have enough score to buy a token`;
     if (isOutValue) return 'Insufficient balance';
     return '';

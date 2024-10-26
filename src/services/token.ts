@@ -22,7 +22,9 @@ export const postCreateMintToken = async (
     symbol: string;
     description: string;
 
-    target_score?: number;
+    min_target_score: number;
+    max_target_score: number;
+
     max_buy_per_address?: number;
     price_sol_per_token: number;
     total_sol_receive: number;

@@ -132,10 +132,17 @@ export default function LaunchDetailView({ mint }: { mint: string }) {
             <LineCustom />
             <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
               <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
-                Status
+                Raydium Process
               </Box>
               <Box fontSize={16} fontWeight={600}>
-                {data.mintToken?.trade_completed ? 'Closed' : 'Opening'}
+                <Currency
+                  value={BigNumber(data.mintToken?.virtual_sol_reserves || 0)
+                    .dividedBy(data.mintToken?.total_sol_receive || 1)
+                    .multipliedBy(100)}
+                  decimal={2}
+                  suffix="%"
+                />
+                {/* {data.mintToken?.trade_completed ? 'Closed' : 'Opening'} */}
               </Box>
             </FlexCol>
             <LineCustom />

@@ -1,9 +1,8 @@
 'use client';
 
 import BigNumber from 'bignumber.js';
-import { isNil } from 'lodash';
 import { useRouter } from 'next/navigation';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import {
@@ -32,6 +31,11 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  RangeSlider,
+  RangeSliderFilledTrack,
+  RangeSliderMark,
+  RangeSliderThumb,
+  RangeSliderTrack,
   SimpleGrid,
   Slider,
   SliderFilledTrack,
@@ -76,13 +80,37 @@ export default function TokenDevelopmentTab() {
     },
   });
 
-  const [maxScore, setMaxScore] = useState(0);
+  const [minTargetScore, setMinTargetScore] = useState(0);
+  const [maxTargetScore, setMaxTargetScore] = useState(10);
   const balanceSolana = useSolanaBalance();
   const [showTooltip, setShowTooltip] = useState(false);
   const [showTooltipModal, setShowTooltipModal] = useState(false);
 
-  const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(0.1);
+  const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(1_000_000);
   const [totalSol, setTotalSol] = useState(1);
+
+  const maxTotalReceive = useMemo(() => {
+    return BigNumber(
+      BigNumber(100)
+        .minus(amount || 0)
+        .multipliedBy(20)
+        .multipliedBy(1e9)
+        .multipliedBy(priceToken || 0)
+        .toFixed(9),
+    );
+  }, [amount, priceToken]);
+
+  const minTotalReceive = useMemo(() => {
+    return BigNumber(maxTotalReceive).gt(1) ? BigNumber(1) : maxTotalReceive;
+  }, [maxTotalReceive]);
+
+  useEffect(() => {
+    if (maxTotalReceive.lt(totalSol)) {
+      setTotalSol(maxTotalReceive.toNumber());
+    } else if (minTotalReceive.gt(totalSol)) {
+      setTotalSol(minTotalReceive.toNumber());
+    }
+  }, [maxTotalReceive, minTotalReceive, totalSol]);
 
   const watchImage = watch('image');
   const watchSymbol = watch('symbol');
@@ -113,14 +141,6 @@ export default function TokenDevelopmentTab() {
       .toFixed(0);
   }, [estimatedReceive, priceToken]);
 
-  const estimatedCost = useMemo(() => {
-    return BigNumber(amountSolBuy).plus(0.02 * 1e9);
-  }, [amountSolBuy]);
-
-  const isNotEnoughBalance = useMemo(() => {
-    return estimatedCost.isGreaterThan(balanceSolana.balance ?? 0);
-  }, [balanceSolana, estimatedCost]);
-
   const onSubmit: SubmitHandler<ITokenDeployer> = async (values) => {
     try {
       if (!address || !network || !values.image[0] || !Number(priceToken)) return;
@@ -133,7 +153,8 @@ export default function TokenDevelopmentTab() {
           symbol: values.symbol,
           description: values.description,
 
-          target_score: maxScore,
+          min_target_score: minTargetScore,
+          max_target_score: maxTargetScore,
           max_buy_per_address: maxBuyPerAddress,
           total_sol_receive: BigNumber(totalSol).multipliedBy(1e9).toNumber(),
           price_sol_per_token: BigNumber(priceToken ?? 0).toNumber(),
@@ -149,10 +170,10 @@ export default function TokenDevelopmentTab() {
         mint,
         symbol: res.symbol,
         name: res.name,
-        targetScore: res.target_score,
+        targetScore: 0,
         priceSolPerToken: BigNumber(res.price_sol_per_token).multipliedBy(1e9).toFixed(0),
         totalSolReceive: res.total_sol_receive,
-        maxTokenCanBuy: BigNumber(maxBuyPerAddress).dividedBy(100).multipliedBy(1e6).multipliedBy(1e9).toFixed(0),
+        maxTokenCanBuy: maxBuyPerAddress,
         amountBuy: amountSolBuy,
       });
       onClose();
@@ -318,19 +339,22 @@ export default function TokenDevelopmentTab() {
 
         <FlexCol w="full" gap={3} p={4} rounded={16} border="1px solid" borderColor="rgba(192, 192, 192, 1)" pb={9}>
           <Box fontSize={14}>Target Jeets Score</Box>
-          <Slider
+          <RangeSlider
             min={0}
             max={500}
-            defaultValue={maxScore}
-            onChange={setMaxScore}
+            value={[minTargetScore, maxTargetScore]}
+            onChange={([min, max]) => {
+              setMinTargetScore(min);
+              setMaxTargetScore(max);
+            }}
             py="9px"
             h={6}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
           >
-            <SliderTrack bg="rgba(243, 235, 255, 1)" h={1.5} rounded={999}>
-              <SliderFilledTrack bg="purple" />
-            </SliderTrack>
+            <RangeSliderTrack bg="rgba(243, 235, 255, 1)" h={1.5} rounded={999}>
+              <RangeSliderFilledTrack bg="purple" />
+            </RangeSliderTrack>
             <Box w="full" px={3} h={1.5}>
               <Box position="relative" w="full" h="full">
                 <Tooltip
@@ -341,19 +365,41 @@ export default function TokenDevelopmentTab() {
                   bg="purple"
                   label={
                     <Box color="white" fontWeight={600} fontSize={10} fontFamily="sfPro">
-                      {`${maxScore} Jeets`}
+                      {`${minTargetScore} Jeets`}
                     </Box>
                   }
                 >
-                  <SliderThumb
+                  <RangeSliderThumb
                     bg="purple"
                     boxSize={6}
                     transform="translate(-50%, -50%)"
                     _active={{ transform: 'translate(-50%, -50%) scale(1.15)' }}
+                    index={0}
                   />
                 </Tooltip>
 
-                <SliderMark
+                <Tooltip
+                  placement="bottom"
+                  isOpen={showTooltip}
+                  px={1}
+                  rounded={4}
+                  bg="purple"
+                  label={
+                    <Box color="white" fontWeight={600} fontSize={10} fontFamily="sfPro">
+                      {`${maxTargetScore} Jeets`}
+                    </Box>
+                  }
+                >
+                  <RangeSliderThumb
+                    bg="purple"
+                    boxSize={6}
+                    transform="translate(-50%, -50%)"
+                    _active={{ transform: 'translate(-50%, -50%) scale(1.15)' }}
+                    index={1}
+                  />
+                </Tooltip>
+
+                <RangeSliderMark
                   value={0}
                   textAlign="center"
                   color="rgba(142, 142, 147, 1)"
@@ -363,8 +409,8 @@ export default function TokenDevelopmentTab() {
                   transform="translateX(-12px)"
                 >
                   0 Jeets
-                </SliderMark>
-                <SliderMark
+                </RangeSliderMark>
+                <RangeSliderMark
                   style={{ textWrap: 'nowrap' }}
                   value={500}
                   textAlign="center"
@@ -375,10 +421,10 @@ export default function TokenDevelopmentTab() {
                   transform="translateX(calc(-100% + 12px))"
                 >
                   500 Jeets
-                </SliderMark>
+                </RangeSliderMark>
               </Box>
             </Box>
-          </Slider>
+          </RangeSlider>
         </FlexCol>
 
         {/* <FlexCol gap={2.5} w="full">
@@ -468,30 +514,35 @@ export default function TokenDevelopmentTab() {
           <Box w="full" borderBottom="1px solid rgba(99, 99, 102, 1)" />
           <Box fontSize={{ base: 16, md: 18 }}>Max buy per address</Box>
           <SimpleGrid columns={4} gap={2} fontSize={14} fontWeight={600}>
-            {[0.1, 0.5, 0.7, 1].map((e) => (
+            {[
+              { value: 1_000_000, label: '0.1%' },
+              { value: 5_000_000, label: '0.5%' },
+              { value: 7_000_000, label: '0.7%' },
+              { value: 10_000_000, label: '1%' },
+            ].map((e) => (
               <Box
-                key={e}
-                bg={e === maxBuyPerAddress ? 'purple' : 'rgba(243, 235, 255, 1)'}
+                key={e.value}
+                bg={e.value === maxBuyPerAddress ? 'purple' : 'rgba(243, 235, 255, 1)'}
                 rounded={6}
                 p={2.5}
-                color={e === maxBuyPerAddress ? 'white' : 'purple'}
+                color={e.value === maxBuyPerAddress ? 'white' : 'purple'}
                 textAlign="center"
                 cursor="pointer"
-                onClick={() => setMaxBuyPerAddress(e)}
+                onClick={() => setMaxBuyPerAddress(e.value)}
               >
-                {e}%
+                {e.label}
               </Box>
             ))}
           </SimpleGrid>
           <Box pb={'30px'}>
             <Slider
               value={maxBuyPerAddress}
-              min={0.1}
-              max={1}
+              min={1_000_000}
+              max={10_000_000}
               onChange={(val) => setMaxBuyPerAddress(val)}
               py="9px"
               h={6}
-              step={0.1}
+              step={1_000}
             >
               <SliderTrack bg="rgba(243, 235, 255, 1)" h={1.5} rounded={999}>
                 <SliderFilledTrack bg="purple" />
@@ -513,7 +564,7 @@ export default function TokenDevelopmentTab() {
                     fontSize={14}
                     transform="translateX(-50%)"
                   >
-                    ({maxBuyPerAddress}%)
+                    <Currency value={maxBuyPerAddress} />
                   </SliderMark>
                 </Box>
               </Box>
@@ -548,13 +599,14 @@ export default function TokenDevelopmentTab() {
           <Box pb={'30px'}>
             <Slider
               value={totalSol}
-              min={1}
-              max={100}
+              min={minTotalReceive.toNumber()}
+              max={maxTotalReceive.toNumber()}
               onChange={(val) => setTotalSol(val)}
               py="9px"
               h={6}
               onMouseEnter={() => setShowTooltipModal(true)}
               onMouseLeave={() => setShowTooltipModal(false)}
+              focusThumbOnChange={false}
             >
               <SliderTrack bg="rgba(243, 235, 255, 1)" h={1.5} rounded={999}>
                 <SliderFilledTrack bg="purple" />
@@ -580,7 +632,7 @@ export default function TokenDevelopmentTab() {
                   </Tooltip>
 
                   <SliderMark
-                    value={1}
+                    value={minTotalReceive.toNumber()}
                     textAlign="center"
                     color="rgba(174, 174, 178, 1)"
                     top="calc(100% + 19px)"
@@ -588,27 +640,26 @@ export default function TokenDevelopmentTab() {
                     fontSize={14}
                     transform="translateX(-12px)"
                   >
-                    (1SOL)
+                    ({minTotalReceive.toFixed()}SOL)
                   </SliderMark>
-                  <SliderMark
-                    value={100}
-                    textAlign="center"
-                    color="rgba(174, 174, 178, 1)"
-                    top="calc(100% + 19px)"
-                    fontWeight={400}
-                    fontSize={14}
-                    transform="translateX(calc(-100% + 12px))"
-                  >
-                    (100SOL)
-                  </SliderMark>
+                  {!minTotalReceive.eq(maxTotalReceive) && (
+                    <SliderMark
+                      value={maxTotalReceive.toNumber()}
+                      textAlign="center"
+                      color="rgba(174, 174, 178, 1)"
+                      top="calc(100% + 19px)"
+                      fontWeight={400}
+                      fontSize={14}
+                      transform="translateX(calc(-100% + 12px))"
+                    >
+                      ({maxTotalReceive.toFixed()}SOL)
+                    </SliderMark>
+                  )}
                 </Box>
               </Box>
             </Slider>
           </Box>
 
-          <Box color={isNotEnoughBalance ? 'red' : undefined}>
-            cost estimate: <Currency value={estimatedCost} isWei /> SOL
-          </Box>
           <Button
             bg="makeColor"
             fontSize={{ base: 16, md: 20 }}
@@ -618,7 +669,7 @@ export default function TokenDevelopmentTab() {
             h={{ base: 10, md: 10 }}
             color="white"
             fontFamily="titanOne"
-            disabled={isNotEnoughBalance || !!Object.keys(errors).length}
+            disabled={!!Object.keys(errors).length}
             onClick={handleSubmit(onSubmit)}
             isLoading={isSubmitting}
           >
