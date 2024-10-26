@@ -20,7 +20,6 @@ const tabs = [
 export default function ExchangeDetailView({ mint }: { mint: string }) {
   const router = useRouter();
   const { data, isLoading } = useQueryTokenDetail(mint);
-  console.log('data', data);
   return (
     <Wrapper
       as={Tabs}
@@ -76,7 +75,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
 
           <Flex gap={4} alignItems="center" w="full">
             <ImageRatio
-              src={'https://placehold.co/100x100/png'}
+              src={data.mintToken?.image_uri ?? 'https://placehold.co/100x100/png'}
               ratio={1}
               border="0.67px solid rgba(16, 16, 16, 1)"
               w={{ base: 83, md: 83 }}
@@ -121,7 +120,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
               <Box color="rgba(131, 131, 131, 1)" fontSize={14} fontWeight={400}>
                 Wallet address
               </Box>
-              <Box fontSize={16} fontWeight={500}>
+              <Box fontSize={16} fontWeight={600}>
                 {formatAddress(data.mintToken?.mint, 6, 4)}
               </Box>
             </FlexCol>
@@ -130,7 +129,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
               <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
                 Status
               </Box>
-              <Box fontSize={16} fontWeight={500}>
+              <Box fontSize={16} fontWeight={600}>
                 Opening
               </Box>
             </FlexCol>
@@ -139,7 +138,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
               <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
                 Price/Token
               </Box>
-              <Box fontSize={16} fontWeight={500}>
+              <Box fontSize={16} fontWeight={600}>
                 <Currency value={data.mintToken?.current_price} />
                 SOL/MEME
               </Box>
@@ -149,7 +148,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
               <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
                 Sold
               </Box>
-              <Box fontSize={16} fontWeight={500}>
+              <Box fontSize={16} fontWeight={600}>
                 <Currency value={data.mintToken?.virtual_sol_reserves} isWei prefix="$" />
               </Box>
             </FlexCol>
@@ -158,7 +157,7 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
               <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
                 Target
               </Box>
-              <Box fontSize={16} fontWeight={500}>
+              <Box fontSize={16} fontWeight={600}>
                 <Currency value={data.mintToken?.total_sol_receive} isWei prefix="$" />
               </Box>
             </FlexCol>

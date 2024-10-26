@@ -102,44 +102,12 @@ export const getTokenHolders = async (mint: string, params: ITokenPaginationPara
   return data.data;
 };
 
-// export const getEthPrice = async () => {
-//   const data = await axiosNoAuthInstance.get<{ ETH: number }>(`/price-token/eth-price`);
-//   return data.data;
-// };
+export const getSolPrice = async () => {
+  const data = await axiosNoAuthInstance.get<{ SOL: number }>(`/price-token/sol-price`);
+  return data.data;
+};
 
-// export const postBuyToken = async (body: {
-//   network: string;
-//   mint: string;
-//   ethAmount: string;
-//   description?: string;
-//   code?: string;
-// }) => {
-//   const data = await axiosInstance.post<{
-//     nonce: Address;
-//     caller: Address;
-//     referral: Address;
-//     ethAmount: string;
-//     price: string;
-//     signTime: number;
-//     signature: Address;
-//   }>(appConfig.publicUrlV2 + `/mint-token/buy`, body);
-//   return data.data;
-// };
-
-// export const postSellToken = async (body: {
-//   network: string;
-//   mint: string;
-//   tokenAmount: string;
-//   description?: string;
-// }) => {
-//   const data = await axiosInstance.post<{
-//     nonce: Address;
-//     caller: Address;
-//     referral: Address;
-//     tokenAmount: string;
-//     price: string;
-//     signTime: number;
-//     signature: Address;
-//   }>(appConfig.publicUrlV2 + `/mint-token/sell`, body);
-//   return data.data;
-// };
+export const postBuyToken = async (body: { network: string; mint: string; solAmount: string }) => {
+  const data = await axiosInstance.post<string>(appConfig.publicUrlV2 + `/mint-token/buy`, body);
+  return data.data;
+};

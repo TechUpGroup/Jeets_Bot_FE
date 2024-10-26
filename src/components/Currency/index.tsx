@@ -26,7 +26,7 @@ const getValue = (props: Props) => {
     value,
     isWei,
     rounded,
-    decimal = 3,
+    decimal = 5,
     decimalNumber,
     isPositive,
     roundingMode = BigNumber.ROUND_FLOOR,
@@ -97,5 +97,9 @@ const getValue = (props: Props) => {
 export const Currency: FC<Props> = (props) => {
   const { value: valueShow, isRounded, fullValue } = getValue(props);
   if (!isRounded) return <>{valueShow}</>;
-  return <Tooltip label={fullValue}>{valueShow}</Tooltip>;
+  return (
+    <Tooltip label={fullValue} fontFamily="sfPro" fontWeight={600}>
+      {valueShow}
+    </Tooltip>
+  );
 };

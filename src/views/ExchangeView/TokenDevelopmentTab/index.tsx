@@ -22,6 +22,7 @@ import { TelegramIcon, TwitterIcon, WebsiteIcon } from '@/components/Icons';
 import { useSolanaBalance } from '@/hooks/solana';
 import useWalletActive from '@/hooks/useWalletActive';
 import { postCreateMintToken } from '@/services/token';
+import { sleep } from '@/utils';
 import { toastError } from '@/utils/toast';
 import {
   Box,
@@ -100,14 +101,16 @@ export default function TokenDevelopmentTab() {
 
   const createToken = useCreateToken();
 
+  const estimatedReceive = useMemo(() => {
+    return BigNumber(amount ?? 0)
+      .dividedBy(100)
+      .multipliedBy(1e9)
+      .toFixed();
+  }, [amount]);
+
   const onSubmit: SubmitHandler<ITokenDeployer> = async (values) => {
     try {
       if (!address || !network || !values.image[0]) return;
-      const ethAmount = BigInt(
-        BigNumber(amount || '0')
-          .multipliedBy(1e18)
-          .toFixed(0),
-      );
       const mint = Keypair.generate(); // tạo địa chỉ token
       const res = await postCreateMintToken(
         {
@@ -138,39 +141,13 @@ export default function TokenDevelopmentTab() {
         maxTokenCanBuy: BigNumber(maxBuyPerAddress).dividedBy(100).multipliedBy(1e6).multipliedBy(1e9).toFixed(0),
       });
       onClose();
+      await sleep(5_000);
       push(`/exchange/${res.mint}`);
     } catch (e) {
       toastError('create token failed', e);
       console.error(e);
     }
   };
-
-  const receiveEst = useMemo(() => {
-    if (isNil(ethPrice)) return undefined;
-    const previous_eth_reserve = BigNumber(maxScore).multipliedBy(1e1).dividedBy(ethPrice);
-    const previous_token_reserve = BigNumber(8 * 10 ** 8);
-    const decimal = 18;
-    const previous_eth_reserve_wei = BigNumber(previous_eth_reserve).multipliedBy(1e18);
-    const previous_token_reserve_wei = previous_token_reserve.multipliedBy(10 ** decimal);
-    const amount_eth_in_without_fee = BigNumber(amount ?? '0').multipliedBy(1e18);
-    // .multipliedBy(1 - 0.01); // 1% fee
-    const k = previous_token_reserve.multipliedBy(previous_eth_reserve);
-    return previous_token_reserve_wei
-      .dividedBy(10 ** decimal)
-      .minus(k.dividedBy(previous_eth_reserve_wei.plus(amount_eth_in_without_fee).dividedBy(1e18)));
-  }, [amount, ethPrice, maxScore]);
-
-  const errorMessage = useMemo(() => {
-    if (
-      !amount ||
-      BigNumber(amount || 0)
-        .multipliedBy(1e18)
-        .lte(balanceSolana?.balance?.toString() ?? 0)
-    )
-      return;
-
-    return `you do not have enough ETH`;
-  }, [amount, balanceSolana]);
 
   const imagePreview = useMemo(() => {
     const file = watchImage?.[0];
@@ -344,12 +321,12 @@ export default function TokenDevelopmentTab() {
                 <Tooltip
                   placement="bottom"
                   isOpen={showTooltip}
-                  px={0.5}
+                  px={1}
                   rounded={4}
                   bg="purple"
                   label={
                     <Box color="white" fontWeight={600} fontSize={10} fontFamily="sfPro">
-                      {`${maxScore}`}
+                      {`${maxScore} Jeets`}
                     </Box>
                   }
                 >
@@ -442,7 +419,15 @@ export default function TokenDevelopmentTab() {
               <InputCurrency
                 style={{ paddingRight: '40px' }}
                 value={amount}
-                onValueChange={setAmount}
+                onValueChange={(val) => {
+                  if (Number(val) > 100) {
+                    setAmount('100');
+                  } else if (Number(val) < 0) {
+                    setAmount('0');
+                  } else {
+                    setAmount(val);
+                  }
+                }}
                 min={0}
                 max={100}
               />
@@ -462,7 +447,7 @@ export default function TokenDevelopmentTab() {
           <FlexCol w="full" gap={2.5}>
             <Box fontSize={14}>You receive</Box>
             <Title2 color="purple" fontWeight={600}>
-              <Currency value={0} suffix=" DOG" />
+              <Currency value={estimatedReceive} /> {watchSymbol}
             </Title2>
           </FlexCol>
           <Box w="full" borderBottom="1px solid rgba(99, 99, 102, 1)" />
@@ -575,7 +560,7 @@ export default function TokenDevelopmentTab() {
                   </Tooltip>
 
                   <SliderMark
-                    value={0}
+                    value={1}
                     textAlign="center"
                     color="rgba(174, 174, 178, 1)"
                     top="calc(100% + 19px)"
@@ -583,7 +568,7 @@ export default function TokenDevelopmentTab() {
                     fontSize={14}
                     transform="translateX(-12px)"
                   >
-                    (0SOL)
+                    (1SOL)
                   </SliderMark>
                   <SliderMark
                     value={100}

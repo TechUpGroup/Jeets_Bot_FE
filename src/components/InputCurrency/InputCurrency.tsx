@@ -22,5 +22,5 @@ const StyledCurrencyInput = styled(CurrencyInput)`
 `;
 
 export const InputCurrency = (props: CurrencyInputProps) => {
-  return <StyledCurrencyInput decimalSeparator="." groupSeparator="," {...props} />;
+  return <StyledCurrencyInput decimalSeparator="." groupSeparator="," decimalsLimit={9} {...props} />;
 };

@@ -1,50 +1,49 @@
-import BigNumber from 'bignumber.js';
 import { useCallback } from 'react';
-import { Address } from 'viem';
 
-import moonadABI from '@/config/ABI/moonadABI';
-import useActiveWeb3React from '@/hooks/useActiveWeb3React';
-import { useAddress } from '@/hooks/useAddress';
-import { useCallWithGasPrice } from '@/hooks/wagmi/useCallWithGasPrice';
-import { getReceiptTxs } from '@/utils/helpers';
+import tokenIdl from '@/constants/idl/tokenIdl.json';
+import { JeetsSolana } from '@/constants/types/token.type';
+import { useAnchorProvider } from '@/hooks/solana';
+import { BN, Program } from '@coral-xyz/anchor';
+import { PublicKey, Transaction } from '@solana/web3.js';
 
 export const useSellToken = () => {
-  const { provider } = useActiveWeb3React();
-  const { callWithGasPrice } = useCallWithGasPrice();
-  const { moonad } = useAddress();
+  const anchorProvider = useAnchorProvider();
   return useCallback(
-    async (params: {
-      token: Address;
-      amount: string;
-      nonce: Address;
-      price: string;
-      signTime: number;
-      signature: Address;
-      amountOutMin: bigint;
-    }) => {
-      if (!provider) return;
-      const { token, amount, amountOutMin, nonce, price, signTime, signature } = params;
+    async (params: { amountToken: string; mint: string }) => {
+      if (!anchorProvider) throw new Error('Provider not found');
+      const { wallet, connection, publicKey } = anchorProvider;
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash('confirmed');
+      const program = new Program(tokenIdl as JeetsSolana, anchorProvider);
 
-      await getReceiptTxs(
-        callWithGasPrice(
-          {
-            abi: moonadABI,
-            address: moonad,
-          },
-          'sell',
-          [
-            token,
-            BigInt(BigNumber(amount).multipliedBy(1e18).toFixed(0)),
-            amountOutMin,
-            nonce,
-            BigInt(price),
-            BigInt(signTime),
-            signature,
-          ],
-        ),
-        provider,
+      const txs = new Transaction();
+      txs.recentBlockhash = blockhash;
+      txs.feePayer = publicKey;
+      const ix = await program.methods
+        .sell(new BN(params.amountToken))
+        .accounts({
+          seller: publicKey,
+          mint: new PublicKey(params.mint),
+        })
+        .instruction();
+      txs.add(ix);
+      const signedTransaction = await wallet.signTransaction(txs);
+      const signature = await connection.sendRawTransaction(signedTransaction.serialize(), {
+        skipPreflight: true,
+        preflightCommitment: 'confirmed',
+        maxRetries: 50,
+      });
+
+      const res = await connection.confirmTransaction(
+        {
+          blockhash,
+          lastValidBlockHeight,
+          signature,
+        },
+        'confirmed',
       );
+      if (res.value.err) throw new Error('Transaction fail');
+      return signature;
     },
-    [moonad, provider, callWithGasPrice],
+    [anchorProvider],
   );
 };

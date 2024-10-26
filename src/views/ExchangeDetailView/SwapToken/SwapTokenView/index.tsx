@@ -7,22 +7,22 @@ import {
   Currency,
   FlexBetween,
   FlexCol,
+  ImageRatio,
   InputCurrency,
-  InputForm,
   Line,
   ModalBase,
   TextareaForm,
-  Title,
 } from '@/components';
-import { SettingIcon, SwapIcon } from '@/components/Icons';
+import { SwapIcon } from '@/components/Icons';
+import { useSolanaBalance, useSolanaBalanceToken } from '@/hooks/solana';
 import { useDebounce } from '@/hooks/useDebounce';
 import useWalletActive from '@/hooks/useWalletActive';
+import { postBuyToken } from '@/services/token';
 import useListUserStore from '@/store/useListUserStore';
 import { ITokenInfo } from '@/types/token.type';
 import { toastError, toastSuccess } from '@/utils/toast';
 import {
   Box,
-  Button as ButtonChakra,
   Flex,
   FormControl,
   FormLabel,
@@ -33,191 +33,105 @@ import {
   SliderTrack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useWalletMultiButton } from '@solana/wallet-adapter-base-ui';
-import { useWalletModal } from '@tiplink/wallet-adapter-react-ui';
 
-// import { useBuyToken } from './hooks/useBuyToken';
-// import { useSellToken } from './hooks/useSellToken';
+import { useBuyToken } from './hooks/useBuyToken';
+import { useSellToken } from './hooks/useSellToken';
 
 export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
-  const { address } = useWalletActive();
+  const { address, network } = useWalletActive();
   const slippage = useListUserStore((s) => s.slippage);
   const setSlippage = useListUserStore((s) => s.setSlippage);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOpenSlippage, onOpen: onOpenSlippage, onClose: onCloseSlippage } = useDisclosure();
-  const { isOpen: isOpenAlert, onOpen: onOpenAlert, onClose: onCloseAlert } = useDisclosure();
 
+  const { balance: solBalance } = useSolanaBalance();
+  const { balance: tokenBalance } = useSolanaBalanceToken(token.mint);
   const [isBuy, setIsBuy] = useState(true);
   const [amount, setAmount] = useState<string>();
   const [comment, setComment] = useState('');
-  const [referralCode, setReferralCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const amountDebounce = useDebounce(Number(amount).toString(), 300);
+  const amountDebounce = useDebounce(Number(amount || 0).toString(), 300);
 
-  const { setVisible } = useWalletModal();
-  const { buttonState, publicKey } = useWalletMultiButton({
-    onSelectWallet() {
-      setVisible(true);
-    },
-  });
+  const ethBalanceFormated = useMemo(() => BigNumber(solBalance ?? 0).dividedBy(1e9), [solBalance]);
+  const tokenBalanceFormated = useMemo(() => BigNumber(tokenBalance?.toString() ?? 0).dividedBy(1e6), [tokenBalance]);
 
-  // const ethBalanceFormated = useMemo(
-  //   () => BigNumber(ethBalance?.value.toString() ?? 0).dividedBy(1e18),
-  //   [ethBalance?.value],
-  // );
-  // const isApproveToken = useMemo(
-  //   () => BigNumber(tokenAllowance?.toString() ?? 0).gt(BigNumber(amount || 0).multipliedBy(1e18)),
-  //   [amount, tokenAllowance],
-  // );
-  // const buyToken = useBuyToken();
-  // const sellToken = useSellToken();
+  const buyToken = useBuyToken();
+  const sellToken = useSellToken();
 
-  // const tokenBalanceFormated = useMemo(() => BigNumber(tokenBalance?.toString() ?? 0).dividedBy(1e18), [tokenBalance]);
+  const estReceive = useMemo(() => {
+    if (isBuy)
+      return BigNumber(amountDebounce || 0)
+        .dividedBy(token.price_sol_per_token)
+        .toFixed();
+    return BigNumber(amountDebounce || 0)
+      .multipliedBy(token.price_sol_per_token)
+      .toFixed();
+  }, [amountDebounce, isBuy, token.price_sol_per_token]);
+  const handleSwap = useCallback(async () => {
+    if (!address || !network) {
+      toastError('You have not connected your wallet yet');
+      return;
+    }
+    if (isLoading) return;
+    try {
+      if (!amount || !Number(amount) || isNil(estReceive)) return;
+      setIsLoading(true);
 
-  // const { data: calcFeeBuy } = useCalculateFee(amountDebounce, true);
+      if (isBuy) {
+        const signature = await postBuyToken({
+          network,
+          mint: token.mint,
+          solAmount: BigNumber(amount).multipliedBy(1e9).toFixed(0),
+        });
+        await buyToken(signature);
+        toastSuccess('Buy token success');
+      } else {
+        await sellToken({
+          mint: token.mint,
+          amountToken: BigNumber(amount).multipliedBy(1e6).toFixed(0),
+        });
+        toastSuccess('Sell token success');
+      }
+      setAmount('');
+      setComment('');
+    } catch (e) {
+      console.error(e);
+      toastError(`${isBuy ? 'Buy' : 'Sell'} failed`, e);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [address, amount, buyToken, estReceive, isBuy, isLoading, network, sellToken, token.mint]);
 
-  // const { data: amountTokenOut } = useCalculateTokenOut(
-  //   token.mint,
-  //   isBuy,
-  //   isBuy ? (calcFeeBuy ? formatEther(calcFeeBuy?.[0]) : '0') : amountDebounce,
-  // );
-  // const estReceiveBuy = useMemo(() => {
-  //   if (isNil(amountTokenOut?.[2])) return undefined;
-  //   return amountTokenOut[2];
-  // }, [amountTokenOut]);
-  // const estReceiveSell = useMemo(() => {
-  //   if (isNil(amountTokenOut?.[2])) return undefined;
-  //   return amountTokenOut[2];
-  // }, [amountTokenOut]);
+  const isOutValue = useMemo(() => {
+    if (isBuy && ethBalanceFormated.lt(amount || '0')) return true;
+    if (!isBuy && tokenBalanceFormated.lt(amount || '0')) return true;
+    return false;
+  }, [amount, ethBalanceFormated, isBuy, tokenBalanceFormated]);
 
-  // const { data: calcFeeSell } = useCalculateFee(estReceiveSell?.toString());
-  // const estReceive = useMemo(() => {
-  //   if (isBuy) return estReceiveBuy;
-  //   return calcFeeSell?.[0];
-  // }, [isBuy, estReceiveBuy, calcFeeSell]);
+  const isDisableSwap = useMemo(() => {
+    if (Number(amount || '0') === 0) return true;
+    if (isOutValue) return true;
+    return false;
+  }, [amount, isOutValue]);
 
-  // const estReceiveFormated = useMemo(() => {
-  //   if (isNil(estReceive)) return undefined;
-  //   return BigNumber(
-  //     BigNumber(estReceive.toString() ?? '0')
-  //       .dividedBy(1e18)
-  //       .toFixed(isBuy ? 3 : 5),
-  //   ).toFixed();
-  // }, [estReceive, isBuy]);
-
-  // const handleSwap = useCallback(async () => {
-  //   if (!address) {
-  //     toastError('You have not connected your wallet yet');
-  //     return;
-  //   }
-  //   if (isLoading) return;
-  //   try {
-  //     if (!amount || !Number(amount) || isNil(estReceive)) return;
-  //     setIsLoading(true);
-
-  //     let slippageCal = parseInt(slippage.toString());
-  //     slippageCal = slippageCal < 1 ? 1 : slippageCal > 50 ? 50 : Number.isNaN(slippageCal) ? 1 : slippageCal;
-  //     const amountOutMin = BigInt(
-  //       BigNumber(estReceive.toString())
-  //         .multipliedBy(100 - slippageCal)
-  //         .dividedBy(100)
-  //         .toFixed(0),
-  //     );
-  //     if (isBuy) {
-  //       const res = await postBuyToken({
-  //         network,
-  //         mint: token.mint,
-  //         ethAmount: BigNumber(amount).multipliedBy(1e18).toFixed(0),
-  //         description: comment,
-  //         code: referralCode,
-  //       });
-  //       await buyToken({
-  //         token: token.mint,
-  //         nonce: res.nonce,
-  //         price: res.price,
-  //         signTime: res.signTime,
-  //         signature: res.signature,
-  //         referral: res.referral,
-  //         amount,
-  //         amountOutMin,
-  //       });
-  //       toastSuccess('Buy token success');
-  //     } else {
-  //       if (!isApproveToken) {
-  //         await approveToken();
-  //         toastSuccess('Approve token success');
-  //       }
-  //       const res = await postSellToken({
-  //         network,
-  //         mint: token.mint,
-  //         tokenAmount: BigNumber(amount).multipliedBy(1e18).toFixed(0),
-  //         description: comment,
-  //         // code: referralCode,
-  //       });
-  //       await sellToken({
-  //         token: token.mint,
-  //         amount,
-  //         amountOutMin,
-  //         nonce: res.nonce,
-  //         price: res.price,
-  //         signTime: res.signTime,
-  //         signature: res.signature,
-  //       });
-  //       toastSuccess('Sell token success');
-  //     }
-  //     setAmount('');
-  //     setComment('');
-  //   } catch (e) {
-  //     console.error(e);
-  //     toastError(`${isBuy ? 'Buy' : 'Sell'} failed`, e);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }, [
-  //   address,
-  //   amount,
-  //   approveToken,
-  //   buyToken,
-  //   comment,
-  //   estReceive,
-  //   isApproveToken,
-  //   isBuy,
-  //   isLoading,
-  //   network,
-  //   referralCode,
-  //   sellToken,
-  //   slippage,
-  //   token.mint,
-  // ]);
-
-  // const isOutValue = useMemo(() => {
-  //   if (isBuy && ethBalanceFormated.lt(amount || '0')) return true;
-  //   if (!isBuy && tokenBalanceFormated.lt(amount || '0')) return true;
-  //   return false;
-  // }, [amount, ethBalanceFormated, isBuy, tokenBalanceFormated]);
-
-  // const isDisableSwap = useMemo(() => {
-  //   if (Number(amount || '0') === 0) return true;
-  //   if (isOutValue) return true;
-  //   return false;
-  // }, [amount, isOutValue]);
-
-  // const handleOnMaxAmount = () => {
-  //   if (isBuy && ethBalance) {
-  //     setAmount(BigNumber(ethBalance.value.toString()).dividedBy(1e18).toFixed());
-  //   } else if (!isBuy && !isNil(tokenBalance)) {
-  //     setAmount(BigNumber(tokenBalance.toString()).dividedBy(1e18).toFixed());
-  //   }
-  // };
+  const handleOnMaxAmount = () => {
+    if (isBuy && solBalance) {
+      setAmount(BigNumber(solBalance.toString()).dividedBy(1e9).toFixed());
+    } else if (!isBuy && !isNil(tokenBalance)) {
+      setAmount(BigNumber(tokenBalance.toString()).dividedBy(1e6).toFixed());
+    }
+  };
 
   return (
     <>
-      <Box as={FlexCol} gap={6}>
+      <Box as={FlexCol} gap={6} bg="rgba(249, 252, 255, 1)" rounded={16} p={5}>
         <FlexBetween>
-          <Title>Swap</Title>
-          <Button onClick={onOpenSlippage}>
+          <Box fontSize={20} fontWeight={600}>
+            Swap
+          </Box>
+          {/* <Button onClick={onOpenSlippage}>
             <SettingIcon />
-          </Button>
+          </Button> */}
         </FlexBetween>
         <FlexCol gap={3}>
           <FlexCol gap={2}>
@@ -225,19 +139,52 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
               <Box fontSize={14} fontWeight={500}>
                 From
               </Box>
-              <Box fontSize={14} fontWeight={600}>
-                {/* Balance: <Currency value={isBuy ? ethBalance?.value : tokenBalance} isWei /> */}
+              <Box fontSize={12} fontWeight={600} color="rgba(131, 131, 131, 1)">
+                Balance:{' '}
+                <Currency
+                  value={isBuy ? solBalance : tokenBalance?.amount}
+                  decimalNumber={isBuy ? 9 : tokenBalance?.decimals}
+                />
               </Box>
             </FlexBetween>
-            <InputCurrency
-              // currency={isBuy ? 'ETH' : token.symbol}
-              // isInvalid={isOutValue}
-              value={amount}
-              min={0}
-              onValueChange={setAmount}
-              // onMax={handleOnMaxAmount}
-              // icon={isBuy ? undefined : token.image_uri}
-            />
+            <Box pos="relative">
+              <InputCurrency
+                style={{ height: '44px', paddingRight: '126px' }}
+                value={amount}
+                min={0}
+                onValueChange={setAmount}
+              />
+
+              <Flex gap={2} alignItems="center" pos="absolute" right={3} top={0} h="full">
+                <Button color="purple" onClick={handleOnMaxAmount}>
+                  MAX
+                </Button>
+                <Box h={5} w="1px" bg="rgba(40, 40, 45, 1)" />
+                <Flex alignItems="center" gap={1}>
+                  <ImageRatio
+                    src={isBuy ? '/icons/solana.png' : token.image_uri}
+                    ratio={1}
+                    w={5}
+                    h={5}
+                    rounded={999}
+                    overflow="hidden"
+                  />
+                  <Box
+                    as="span"
+                    maxW={45}
+                    justifyContent="end"
+                    alignItems="center"
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    fontSize={14}
+                    color="dark.500"
+                  >
+                    {isBuy ? 'SOL' : token.symbol}
+                  </Box>
+                </Flex>
+              </Flex>
+            </Box>
           </FlexCol>
           <Flex alignItems="center" gap={3}>
             <Line flex={1} />
@@ -251,74 +198,104 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
               <Box fontSize={14} fontWeight={500}>
                 To
               </Box>
-              <Box fontSize={14} fontWeight={600}>
-                {/* Balance: <Currency value={isBuy ? tokenBalance : ethBalance?.value} isWei isKmb /> */}
+              <Box fontSize={12} fontWeight={600} color="rgba(131, 131, 131, 1)">
+                Balance:{' '}
+                <Currency
+                  value={!isBuy ? solBalance : tokenBalance?.amount}
+                  decimalNumber={!isBuy ? 9 : tokenBalance?.decimals}
+                />
               </Box>
             </FlexBetween>
-            <InputCurrency
-              // currency={isBuy ? token.symbol : 'ETH'}
-              value={0}
-              disabled
-              // icon={isBuy ? token.image_uri : undefined}
-            />
+
+            <Box pos="relative">
+              <InputCurrency style={{ height: '44px', paddingRight: '55px' }} disabled value={estReceive} />
+
+              <Flex gap={1} alignItems="center" pos="absolute" right={3} top={0} h="full">
+                <ImageRatio
+                  src={!isBuy ? '/icons/solana.png' : token.image_uri}
+                  ratio={1}
+                  w={5}
+                  h={5}
+                  rounded={999}
+                  overflow="hidden"
+                />
+                <Box
+                  as="span"
+                  maxW={45}
+                  justifyContent="end"
+                  alignItems="center"
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  fontSize={14}
+                  color="dark.500"
+                >
+                  {!isBuy ? 'SOL' : token.symbol}
+                </Box>
+              </Flex>
+            </Box>
           </FlexCol>
         </FlexCol>
-        <FlexBetween>
+        {/* <FlexBetween>
           <Box fontSize={14} fontWeight={500}>
             Slippage Tolerance
           </Box>
           <Flex alignItems="center" gap={1}>
-            <Box fontSize={14} fontWeight={500}>
+            <Box fontSize={14} fontWeight={500} color="rgba(131, 131, 131, 1)">
               {slippage}%
             </Box>
-            {/* <Button onClick={onOpenSlippage}>
-              <EditIcon />
-            </Button> */}
+        
           </Flex>
-        </FlexBetween>
-        {
-          <ButtonChakra
-            rounded={8}
-            onClick={() => {
-              onOpen();
-            }}
-            isLoading={isLoading}
-          >
-            SWAP
-          </ButtonChakra>
-        }
+        </FlexBetween> */}
+        <Button
+          rounded={8}
+          onClick={handleSwap}
+          isLoading={isLoading}
+          bg="makeColor"
+          h={10}
+          color="white"
+          fontFamily="titanOne"
+          fontWeight={400}
+          fontSize={20}
+          _disabled={{
+            bg: 'rgba(131, 131, 131, 1)',
+            cursor: 'not-allowed',
+          }}
+          disabled={isDisableSwap}
+        >
+          SWAP
+        </Button>
       </Box>
       <ModalBase isOpen={isOpen} onClose={onClose} isCentered>
         <FlexCol gap={2.5}>
           <FormControl>
-            <FormLabel fontSize={14}>Add a comment</FormLabel>
+            <FormLabel fontSize={14} fontFamily="sfPro" fontWeight={700}>
+              Add a comment
+            </FormLabel>
             <TextareaForm
-              borderColor="dark.600"
+              fontFamily="sfPro"
+              fontWeight={700}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Optional"
             />
           </FormControl>
-          {isBuy && (
-            <FormControl>
-              <FormLabel fontSize={14}>Referral Code</FormLabel>
-              <InputForm
-                borderColor="dark.600"
-                value={referralCode}
-                onChange={(e) => setReferralCode(e.target.value)}
-                placeholder="Optional"
-              />
-            </FormControl>
-          )}
-          <ButtonChakra
-            isDisabled={isLoading}
+
+          <Button
+            fontFamily="titanOne"
+            fontWeight={400}
+            bg="makeColor"
+            h={10}
+            color="white"
+            isLoading={isLoading}
+            rounded={8}
             onClick={() => {
               onClose();
               // handleSwap();
             }}
           >
             SWAP
-          </ButtonChakra>
+          </Button>
         </FlexCol>
       </ModalBase>
 
@@ -329,7 +306,7 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
         closeOnOverlayClick={false}
         minW={{ base: 'unset', md: 520 }}
       >
-        <FlexCol gap={2.5}>
+        <FlexCol gap={2.5} pt={5}>
           <FlexCol w="full" gap={3} p={4} rounded={16} border="1px solid" borderColor="dark.800" pb={9}>
             <Box fontSize={14} fontWeight={500}>
               Set Slippage
@@ -354,11 +331,10 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
               <SliderMark
                 value={slippage}
                 textAlign="center"
-                bg="primary.100"
-                color="white"
-                mt="-10"
-                ml="-13px"
-                bottom={'-20px'}
+                bg="rgba(243, 235, 255, 1)"
+                color="purple"
+                ml="-3px"
+                bottom={'-25px'}
                 w="fit-content"
                 px={1}
                 py={0.5}
@@ -368,22 +344,15 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
               >
                 {slippage}%
               </SliderMark>
-              <SliderTrack bg="dark.700" h={1.5} rounded="full">
-                <SliderFilledTrack bg="primary.100" />
+              <SliderTrack bg="rgba(243, 235, 255, 1)" h={1.5} rounded="full">
+                <SliderFilledTrack bg="purple" />
               </SliderTrack>
-              <SliderThumb boxSize={5} bg="primary.100" border="1px solid white" />
+              <SliderThumb boxSize={5} bg="purple" border="1px solid white" />
             </Slider>
           </FlexCol>
-          <ButtonChakra onClick={onCloseSlippage}>OK</ButtonChakra>
-        </FlexCol>
-      </ModalBase>
-
-      <ModalBase isOpen={isOpenAlert} onClose={onCloseAlert} isCentered minW={{ base: 'unset', md: 520 }}>
-        <FlexCol gap={2.5}>
-          <Box w="full" py={10} textAlign="center">
-            This project is protected by S.meme . You can only sell the token once it has been listed on MVX.Exchange.
-          </Box>
-          <ButtonChakra onClick={onCloseAlert}>OK</ButtonChakra>
+          <Button onClick={onCloseSlippage} h={10} bg="makeColor" rounded={8} color="white">
+            OK
+          </Button>
         </FlexCol>
       </ModalBase>
     </>

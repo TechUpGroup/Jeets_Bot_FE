@@ -4,7 +4,7 @@ import tokenIdl from '@/constants/idl/tokenIdl.json';
 import { JeetsSolana } from '@/constants/types/token.type';
 import { useAnchorProvider } from '@/hooks/solana';
 import { BN, Program } from '@coral-xyz/anchor';
-import { Keypair, PublicKey, sendAndConfirmTransaction, SYSVAR_RENT_PUBKEY, Transaction } from '@solana/web3.js';
+import { Keypair, PublicKey, SYSVAR_RENT_PUBKEY, Transaction } from '@solana/web3.js';
 
 export const useCreateToken = () => {
   const anchorProvider = useAnchorProvider();

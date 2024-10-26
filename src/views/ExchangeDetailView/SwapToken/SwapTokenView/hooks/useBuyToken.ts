@@ -1,48 +1,38 @@
-import BigNumber from 'bignumber.js';
 import { useCallback } from 'react';
-import { Address, zeroAddress } from 'viem';
 
-import moonadABI from '@/config/ABI/moonadABI';
-import useActiveWeb3React from '@/hooks/useActiveWeb3React';
-import { useAddress } from '@/hooks/useAddress';
-import { useCallWithGasPrice } from '@/hooks/wagmi/useCallWithGasPrice';
-import { getReceiptTxs } from '@/utils/helpers';
+import { useAnchorProvider } from '@/hooks/solana';
+import { Transaction } from '@solana/web3.js';
 
 export const useBuyToken = () => {
-  const { provider } = useActiveWeb3React();
-  const { callWithGasPrice } = useCallWithGasPrice();
-  const { moonad } = useAddress();
+  const anchorProvider = useAnchorProvider();
   return useCallback(
-    async (params: {
-      token: Address;
-      referral?: string;
-      nonce: Address;
-      price: string;
-      signTime: number;
-      signature: Address;
-      amount: string;
-      amountOutMin: bigint;
-    }) => {
-      if (!provider) return;
-      const { token, referral, nonce, price, signTime, signature, amount, amountOutMin } = params;
-      await getReceiptTxs(
-        callWithGasPrice(
-          { abi: moonadABI, address: moonad },
-          'buy',
-          [
-            token,
-            (referral ?? zeroAddress) as Address,
-            amountOutMin,
-            nonce,
-            BigInt(price),
-            BigInt(signTime),
-            signature,
-          ],
-          { value: BigInt(BigNumber(amount).multipliedBy(1e18).toFixed(0)) },
-        ),
-        provider,
+    async (signatureRaw: string) => {
+      if (!anchorProvider) throw new Error('Provider not found');
+      const { wallet, connection } = anchorProvider;
+      const decodedTx = Buffer.from(signatureRaw, 'base64');
+      const transaction = Transaction.from(decodedTx);
+
+      const transactionSigned = await wallet.signTransaction(transaction);
+      const signature = await connection.sendRawTransaction(transactionSigned.serialize(), {
+        skipPreflight: true,
+        preflightCommitment: 'confirmed',
+        maxRetries: 50,
+      });
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash('confirmed');
+      const confirmedTx = await connection.confirmTransaction(
+        {
+          blockhash,
+          lastValidBlockHeight,
+          signature,
+        },
+        'confirmed',
       );
+
+      if (!!confirmedTx.value.err) {
+        throw new Error('Transaction fail!');
+      }
+      return signature;
     },
-    [moonad, provider, callWithGasPrice],
+    [anchorProvider],
   );
 };
