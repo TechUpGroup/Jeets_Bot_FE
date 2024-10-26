@@ -9,13 +9,14 @@ export interface ICreateTokenSignature {
   image_uri: string;
   metadata_uri: string;
   target_score: number;
+  max_buy_per_address: number;
   price_sol_per_token: number;
   total_sol_receive: number;
   mint: string;
   creator: string;
   created_timestamp: number;
-  complete: false;
-  trade_completed: false;
+  complete: boolean;
+  trade_completed: boolean;
   total_supply: number;
   virtual_sol_reserves: number;
   virtual_token_reserves: number;
@@ -53,44 +54,48 @@ export interface ITokenHolder {
 }
 
 export interface ITokenCreate {
+  _id: string;
   network: string;
-  user: {
-    address: string;
-    username: string;
-    avatar: string;
-  };
-  is_king: boolean;
+  username: string;
   name: string;
   symbol: string;
   description: string;
   image_uri: string;
   metadata_uri: string;
+  target_score: number;
+  max_buy_per_address: number;
+  price_sol_per_token: number;
+  total_sol_receive: number;
   mint: string;
-  avatar?: string;
   creator: string;
   created_timestamp: number;
-  nonce: Address;
-  milestone_pushed: number;
-  anti_rug_pool: boolean;
   complete: boolean;
-  complete_timestamp: number;
-  total_supply: string;
-  virtual_eth_reserves: string;
-  virtual_token_reserves: string;
-  real_eth_reserves: string;
-  real_token_reserves: string;
-  init_price: number;
-  market_cap: string;
-  chat_count: number;
+  trade_completed: boolean;
+  total_supply: number;
+  virtual_sol_reserves: number;
+  virtual_token_reserves: number;
+  real_sol_reserves: number;
+  real_token_reserves: number;
+  current_price: number;
+  myAmount: number;
+  market_cap: number;
+  fee_create_market_pool: number;
+  last_trade_timestamp: number;
+  show_name: boolean;
+  is_withdraw: boolean;
+  is_burned_lp: boolean;
   is_minted_onchain: boolean;
-  _id: string;
+  call_withdraw: number;
+  call_create_market: number;
+  call_create_pool: number;
+  call_burn_lp: number;
   createdAt: string;
   updatedAt: string;
-  no: number;
-
-  telegram?: string;
-  twitter?: string;
-  website?: string;
+  __v: number;
+  transaction_hash: string;
+  holders: [];
+  totalHolders: number;
+  saleProgress: number;
 }
 
 export interface ITokenTrade {
@@ -123,63 +128,52 @@ export interface ITokenTrade {
 export interface ITokenInfo {
   _id: string;
   network: string;
-  pool: string;
-
-  is_king: boolean;
-  user: {
-    _id: string;
-    username: string;
-    avatar: string;
-  };
+  username: string;
   name: string;
   symbol: string;
-  max_holding: string;
   description: string;
   image_uri: string;
   metadata_uri: string;
-  mint: Address;
+  target_score: number;
+  max_buy_per_address: number;
+  price_sol_per_token: number;
+  total_sol_receive: number;
+  mint: string;
   creator: string;
   created_timestamp: number;
-  nonce: string;
-  milestone_pushed: number;
-  anti_rug_pool: boolean;
   complete: boolean;
-  complete_timestamp: number;
-  total_supply: string;
-  virtual_eth_reserves: string;
-  virtual_token_reserves: string;
-  real_eth_reserves: string;
-  real_token_reserves: string;
-  init_price: number;
-  market_cap: string;
-  chat_count: number;
+  trade_completed: boolean;
+  total_supply: number;
+  virtual_sol_reserves: number;
+  virtual_token_reserves: number;
+  real_sol_reserves: number;
+  real_token_reserves: number;
+  current_price: number;
+  market_cap: number;
+  fee_create_market_pool: number;
+  last_trade_timestamp: number;
+  show_name: boolean;
+  is_withdraw: boolean;
+  is_burned_lp: boolean;
   is_minted_onchain: boolean;
+  call_withdraw: number;
+  call_create_market: number;
+  call_create_pool: number;
+  call_burn_lp: number;
   createdAt: string;
   updatedAt: string;
-  no: number;
   transaction_hash: string;
-
-  telegram?: string;
-  twitter?: string;
-  website?: string;
 }
 
 export interface ITokenData {
-  is_sell: boolean;
   mintToken?: ITokenInfo;
-  volume: {
-    eth_volume: number;
-    usd_volume: number;
-  };
-
-  usd_king_threshold: number;
-  virtualLiquidity: {
-    usd_virtual_liquidity: number;
-    eth_virtual_liquidity: string;
-  };
-  marketCap: {
+  marketCap?: {
     usd_market_cap: number;
-    eth_market_cap: string;
+    sol_market_cap: number;
+  };
+  volume?: {
+    sol_volume: number;
+    usd_volume: number;
   };
 }
 

@@ -12,26 +12,29 @@ export const useCreateToken = () => {
     async (params: {
       symbol: string;
       name: string;
-      target_score: number;
-      maxHolding?: bigint;
-      nonce: string;
-      price: bigint;
+      targetScore: number;
+      priceSolPerToken: string | number;
+      totalSolReceive: string | number;
+      maxTokenCanBuy: string | number;
+      mint: Keypair;
     }) => {
+      const { mint } = params;
       if (!anchorProvider) throw new Error('Provider not found');
       const { wallet, connection, publicKey } = anchorProvider;
       const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash('confirmed');
       const program = new Program(tokenIdl as JeetsSolana, anchorProvider);
-      const mint = Keypair.generate(); // tạo địa chỉ token
 
       const MPL_TOKEN_METADATA_PROGRAM_ID = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
       const operator = new PublicKey('DydnchyFBgyXYfVi4gmwPKFGxdL8eoXfpG1UaoVhsHrV');
-      const tx = new Transaction();
+      const txs = new Transaction();
+      txs.recentBlockhash = blockhash;
+      txs.feePayer = publicKey;
       const ix = await program.methods
         .createToken(
           params.name, // name token
           params.symbol, // ticker
           '', // uri
-          params.target_score, // target jeets score
+          params.targetScore, // target jeets score
         )
         .accounts({
           payer: publicKey,
@@ -41,13 +44,13 @@ export const useCreateToken = () => {
           mint: mint.publicKey,
         })
         .instruction();
-      tx.add(ix);
+      txs.add(ix);
       const ix2 = await program.methods
         .mint(
           publicKey, // creator pubKey
-          new BN(5000000), // price
-          new BN(500000), // sol target
-          new BN(40000000 * 10 ** 6), // max token can buy
+          new BN(params.priceSolPerToken), // price
+          new BN(params.totalSolReceive), // sol target
+          new BN(params.maxTokenCanBuy), // max token can buy
         )
         .accounts({
           payer: publicKey,
@@ -55,9 +58,10 @@ export const useCreateToken = () => {
           mint: mint.publicKey,
         })
         .instruction();
-      tx.add(ix2);
-      tx.partialSign(mint);
-      const signedTransaction = await wallet.signTransaction(tx);
+      txs.add(ix2);
+
+      txs.partialSign(mint);
+      const signedTransaction = await wallet.signTransaction(txs);
       const signature = await connection.sendRawTransaction(signedTransaction.serialize(), {
         skipPreflight: true,
         preflightCommitment: 'confirmed',

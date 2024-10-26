@@ -82,7 +82,7 @@ export default function TokenDevelopmentTab() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showTooltipModal, setShowTooltipModal] = useState(false);
 
-  const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(0);
+  const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(0.1);
   const [totalSol, setTotalSol] = useState(1);
 
   const watchImage = watch('image');
@@ -118,7 +118,7 @@ export default function TokenDevelopmentTab() {
           description: values.description,
 
           target_score: maxScore,
-          max_buy_per_address: maxBuyPerAddress || undefined,
+          max_buy_per_address: maxBuyPerAddress,
           total_sol_receive: BigNumber(totalSol).multipliedBy(1e9).toNumber(),
           price_sol_per_token: BigNumber(priceToken ?? 0).toNumber(),
 
@@ -128,18 +128,17 @@ export default function TokenDevelopmentTab() {
         },
         values.image[0],
       );
-      // await createToken({
-      //   symbol: res.mintoken.symbol,
-      //   name: res.mintoken.name,
-      //   fundingGoal: BigInt(res.mintoken.milestone_pushed),
-      //   maxHolding: BigInt(BigNumber(maxHolding).multipliedBy(1e18).toFixed(0)),
-      //   nonce: res.signature.nonce,
-      //   price: BigInt(res.signature.price),
-      //   signTime: BigInt(res.signature.signTime),
-      //   signature: res.signature.signature,
-      // });
+      await createToken({
+        mint,
+        symbol: res.symbol,
+        name: res.name,
+        targetScore: res.target_score,
+        priceSolPerToken: BigNumber(res.price_sol_per_token).multipliedBy(1e9).toFixed(0),
+        totalSolReceive: res.total_sol_receive,
+        maxTokenCanBuy: BigNumber(maxBuyPerAddress).dividedBy(100).multipliedBy(1e6).multipliedBy(1e9).toFixed(0),
+      });
       onClose();
-      // push(`/pairs/${res.mintoken.mint}`);
+      push(`/exchange/${res.mint}`);
     } catch (e) {
       toastError('create token failed', e);
       console.error(e);
@@ -440,7 +439,13 @@ export default function TokenDevelopmentTab() {
           <FlexCol w="full" gap={2.5}>
             <Box>Amount</Box>
             <Box position="relative" w="full">
-              <InputCurrency style={{ paddingRight: '40px' }} value={amount} onValueChange={setAmount} />
+              <InputCurrency
+                style={{ paddingRight: '40px' }}
+                value={amount}
+                onValueChange={setAmount}
+                min={0}
+                max={100}
+              />
               <Flex
                 position="absolute"
                 top={0}
@@ -481,7 +486,7 @@ export default function TokenDevelopmentTab() {
           <Box pb={'30px'}>
             <Slider
               value={maxBuyPerAddress}
-              min={0}
+              min={0.1}
               max={1}
               onChange={(val) => setMaxBuyPerAddress(val)}
               py="9px"

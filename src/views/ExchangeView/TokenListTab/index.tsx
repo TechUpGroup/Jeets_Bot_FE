@@ -1,9 +1,27 @@
 'use client';
 
-import { Button, Currency, FlexCenter, FlexContent, ImageRatio, Pagination, Title2 } from '@/components';
+import { useMemo, useState } from 'react';
+
+import { Button, Currency, FlexCenter, FlexContent, ImageRatio, LinkCustom, Pagination, Title2 } from '@/components';
+import { useDebounce } from '@/hooks/useDebounce';
 import { Box, Flex, Select, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
+import { useQueryTokenList } from './hooks/useQueryTokenList';
+
 export default function TokenListTab() {
+  const [sortBy, setSortBy] = useState<string>('current_price');
+  const [sortType, setSortType] = useState<string>('desc');
+  const [search, setSearch] = useState<string>('');
+  const [page, setPage] = useState(1);
+
+  const searchDeb = useDebounce(search, 300);
+
+  const params = useMemo(
+    () => ({ page, limit: 10, sortBy, sortType, search: searchDeb }),
+    [page, sortBy, sortType, searchDeb],
+  );
+  const { data } = useQueryTokenList(params);
+
   return (
     <FlexContent w="full">
       <Title2>TOKEN LIST</Title2>
@@ -47,28 +65,28 @@ export default function TokenListTab() {
             </Tr>
           </Thead>
           <Tbody fontSize={{ base: 16, md: 16 }}>
-            {Array.from({ length: 5 }).map((_, i) => (
+            {data?.docs.map((token, i) => (
               <Tr key={i}>
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
                   <FlexCenter gap={2.5}>
                     <ImageRatio
-                      src="https://placehold.co/30x30/png"
+                      src={token.image_uri ?? 'https://placehold.co/30x30/png'}
                       ratio={1}
                       w="30px"
                       rounded={999}
                       overflow="hidden"
                     />
-                    ordi
+                    {token.name}
                   </FlexCenter>
                 </Td>
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
-                  <Currency value={37.281} prefix="$" />
+                  <Currency value={token.current_price} prefix="$" />
                 </Td>
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
-                  <Currency value={100} />
+                  <Currency value={token.totalHolders} />
                 </Td>
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
-                  70%
+                  {token.saleProgress * 100}%
                 </Td>
                 <Td
                   px={{ base: 2, md: 5 }}
@@ -77,19 +95,20 @@ export default function TokenListTab() {
                   roundedBottomRight={10}
                 >
                   <Flex justifyContent="end">
-                    <Button
-                      bg="makeColor"
-                      h={10}
-                      maxW={169}
-                      w="full"
-                      fontFamily="titanOne"
-                      fontWeight={400}
-                      fontSize={20}
-                      color="white"
-                      rounded={8}
-                    >
-                      BUY
-                    </Button>
+                    <LinkCustom href={`/exchange/${token.mint}`} maxW={169} w="full">
+                      <Button
+                        bg="makeColor"
+                        h={10}
+                        w="full"
+                        fontFamily="titanOne"
+                        fontWeight={400}
+                        fontSize={20}
+                        color="white"
+                        rounded={8}
+                      >
+                        BUY
+                      </Button>
+                    </LinkCustom>
                   </Flex>
                 </Td>
               </Tr>
@@ -98,7 +117,7 @@ export default function TokenListTab() {
         </Table>
       </TableContainer>
 
-      <Pagination total={10} initialPage={1} />
+      <Pagination page={page} onChange={setPage} total={data?.totalPages ?? 0} />
     </FlexContent>
   );
 }

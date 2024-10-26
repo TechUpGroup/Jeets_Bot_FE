@@ -2,16 +2,25 @@
 
 import { useRouter } from 'next/navigation';
 
-import { Button, FlexCol, FlexContent, ImageRatio, Title2, Wrapper } from '@/components';
-import { Box, Flex, SimpleGrid, Tab, Tabs } from '@chakra-ui/react';
+import { Button, Currency, FlexCol, FlexContent, ImageRatio, LinkCustom, Title2, Wrapper } from '@/components';
+import { formatAddress } from '@/utils/address';
+import { Box, Flex, SimpleGrid, Spinner, Tab, Tabs } from '@chakra-ui/react';
 
 import { HoldersDistribution } from './HoldersDistribution';
+import { useQueryTokenDetail } from './hooks/useQueryTokenDetail';
+import { SwapToken } from './SwapToken';
 import { TradeComponent } from './TradeComponent';
 
-const tabs = ['Token List', 'Token Development', 'My Token'];
+const tabs = [
+  { name: 'Token List', href: '/exchange?tab=1' },
+  { name: 'Token Development', href: '/exchange?tab=2' },
+  { name: 'My Token', href: '/exchange?tab=3' },
+];
 
 export default function ExchangeDetailView({ mint }: { mint: string }) {
   const router = useRouter();
+  const { data, isLoading } = useQueryTokenDetail(mint);
+  console.log('data', data);
   return (
     <Wrapper
       as={Tabs}
@@ -28,9 +37,11 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
       <FlexContent maxW={{ base: 'full', md: 300, lg: 320, xl: 350, '2xl': 402 }} w="full" flex="unset" gap={5}>
         <Title2>OTC Exchange</Title2>
         <SimpleGrid columns={{ base: 3, md: 1 }} gap={5} w="full">
-          {tabs.map((name) => (
+          {tabs.map((tab) => (
             <Tab
-              key={name}
+              as={LinkCustom}
+              href={tab.href}
+              key={tab.name}
               w="full"
               _selected={{ color: 'white', bg: 'purple' }}
               bg="rgba(237, 247, 255, 1)"
@@ -40,120 +51,130 @@ export default function ExchangeDetailView({ mint }: { mint: string }) {
               py={{ base: 3, md: 5 }}
               rounded={10}
             >
-              {name}
+              {tab.name}
             </Tab>
           ))}
         </SimpleGrid>
       </FlexContent>
-      <FlexContent w="full" fontFamily="sfPro" fontWeight={600}>
-        <Flex justifyContent="space-between" alignItems="center" w="full">
-          <Button fontSize={20} fontWeight={600} onClick={router.back} color="purple" textDecor="underline">
-            Back
-          </Button>
-          <Title2 fontFamily="titanOne" fontWeight={400}>
-            TOKEN DETAILS
-          </Title2>
-          <Button fontSize={20} fontWeight={600} visibility="hidden">
-            Back
-          </Button>
-        </Flex>
+      {isLoading || !data ? (
+        <FlexContent w="full" justifyContent="center" alignItems="center" minH={350}>
+          {isLoading ? <Spinner /> : <Box>Token not found</Box>}
+        </FlexContent>
+      ) : (
+        <FlexContent w="full" fontFamily="sfPro" fontWeight={600}>
+          <Flex justifyContent="space-between" alignItems="center" w="full">
+            <Button fontSize={20} fontWeight={600} onClick={router.back} color="purple" textDecor="underline">
+              Back
+            </Button>
+            <Title2 fontFamily="titanOne" fontWeight={400}>
+              TOKEN DETAILS
+            </Title2>
+            <Button fontSize={20} fontWeight={600} visibility="hidden">
+              Back
+            </Button>
+          </Flex>
 
-        <Flex gap={4} alignItems="center" w="full">
-          <ImageRatio
-            src={'https://placehold.co/100x100/png'}
-            ratio={1}
-            border="0.67px solid rgba(16, 16, 16, 1)"
-            w={{ base: 83, md: 83 }}
-            rounded="5.33px"
-            overflow="hidden"
-          />
-          <FlexCol>
-            <Box fontSize={20}>MEME</Box>
-            <Flex
-              bg="rgba(237, 247, 255, 1)"
-              rounded="full"
-              p={2.5}
-              justifyContent="center"
-              alignItems="center"
-              gap={2}
-            >
-              <ImageRatio src="/icons/solana.png" ratio={1} w={6} rounded={999} overflow="hidden" />
-              <Box fontSize={14} fontWeight={500}>
-                Solana
+          <Flex gap={4} alignItems="center" w="full">
+            <ImageRatio
+              src={'https://placehold.co/100x100/png'}
+              ratio={1}
+              border="0.67px solid rgba(16, 16, 16, 1)"
+              w={{ base: 83, md: 83 }}
+              rounded="5.33px"
+              overflow="hidden"
+            />
+            <FlexCol>
+              <Box fontSize={20}>{data.mintToken?.name}</Box>
+              <Flex
+                bg="rgba(237, 247, 255, 1)"
+                rounded="full"
+                p={2.5}
+                justifyContent="center"
+                alignItems="center"
+                gap={2}
+              >
+                <ImageRatio src="/icons/solana.png" ratio={1} w={6} rounded={999} overflow="hidden" />
+                <Box fontSize={14} fontWeight={500}>
+                  Solana
+                </Box>
+              </Flex>
+            </FlexCol>
+          </Flex>
+
+          <FlexCol fontSize={{ base: 28, md: 36 }} w="full">
+            <Box>{data.mintToken?.symbol}</Box>
+            <Box>
+              <Currency value={data.mintToken?.current_price} prefix="$" />
+            </Box>
+          </FlexCol>
+
+          <Flex
+            border="1px solid black"
+            rounded={12}
+            px={{ base: 2.5, md: 6 }}
+            py={{ base: 2.5, md: 4 }}
+            w="full"
+            gap={{ base: 4, md: 10 }}
+            flexDir={{ base: 'column', md: 'row' }}
+          >
+            <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
+              <Box color="rgba(131, 131, 131, 1)" fontSize={14} fontWeight={400}>
+                Wallet address
               </Box>
-            </Flex>
-          </FlexCol>
-        </Flex>
+              <Box fontSize={16} fontWeight={500}>
+                {formatAddress(data.mintToken?.mint, 6, 4)}
+              </Box>
+            </FlexCol>
+            <LineCustom />
+            <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
+              <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
+                Status
+              </Box>
+              <Box fontSize={16} fontWeight={500}>
+                Opening
+              </Box>
+            </FlexCol>
+            <LineCustom />
+            <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
+              <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
+                Price/Token
+              </Box>
+              <Box fontSize={16} fontWeight={500}>
+                <Currency value={data.mintToken?.current_price} />
+                SOL/MEME
+              </Box>
+            </FlexCol>
+            <LineCustom />
+            <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
+              <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
+                Sold
+              </Box>
+              <Box fontSize={16} fontWeight={500}>
+                <Currency value={data.mintToken?.virtual_sol_reserves} isWei prefix="$" />
+              </Box>
+            </FlexCol>
+            <LineCustom />
+            <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
+              <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
+                Target
+              </Box>
+              <Box fontSize={16} fontWeight={500}>
+                <Currency value={data.mintToken?.total_sol_receive} isWei prefix="$" />
+              </Box>
+            </FlexCol>
+          </Flex>
 
-        <FlexCol fontSize={{ base: 28, md: 36 }} w="full">
-          <Box>MEME</Box>
-          <Box>$0.0000553</Box>
-        </FlexCol>
-
-        <Flex
-          border="1px solid black"
-          rounded={12}
-          px={{ base: 2.5, md: 6 }}
-          py={{ base: 2.5, md: 4 }}
-          w="full"
-          gap={{ base: 4, md: 10 }}
-          flexDir={{ base: 'column', md: 'row' }}
-        >
-          <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
-            <Box color="rgba(131, 131, 131, 1)" fontSize={14} fontWeight={400}>
-              Wallet address
+          <Flex w="full" gap={{ base: 4, md: '30px' }} flexDir={{ base: 'column', md: 'row' }}>
+            <Box flex={1}>
+              <TradeComponent />
             </Box>
-            <Box fontSize={16} fontWeight={500}>
-              0xac27...fd0f
-            </Box>
-          </FlexCol>
-          <LineCustom />
-          <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
-            <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
-              Status
-            </Box>
-            <Box fontSize={16} fontWeight={500}>
-              Opening
-            </Box>
-          </FlexCol>
-          <LineCustom />
-          <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
-            <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
-              Price/Token
-            </Box>
-            <Box fontSize={16} fontWeight={500}>
-              1SOL/MEME
-            </Box>
-          </FlexCol>
-          <LineCustom />
-          <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
-            <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
-              Sold
-            </Box>
-            <Box fontSize={16} fontWeight={500}>
-              $133
-            </Box>
-          </FlexCol>
-          <LineCustom />
-          <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
-            <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
-              Target
-            </Box>
-            <Box fontSize={16} fontWeight={500}>
-              $9431
-            </Box>
-          </FlexCol>
-        </Flex>
-
-        <Flex w="full" gap={{ base: 4, md: '30px' }} flexDir={{ base: 'column', md: 'row' }}>
-          <Box flex={1}>
-            <TradeComponent />
-          </Box>
-          <FlexCol w="full" maxW={356}>
-            <HoldersDistribution />
-          </FlexCol>
-        </Flex>
-      </FlexContent>
+            <FlexCol w="full" maxW={356} gap="30px">
+              {data.mintToken && <SwapToken token={data.mintToken} />}
+              <HoldersDistribution />
+            </FlexCol>
+          </Flex>
+        </FlexContent>
+      )}
     </Wrapper>
   );
 }
