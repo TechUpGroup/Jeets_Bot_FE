@@ -127,11 +127,21 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
   // };
 
   const messageError = useMemo(() => {
+    const userScore = user?.score ?? 0;
     if (isBuy && Number(estReceive) > token.max_buy_per_address) return 'Exceeded maximum number of tokens purchased';
-    if (token.target_score > (user?.score ?? 0)) return `You don't have enough score to buy a token`;
+    if (userScore < token.min_target_score) return `You don't have enough score to swap token`;
+    if (userScore > token.max_target_score) return `You exceed score to swap token`;
     if (isOutValue) return 'Insufficient balance';
     return '';
-  }, [token.target_score, token.max_buy_per_address, user?.score, isOutValue, isBuy, estReceive]);
+  }, [
+    user?.score,
+    isBuy,
+    estReceive,
+    token.max_buy_per_address,
+    token.min_target_score,
+    token.max_target_score,
+    isOutValue,
+  ]);
 
   const isDisableSwap = useMemo(() => {
     if (Number(amount || '0') === 0) return true;
