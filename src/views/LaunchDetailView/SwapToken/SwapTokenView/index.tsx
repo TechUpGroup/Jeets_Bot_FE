@@ -49,10 +49,23 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
   const { balance: solBalance } = useSolanaBalance();
   const { balance: tokenBalance } = useSolanaBalanceToken(token.mint);
   const [isBuy, setIsBuy] = useState(true);
-  const [amount, setAmount] = useState<string>();
+  // const [amount, setAmount] = useState<string>();
+  const amount = useMemo(() => {
+    if (isBuy)
+      return BigNumber(token.max_buy_per_address)
+        .dividedBy(100)
+        .multipliedBy(1e9)
+        .multipliedBy(token.price_sol_per_token)
+        .toFixed();
+    return BigNumber(tokenBalance?.amount ?? 0)
+      .dividedBy(1 ** (tokenBalance?.decimals ?? 1))
+      .toFixed();
+  }, [isBuy, token.max_buy_per_address, token.price_sol_per_token, tokenBalance?.amount, tokenBalance?.decimals]);
+
   const [comment, setComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const amountDebounce = useDebounce(Number(amount || 0).toString(), 300);
+  // const amountDebounce = useDebounce(Number(amount || 0).toString(), 300);
+  const amountDebounce = useMemo(() => BigNumber(amount || 0).toFixed(), [amount]);
 
   const ethBalanceFormated = useMemo(() => BigNumber(solBalance ?? 0).dividedBy(1e9), [solBalance]);
   const tokenBalanceFormated = useMemo(() => BigNumber(tokenBalance?.toString() ?? 0).dividedBy(1e6), [tokenBalance]);
@@ -94,7 +107,7 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
         });
         toastSuccess('Sell token success');
       }
-      setAmount('');
+      // setAmount('');
       setComment('');
     } catch (e) {
       console.error(e);
@@ -110,13 +123,13 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
     return false;
   }, [amount, ethBalanceFormated, isBuy, tokenBalanceFormated]);
 
-  const handleOnMaxAmount = () => {
-    if (isBuy && solBalance) {
-      setAmount(BigNumber(solBalance.toString()).dividedBy(1e9).toFixed());
-    } else if (!isBuy && !isNil(tokenBalance)) {
-      setAmount(BigNumber(tokenBalance.toString()).dividedBy(1e6).toFixed());
-    }
-  };
+  // const handleOnMaxAmount = () => {
+  //   if (isBuy && solBalance) {
+  //     setAmount(BigNumber(solBalance.toString()).dividedBy(1e9).toFixed());
+  //   } else if (!isBuy && !isNil(tokenBalance)) {
+  //     setAmount(BigNumber(tokenBalance.toString()).dividedBy(1e6).toFixed());
+  //   }
+  // };
 
   const messageError = useMemo(() => {
     if (isBuy && Number(estReceive) / 1e9 > token.max_buy_per_address / 100)
@@ -159,17 +172,22 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
             </FlexBetween>
             <Box pos="relative">
               <InputCurrency
-                style={{ height: '44px', paddingRight: '126px' }}
+                style={{
+                  height: '44px',
+                  paddingRight: '55px',
+                  // paddingRight: '126px'
+                }}
+                disabled
                 value={amount}
                 min={0}
-                onValueChange={setAmount}
+                // onValueChange={setAmount}
               />
 
               <Flex gap={2} alignItems="center" pos="absolute" right={3} top={0} h="full">
-                <Button color="purple" onClick={handleOnMaxAmount}>
+                {/* <Button color="purple" onClick={handleOnMaxAmount}>
                   MAX
                 </Button>
-                <Box h={5} w="1px" bg="rgba(40, 40, 45, 1)" />
+                <Box h={5} w="1px" bg="rgba(40, 40, 45, 1)" /> */}
                 <Flex alignItems="center" gap={1}>
                   <ImageRatio
                     src={isBuy ? '/icons/solana.png' : token.image_uri}

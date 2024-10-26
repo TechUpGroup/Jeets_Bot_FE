@@ -429,7 +429,7 @@ export default function TokenDevelopmentTab() {
             Deploy your token
           </Box>
           <FlexCol w="full" gap={2.5}>
-            <Box>Amount</Box>
+            <Box>What % of the total supply do you want to own?</Box>
             <Box position="relative" w="full">
               <InputCurrency
                 style={{ paddingRight: '40px' }}
@@ -471,10 +471,10 @@ export default function TokenDevelopmentTab() {
             {[0.1, 0.5, 0.7, 1].map((e) => (
               <Box
                 key={e}
-                bg="rgba(243, 235, 255, 1)"
+                bg={e === maxBuyPerAddress ? 'purple' : 'rgba(243, 235, 255, 1)'}
                 rounded={6}
                 p={2.5}
-                color="purple"
+                color={e === maxBuyPerAddress ? 'white' : 'purple'}
                 textAlign="center"
                 cursor="pointer"
                 onClick={() => setMaxBuyPerAddress(e)}
