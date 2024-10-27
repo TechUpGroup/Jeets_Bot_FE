@@ -326,96 +326,6 @@ export default function TokenDevelopmentTab() {
           </InputGroup>
         </FormControl>
 
-        <FlexCol w="full" gap={3} p={4} rounded={16} border="1px solid" borderColor="rgba(192, 192, 192, 1)" pb={9}>
-          <Box fontSize={14}>Target Jeets Score</Box>
-          <RangeSlider
-            min={0}
-            max={500}
-            value={[minTargetScore, maxTargetScore]}
-            onChange={([min, max]) => {
-              setMinTargetScore(min);
-              setMaxTargetScore(max);
-            }}
-            py="9px"
-            h={6}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-          >
-            <RangeSliderTrack bg="rgba(243, 235, 255, 1)" h={1.5} rounded={999}>
-              <RangeSliderFilledTrack bg="purple" />
-            </RangeSliderTrack>
-            <Box w="full" px={3} h={1.5}>
-              <Box position="relative" w="full" h="full">
-                <Tooltip
-                  placement="bottom"
-                  isOpen={showTooltip}
-                  px={1}
-                  rounded={4}
-                  bg="purple"
-                  label={
-                    <Box color="white" fontWeight={600} fontSize={10} fontFamily="sfPro">
-                      {`${minTargetScore} Jeets`}
-                    </Box>
-                  }
-                >
-                  <RangeSliderThumb
-                    bg="purple"
-                    boxSize={6}
-                    transform="translate(-50%, -50%)"
-                    _active={{ transform: 'translate(-50%, -50%) scale(1.15)' }}
-                    index={0}
-                  />
-                </Tooltip>
-
-                <Tooltip
-                  placement="bottom"
-                  isOpen={showTooltip}
-                  px={1}
-                  rounded={4}
-                  bg="purple"
-                  label={
-                    <Box color="white" fontWeight={600} fontSize={10} fontFamily="sfPro">
-                      {`${maxTargetScore} Jeets`}
-                    </Box>
-                  }
-                >
-                  <RangeSliderThumb
-                    bg="purple"
-                    boxSize={6}
-                    transform="translate(-50%, -50%)"
-                    _active={{ transform: 'translate(-50%, -50%) scale(1.15)' }}
-                    index={1}
-                  />
-                </Tooltip>
-
-                <RangeSliderMark
-                  value={0}
-                  textAlign="center"
-                  color="rgba(142, 142, 147, 1)"
-                  top="calc(100% + 14px)"
-                  fontWeight={600}
-                  fontSize={12}
-                  transform="translateX(-12px)"
-                >
-                  0 Jeets
-                </RangeSliderMark>
-                <RangeSliderMark
-                  style={{ textWrap: 'nowrap' }}
-                  value={500}
-                  textAlign="center"
-                  color="rgba(142, 142, 147, 1)"
-                  top="calc(100% + 14px)"
-                  fontWeight={600}
-                  fontSize={12}
-                  transform="translateX(calc(-100% + 12px))"
-                >
-                  500 Jeets
-                </RangeSliderMark>
-              </Box>
-            </Box>
-          </RangeSlider>
-        </FlexCol>
-
         {/* <FlexCol gap={2.5} w="full">
           <Title fontSize={16} fontWeight={800}>
             Target Jeets Holder
@@ -582,6 +492,96 @@ export default function TokenDevelopmentTab() {
                 SOL
               </Flex>
             </Box>
+          </FlexCol>
+
+          <FlexCol w="full" gap={3} p={4} rounded={16} border="1px solid" borderColor="rgba(192, 192, 192, 1)" pb={9}>
+            <Box fontSize={14}>Target Jeets Score</Box>
+            <RangeSlider
+              min={0}
+              max={500}
+              value={[minTargetScore, maxTargetScore]}
+              onChange={([min, max]) => {
+                setMinTargetScore(min);
+                setMaxTargetScore(max);
+              }}
+              py="9px"
+              h={6}
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              <RangeSliderTrack bg="rgba(243, 235, 255, 1)" h={1.5} rounded={999}>
+                <RangeSliderFilledTrack bg="purple" />
+              </RangeSliderTrack>
+              <Box w="full" px={3} h={1.5}>
+                <Box position="relative" w="full" h="full">
+                  <Tooltip
+                    placement="bottom"
+                    isOpen={showTooltip}
+                    px={1}
+                    rounded={4}
+                    bg="purple"
+                    label={
+                      <Box color="white" fontWeight={600} fontSize={10} fontFamily="sfPro">
+                        {`${minTargetScore} Jeets`}
+                      </Box>
+                    }
+                  >
+                    <RangeSliderThumb
+                      bg="purple"
+                      boxSize={6}
+                      transform="translate(-50%, -50%)"
+                      _active={{ transform: 'translate(-50%, -50%) scale(1.15)' }}
+                      index={0}
+                    />
+                  </Tooltip>
+
+                  <Tooltip
+                    placement="bottom"
+                    isOpen={showTooltip}
+                    px={1}
+                    rounded={4}
+                    bg="purple"
+                    label={
+                      <Box color="white" fontWeight={600} fontSize={10} fontFamily="sfPro">
+                        {`${maxTargetScore} Jeets`}
+                      </Box>
+                    }
+                  >
+                    <RangeSliderThumb
+                      bg="purple"
+                      boxSize={6}
+                      transform="translate(-50%, -50%)"
+                      _active={{ transform: 'translate(-50%, -50%) scale(1.15)' }}
+                      index={1}
+                    />
+                  </Tooltip>
+
+                  <RangeSliderMark
+                    value={0}
+                    textAlign="center"
+                    color="rgba(142, 142, 147, 1)"
+                    top="calc(100% + 14px)"
+                    fontWeight={600}
+                    fontSize={12}
+                    transform="translateX(-12px)"
+                  >
+                    0 Jeets
+                  </RangeSliderMark>
+                  <RangeSliderMark
+                    style={{ textWrap: 'nowrap' }}
+                    value={500}
+                    textAlign="center"
+                    color="rgba(142, 142, 147, 1)"
+                    top="calc(100% + 14px)"
+                    fontWeight={600}
+                    fontSize={12}
+                    transform="translateX(calc(-100% + 12px))"
+                  >
+                    500 Jeets
+                  </RangeSliderMark>
+                </Box>
+              </Box>
+            </RangeSlider>
           </FlexCol>
 
           <Box fontSize={{ base: 16, md: 18 }}>
