@@ -20,6 +20,7 @@ import {
 import { TelegramIcon, TwitterIcon, WebsiteIcon } from '@/components/Icons';
 import { TOTAL_TOKEN_SUPPLY } from '@/constants/token.constants';
 import { useSolanaBalance } from '@/hooks/solana';
+import { useDebounce } from '@/hooks/useDebounce';
 import useWalletActive from '@/hooks/useWalletActive';
 import { postCreateMintToken } from '@/services/token';
 import { sleep } from '@/utils';
@@ -49,6 +50,7 @@ import {
 import { Keypair } from '@solana/web3.js';
 
 import { useCreateToken } from './hooks/useCreateToken';
+import { useQueryTotalUserWithScore } from './hooks/useQueryRangeScore';
 
 const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
 
@@ -83,6 +85,9 @@ export default function TokenDevelopmentTab() {
 
   const [minTargetScore, setMinTargetScore] = useState(0);
   const [maxTargetScore, setMaxTargetScore] = useState(10);
+  const minTargetDeb = useDebounce(minTargetScore, 300);
+  const maxTargetDeb = useDebounce(maxTargetScore, 300);
+  const { data: totalUserWithScore } = useQueryTotalUserWithScore(minTargetDeb, maxTargetDeb);
   const balanceSolana = useSolanaBalance();
   const [showTooltip, setShowTooltip] = useState(false);
   const [showTooltipModal, setShowTooltipModal] = useState(false);
@@ -495,7 +500,9 @@ export default function TokenDevelopmentTab() {
             </Box>
           </FlexCol>
           <FlexCol w="full" gap={3} p={4} rounded={16} border="1px solid" borderColor="rgba(192, 192, 192, 1)" pb={9}>
-            <Box fontSize={14}>Target Jeets Score</Box>
+            <Box fontSize={14}>
+              Target Jeets Score {totalUserWithScore !== undefined && `(${totalUserWithScore} users)`}
+            </Box>
             <RangeSlider
               min={0}
               max={500}

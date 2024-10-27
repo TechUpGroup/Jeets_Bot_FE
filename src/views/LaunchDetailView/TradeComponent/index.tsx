@@ -73,13 +73,13 @@ export const TradeComponent = ({ token }: { token: ITokenInfo }) => {
                       Wallet: {formatAddress(item.account)}
                     </LinkCustom>
                     <LinkCustom
-                      href={`https://x.com/${item?.twitter_username}`}
+                      href={`https://x.com/${item?.username}`}
                       target="_blank"
                       _hover={{ bg: 'gray.200' }}
                       px={3}
                       py={1.5}
                     >
-                      X: {item?.twitter_username}
+                      X: {item?.username}
                     </LinkCustom>
 
                     <LinkCustom

@@ -104,8 +104,7 @@ export interface ITokenTrade {
   network: string;
   transaction_hash: string;
   log_index: number;
-  username: string;
-  twitter_username?: string;
+  username?: string;
   telegram_username?: string;
   avatar?: string;
   token_name: string;

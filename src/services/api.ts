@@ -1,3 +1,4 @@
+import { appConfig } from '@/config';
 import { IResponseNonce, IUserInfo } from '@/types/auth.type';
 import { IUser } from '@/types/user.type';
 import { axiosInstance, axiosNoAuthInstance } from '@/utils/axios';
@@ -41,6 +42,13 @@ export const postConnectTwitter = async (code: string) => {
 export const postConnectTelegram = async (code: string) => {
   const data = await axiosInstance.post<boolean>('/users/telegram/connect', {
     code,
+  });
+  return data.data;
+};
+
+export const getTotalUserWithScore = async (params: { min_target_score: number; max_target_score: number }) => {
+  const data = await axiosInstance.get<number>(`${appConfig.publicUrlV2}/users/total-users-with-score`, {
+    params,
   });
   return data.data;
 };
