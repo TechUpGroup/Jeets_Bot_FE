@@ -18,6 +18,7 @@ import {
   Title2,
 } from '@/components';
 import { TelegramIcon, TwitterIcon, WebsiteIcon } from '@/components/Icons';
+import { TOTAL_TOKEN_SUPPLY } from '@/constants/token.constants';
 import { useSolanaBalance } from '@/hooks/solana';
 import useWalletActive from '@/hooks/useWalletActive';
 import { postCreateMintToken } from '@/services/token';
@@ -65,7 +66,7 @@ type ITokenDeployer = {
 export default function TokenDevelopmentTab() {
   const { push } = useRouter();
   const { address, network } = useWalletActive();
-  const [amount, setAmount] = useState<string>();
+  const [amount, setAmount] = useState<string>('1');
   const [priceToken, setPriceToken] = useState<string>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const imageRef = useRef<any>(null);
@@ -86,15 +87,15 @@ export default function TokenDevelopmentTab() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showTooltipModal, setShowTooltipModal] = useState(false);
 
-  const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(1_000_000);
+  const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(0.001 * TOTAL_TOKEN_SUPPLY);
 
   const totalSol = useMemo(() => {
     return BigNumber(
       BigNumber(100)
         .minus(amount || 0)
-        .minus(20)
+        .minus(11)
         .dividedBy(100)
-        .multipliedBy(1e9)
+        .multipliedBy(TOTAL_TOKEN_SUPPLY)
         .multipliedBy(priceToken || 0)
         .toFixed(9),
     );
@@ -118,7 +119,7 @@ export default function TokenDevelopmentTab() {
   const estimatedReceive = useMemo(() => {
     return BigNumber(amount ?? 0)
       .dividedBy(100)
-      .multipliedBy(1e9)
+      .multipliedBy(TOTAL_TOKEN_SUPPLY)
       .toFixed();
   }, [amount]);
 
@@ -164,9 +165,9 @@ export default function TokenDevelopmentTab() {
         maxTokenCanBuy: maxBuyPerAddress,
         amountBuy: amountSolBuy,
       });
-      onClose();
       await sleep(5_000);
       push(`/launch/${res.mint}`);
+      onClose();
     } catch (e) {
       toastError('create token failed', e);
       console.error(e);
@@ -463,22 +464,23 @@ export default function TokenDevelopmentTab() {
             Deploy your token
           </Box>
           <FlexCol w="full" gap={2.5}>
-            <Box>What % of the total supply do you want to own?</Box>
+            <Box>You will hold 1% of the token supply</Box>
             <Box position="relative" w="full">
               <InputCurrency
                 style={{ paddingRight: '40px' }}
                 value={amount}
-                onValueChange={(val) => {
-                  if (Number(val) > 80) {
-                    setAmount('80');
-                  } else if (Number(val) < 0) {
-                    setAmount('0');
-                  } else {
-                    setAmount(val);
-                  }
-                }}
-                min={0}
-                max={100}
+                disabled
+                // onValueChange={(val) => {
+                //   if (Number(val) > 80) {
+                //     setAmount('80');
+                //   } else if (Number(val) < 0) {
+                //     setAmount('0');
+                //   } else {
+                //     setAmount(val);
+                //   }
+                // }}
+                // min={0}
+                // max={100}
               />
               <Flex
                 position="absolute"
@@ -503,10 +505,10 @@ export default function TokenDevelopmentTab() {
           <Box fontSize={{ base: 16, md: 18 }}>Max buy per address</Box>
           <SimpleGrid columns={4} gap={2} fontSize={14} fontWeight={600}>
             {[
-              { value: 1_000_000, label: '0.1%' },
-              { value: 5_000_000, label: '0.5%' },
-              { value: 7_000_000, label: '0.7%' },
-              { value: 10_000_000, label: '1%' },
+              { value: 0.001 * TOTAL_TOKEN_SUPPLY, label: '0.1%' },
+              { value: 0.005 * TOTAL_TOKEN_SUPPLY, label: '0.5%' },
+              { value: 0.007 * TOTAL_TOKEN_SUPPLY, label: '0.7%' },
+              { value: 0.01 * TOTAL_TOKEN_SUPPLY, label: '1%' },
             ].map((e) => (
               <Box
                 key={e.value}
@@ -525,12 +527,12 @@ export default function TokenDevelopmentTab() {
           <Box pb={'30px'}>
             <Slider
               value={maxBuyPerAddress}
-              min={1_000_000}
-              max={10_000_000}
+              min={0.001 * TOTAL_TOKEN_SUPPLY}
+              max={0.01 * TOTAL_TOKEN_SUPPLY}
               onChange={(val) => setMaxBuyPerAddress(val)}
               py="9px"
               h={6}
-              step={1_000}
+              step={0.001 * TOTAL_TOKEN_SUPPLY}
             >
               <SliderTrack bg="rgba(243, 235, 255, 1)" h={1.5} rounded={999}>
                 <SliderFilledTrack bg="purple" />
