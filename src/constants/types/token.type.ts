@@ -1,5 +1,5 @@
 export type JeetsSolana = {
-  address: '3shn1c9kjtg655AtThsJjeYJfQESLGDpHyUpo6bhbiBs';
+  address: 'H8tGYwn6ibSPhvTTCZCqJDxgnG2WZjvQCy4EnUfZzwN7';
   metadata: {
     name: 'jeetsSolana';
     version: '0.1.0';
@@ -452,12 +452,7 @@ export type JeetsSolana = {
           address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL';
         },
       ];
-      args: [
-        {
-          name: 'amountSol';
-          type: 'u64';
-        },
-      ];
+      args: [];
     },
     {
       name: 'initialize';
@@ -798,6 +793,12 @@ export type JeetsSolana = {
       ];
       args: [
         {
+          name: 'initialTokenReserve';
+          type: {
+            option: 'u64';
+          };
+        },
+        {
           name: 'feePlatform';
           type: {
             option: 'u16';
@@ -982,13 +983,13 @@ export type JeetsSolana = {
           };
         },
         {
-          name: 'associateCreator';
+          name: 'associateDev';
           writable: true;
           pda: {
             seeds: [
               {
                 kind: 'account';
-                path: 'creator';
+                path: 'dev';
               },
               {
                 kind: 'const';
@@ -1073,10 +1074,6 @@ export type JeetsSolana = {
         },
         {
           name: 'dev';
-          writable: true;
-        },
-        {
-          name: 'creator';
           writable: true;
         },
         {

@@ -1,5 +1,5 @@
 {
-  "address": "3shn1c9kjtg655AtThsJjeYJfQESLGDpHyUpo6bhbiBs",
+  "address": "H8tGYwn6ibSPhvTTCZCqJDxgnG2WZjvQCy4EnUfZzwN7",
   "metadata": {
     "name": "jeets_solana",
     "version": "0.1.0",
@@ -584,12 +584,7 @@
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
-      "args": [
-        {
-          "name": "amount_sol",
-          "type": "u64"
-        }
-      ]
+      "args": []
     },
     {
       "name": "initialize",
@@ -1084,6 +1079,12 @@
       ],
       "args": [
         {
+          "name": "initial_token_reserve",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
           "name": "fee_platform",
           "type": {
             "option": "u16"
@@ -1308,13 +1309,13 @@
           }
         },
         {
-          "name": "associate_creator",
+          "name": "associate_dev",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "account",
-                "path": "creator"
+                "path": "dev"
               },
               {
                 "kind": "const",
@@ -1399,10 +1400,6 @@
         },
         {
           "name": "dev",
-          "writable": true
-        },
-        {
-          "name": "creator",
           "writable": true
         },
         {

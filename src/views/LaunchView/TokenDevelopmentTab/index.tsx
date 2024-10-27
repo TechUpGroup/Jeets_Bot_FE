@@ -89,17 +89,19 @@ export default function TokenDevelopmentTab() {
 
   const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(0.001 * TOTAL_TOKEN_SUPPLY);
 
-  const totalSol = useMemo(() => {
+  const totalTokenRemain = useMemo(() => {
     return BigNumber(
       BigNumber(100)
         .minus(amount || 0)
         .minus(11)
         .dividedBy(100)
-        .multipliedBy(TOTAL_TOKEN_SUPPLY)
-        .multipliedBy(priceToken || 0)
-        .toFixed(9),
+        .multipliedBy(TOTAL_TOKEN_SUPPLY),
     );
-  }, [amount, priceToken]);
+  }, [amount]);
+
+  const totalSol = useMemo(() => {
+    return BigNumber(totalTokenRemain.multipliedBy(priceToken || 0).toFixed(9));
+  }, [priceToken, totalTokenRemain]);
 
   const watchImage = watch('image');
   const watchSymbol = watch('symbol');
@@ -123,12 +125,12 @@ export default function TokenDevelopmentTab() {
       .toFixed();
   }, [amount]);
 
-  const amountSolBuy = useMemo(() => {
-    return BigNumber(estimatedReceive)
-      .multipliedBy(priceToken || 0)
-      .multipliedBy(1e9)
-      .toFixed(0);
-  }, [estimatedReceive, priceToken]);
+  // const amountSolBuy = useMemo(() => {
+  //   return BigNumber(estimatedReceive)
+  //     .multipliedBy(priceToken || 0)
+  //     .multipliedBy(1e9)
+  //     .toFixed(0);
+  // }, [estimatedReceive, priceToken]);
 
   const onSubmit: SubmitHandler<ITokenDeployer> = async (values) => {
     try {
@@ -163,7 +165,6 @@ export default function TokenDevelopmentTab() {
         priceSolPerToken: BigNumber(res.price_sol_per_token).multipliedBy(1e9).toFixed(0),
         totalSolReceive: res.total_sol_receive,
         maxTokenCanBuy: maxBuyPerAddress,
-        amountBuy: amountSolBuy,
       });
       await sleep(5_000);
       push(`/launch/${res.mint}`);
@@ -493,7 +494,6 @@ export default function TokenDevelopmentTab() {
               </Flex>
             </Box>
           </FlexCol>
-
           <FlexCol w="full" gap={3} p={4} rounded={16} border="1px solid" borderColor="rgba(192, 192, 192, 1)" pb={9}>
             <Box fontSize={14}>Target Jeets Score</Box>
             <RangeSlider
@@ -583,11 +583,17 @@ export default function TokenDevelopmentTab() {
               </Box>
             </RangeSlider>
           </FlexCol>
-
           <Box fontSize={{ base: 16, md: 18 }}>
             Total SOL will add liquidity: <Currency value={totalSol} suffix=" SOL" />
           </Box>
-
+          <Box fontSize={{ base: 16, md: 18 }}>
+            We need{' '}
+            <b>
+              <Currency value={Math.ceil(totalTokenRemain.dividedBy(maxBuyPerAddress).toNumber())} />
+            </b>{' '}
+            person for tokens to push to Raydium
+          </Box>
+          {/* 0.001 * TOTAL_TOKEN_SUPPLY */}
           {/* <Box pb={'30px'}>
             <Slider
               value={totalSol}
@@ -651,7 +657,6 @@ export default function TokenDevelopmentTab() {
               </Box>
             </Slider>
           </Box> */}
-
           <Button
             bg="makeColor"
             fontSize={{ base: 16, md: 20 }}
