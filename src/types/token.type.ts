@@ -105,6 +105,8 @@ export interface ITokenTrade {
   transaction_hash: string;
   log_index: number;
   username: string;
+  twitter_username?: string;
+  telegram_username?: string;
   avatar?: string;
   token_name: string;
   token_symbol: string;
