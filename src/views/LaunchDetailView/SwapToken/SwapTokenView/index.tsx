@@ -53,7 +53,7 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
   const amount = useMemo(() => {
     if (isBuy) return BigNumber(token.max_buy_per_address).multipliedBy(token.price_sol_per_token).toFixed();
     return BigNumber(tokenBalance?.amount ?? 0)
-      .dividedBy(1 ** (tokenBalance?.decimals ?? 1))
+      .dividedBy(10 ** (tokenBalance?.decimals ?? 1))
       .toFixed();
   }, [isBuy, token.max_buy_per_address, token.price_sol_per_token, tokenBalance?.amount, tokenBalance?.decimals]);
 
