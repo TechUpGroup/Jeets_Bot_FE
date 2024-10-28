@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { appConfig } from '@/config';
 import tokenIdl from '@/constants/idl/tokenIdl.json';
 import { JeetsSolana } from '@/constants/types/token.type';
 import { useAnchorProvider } from '@/hooks/solana';
@@ -25,7 +26,7 @@ export const useCreateToken = () => {
       const program = new Program(tokenIdl as JeetsSolana, anchorProvider);
 
       const MPL_TOKEN_METADATA_PROGRAM_ID = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
-      const operator = new PublicKey('DydnchyFBgyXYfVi4gmwPKFGxdL8eoXfpG1UaoVhsHrV');
+      const operator = new PublicKey(appConfig.address.operator);
       const txs = new Transaction();
       txs.recentBlockhash = blockhash;
       txs.feePayer = publicKey;

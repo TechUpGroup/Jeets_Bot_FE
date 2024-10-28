@@ -10,4 +10,8 @@ export const appConfig = {
     twitter: '#',
     discord: '#',
   },
+
+  address: {
+    operator: process.env.NEXT_PUBLIC_OPERATOR_ADDRESS ?? '',
+  },
 };

@@ -118,8 +118,10 @@ export default function LaunchDetailView({ mint }: { mint: string }) {
             px={{ base: 2.5, md: 6 }}
             py={{ base: 2.5, md: 4 }}
             w="full"
-            gap={{ base: 3, md: 10 }}
+            gap={{ base: 3, md: 5, lg: 6, xl: 8, '2xl': 10 }}
             flexDir={{ base: 'column', md: 'row' }}
+            alignItems="stretch"
+            textAlign="center"
           >
             <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
               <Box color="rgba(131, 131, 131, 1)" fontSize={14} fontWeight={400}>
@@ -151,7 +153,9 @@ export default function LaunchDetailView({ mint }: { mint: string }) {
                 Price/Token
               </Box>
               <Box fontSize={16} fontWeight={600}>
-                <Currency value={data.mintToken?.price_sol_per_token} />
+                <Box as="span" style={{ textWrap: 'nowrap' }}>
+                  <Currency value={data.mintToken?.price_sol_per_token} />
+                </Box>
                 SOL/MEME
               </Box>
             </FlexCol>
@@ -202,14 +206,16 @@ export default function LaunchDetailView({ mint }: { mint: string }) {
 
 export const LineCustom = () => {
   return (
-    <Box
-      mt={{ base: 0, md: 1 }}
-      w={{ base: 'full', md: 'unset' }}
-      borderBottomWidth={{ base: '1px', md: 0 }}
-      h={{ base: 'unset', md: 10 }}
-      borderRightWidth={{ base: 0, md: '1px' }}
-      borderStyle="solid"
-      borderColor="rgba(40, 40, 45, 1)"
-    />
+    <Box py={{ base: 0, md: 0.5 }}>
+      <Box
+        mt={{ base: 0, md: 1 }}
+        w={{ base: 'full', md: 'unset' }}
+        borderBottomWidth={{ base: '1px', md: 0 }}
+        h={{ base: 'unset', md: 'full' }}
+        borderRightWidth={{ base: 0, md: '1px' }}
+        borderStyle="solid"
+        borderColor="rgba(40, 40, 45, 1)"
+      />
+    </Box>
   );
 };
