@@ -36,6 +36,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useBuyToken } from './hooks/useBuyToken';
+import { useIsBuyToken } from './hooks/useIsBuyToken';
 import { useSellToken } from './hooks/useSellToken';
 
 export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
@@ -45,6 +46,8 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
   const setSlippage = useListUserStore((s) => s.setSlippage);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOpenSlippage, onOpen: onOpenSlippage, onClose: onCloseSlippage } = useDisclosure();
+
+  const { data: isBuyToken } = useIsBuyToken(token.mint);
 
   const { balance: solBalance } = useSolanaBalance();
   const { balance: tokenBalance } = useSolanaBalanceToken(token.mint);
@@ -294,7 +297,7 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
             bg: 'rgba(131, 131, 131, 1)',
             cursor: 'not-allowed',
           }}
-          disabled={isDisableSwap || token.trade_completed}
+          disabled={isDisableSwap || token.trade_completed || (isBuy && isBuyToken !== false)}
         >
           SWAP
         </Button>
