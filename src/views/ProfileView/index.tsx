@@ -46,15 +46,24 @@ export default function ProfileView() {
             {data?.docs.map((his, i) => (
               <Tr key={i}>
                 <Td p={5} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
-                  <Flex lineHeight={1.4} gap={1} alignContent="center">
-                    Hold
-                    {his.campaign.details.map((e, i) => (
-                      <Box key={i} gap={1}>
-                        {i !== 0 && ' & '}
-                        <Currency value={e.amount} decimalNumber={e.decimal} /> {e.symbol}
+                  {['Sent', 'Received', 'Bought', 'Sold'].includes(his.event) ? (
+                    <Flex lineHeight={1.4} gap={1} alignContent="center">
+                      {his.event}
+                      <Box gap={1}>
+                        <Currency value={his.detail?.amount} decimalNumber={his.detail?.decimal} /> {his.detail?.symbol}
                       </Box>
-                    ))}
-                  </Flex>
+                    </Flex>
+                  ) : (
+                    <Flex lineHeight={1.4} gap={1} alignContent="center">
+                      Hold
+                      {his.campaign?.details.map((e, i) => (
+                        <Box key={i} gap={1}>
+                          {i !== 0 && ' & '}
+                          <Currency value={e.amount} decimalNumber={e.decimal} /> {e.symbol}
+                        </Box>
+                      ))}
+                    </Flex>
+                  )}
                 </Td>
                 <Td p={5} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
                   <Flex

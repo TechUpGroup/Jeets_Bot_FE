@@ -22,7 +22,18 @@ export interface ICampaignHistories {
   address: string;
   timestamp: string;
   score: number;
-  campaign: {
+  event: 'Sent' | 'Received' | 'Bought' | 'Sold';
+  is_buy: boolean;
+  is_send: boolean;
+  tx: string;
+  detail?: {
+    mint: string;
+    symbol: string;
+    decimal: number;
+    amount: string;
+  };
+
+  campaign?: {
     _id: string;
     cid: number;
     name: string;
@@ -37,14 +48,6 @@ export interface ICampaignHistories {
       amount: string;
     }[];
   };
-  start_holders: {
-    mint: string;
-    amount: string;
-  }[];
-  end_holders: {
-    mint: string;
-    amount: string;
-  }[];
 }
 
 export const getListCampaign = async () => {
