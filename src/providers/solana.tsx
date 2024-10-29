@@ -1,16 +1,15 @@
 'use client';
 
-import '@tiplink/wallet-adapter-react-ui/styles.css';
+import '@solana/wallet-adapter-react-ui/styles.css';
 
-import { useSearchParams } from 'next/navigation';
 import React, { useMemo } from 'react';
 
 import { appConfig } from '@/config';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
-import { TipLinkWalletAdapter } from '@tiplink/wallet-adapter';
-import { TipLinkWalletAutoConnectV2, WalletModalProvider } from '@tiplink/wallet-adapter-react-ui';
 
 export default function SolanaProvider({ children }: React.PropsWithChildren) {
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
@@ -18,25 +17,17 @@ export default function SolanaProvider({ children }: React.PropsWithChildren) {
 
   // You can also provide a custom RPC endpoint.
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-  const searchParams = useSearchParams();
+
   const wallets = useMemo(
-    () => [
-      // new PhantomWalletAdapter()
-      new TipLinkWalletAdapter({
-        title: 'SolJeets Bot',
-        clientId: '694bf97c-d2ac-4dfc-a786-a001812658df',
-        theme: 'light',
-      }),
-    ],
-    [],
+    () => [new PhantomWalletAdapter()],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [network],
   );
 
   return (
     <ConnectionProvider endpoint={'https://wispy-ultra-card.solana-mainnet.quiknode.pro/8f5ca2a6ff610b3cb3a71390147658a21b62a204'}>
       <WalletProvider wallets={wallets} autoConnect>
-        <TipLinkWalletAutoConnectV2 isReady query={searchParams}>
-          <WalletModalProvider>{children}</WalletModalProvider>
-        </TipLinkWalletAutoConnectV2>
+        <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
   );
