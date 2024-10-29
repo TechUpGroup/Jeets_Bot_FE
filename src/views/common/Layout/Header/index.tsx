@@ -69,13 +69,13 @@ const Header = () => {
         <LinkCustom href={!isLinked ? '/login' : '/'}>
           <ImageRatio
             src="/images/logo.png"
-            ratio={271 / 108}
-            w={{ base: 120, md: 271 }}
+            ratio={552 / 220}
+            w={{ base: 120, md: 275 }}
             display={{ base: 'none', md: 'block' }}
           />
           <ImageRatio
-            src="/images/cry.png"
-            ratio={3744 / 3320}
+            src="/images/logo-mobile.png"
+            ratio={1}
             w={'60px'}
             display={{ base: 'block', md: 'none' }}
             mx="auto"

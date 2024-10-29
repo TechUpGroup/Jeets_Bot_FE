@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { Button, FlexCol, ImageRatio, LinkCustom } from '@/components';
+import { Button, FlexCenter, FlexCol, ImageRatio, LinkCustom } from '@/components';
 import { TeleIcon, VerifiedIcon, XIcon } from '@/components/Icons';
 import { appConfig } from '@/config';
 import useCodeSocial from '@/hooks/useCodeSocial';
@@ -79,9 +79,9 @@ export default function HomeView() {
 
   return (
     <Flex
-      pt={{ base: '40px', md: 91 }}
+      pt={{ base: '80px', md: 91 }}
       flexDir={{ base: 'column', md: 'row' }}
-      gap={{ base: 10, md: '10.36%' }}
+      gap={{ base: 0, md: '10.36%' }}
       w="full"
       justifyContent="center"
       maxW={1524}
@@ -100,8 +100,8 @@ export default function HomeView() {
       <FlexCol
         w={{ base: ' full', md: '52.95%' }}
         px={{ base: 5, md: '44px' }}
-        pt={{ base: 10, md: '84px' }}
-        pb={{ base: 10, md: '87px' }}
+        pt={{ base: 10, md: !address ? '84px' : 6 }}
+        pb={{ base: 10, md: !address ? '87px' : 6 }}
         bg="white"
         rounded={24}
         alignItems="center"
@@ -172,6 +172,42 @@ export default function HomeView() {
                 CONTINUE
               </Button>
             </LinkCustom>
+
+            <FlexCol
+              border="3px dashed"
+              borderColor="#8F51EC"
+              rounded={8}
+              p={5}
+              alignItems="center"
+              gap={{ base: 1.5, md: 2.5 }}
+              lineHeight={1.145}
+              fontSize={{ base: 14, md: 20 }}
+              color="#201B03"
+              textAlign="center"
+            >
+              <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+                <Box>Conditions for Airdrop</Box>
+                <Box>and Jeets Score Index Eligibility</Box>
+              </FlexCol>
+              <FlexCenter gap="5px">
+                <Box>X blue/gold tick</Box>
+                <ImageRatio src="/icons/tick-1.png" ratio={1} w={6} />
+                <ImageRatio src="/icons/tick-2.png" ratio={1} w={6} />
+              </FlexCenter>
+              <FlexCenter gap="5px">
+                <Box>Has more than 2000 followers</Box>
+                <ImageRatio src="/icons/p.png" ratio={1} w={6} />
+              </FlexCenter>
+              <FlexCenter gap="5px">
+                <Box>Hold tokens from our partners</Box>
+                <ImageRatio src="/icons/sun.png" ratio={1} w={6} />
+                <ImageRatio src="/icons/moon.png" ratio={1} w={6} />
+              </FlexCenter>
+              <FlexCenter gap="5px">
+                <Box>Pass our voting process</Box>
+                <ImageRatio src="/icons/like.png" ratio={1} w={6} />
+              </FlexCenter>
+            </FlexCol>
           </FlexCol>
         )}
       </FlexCol>

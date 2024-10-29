@@ -10,13 +10,14 @@ export const CollapseItem = ({ campaign }: { campaign: ICampaign }) => {
     <>
       <Flex onClick={onToggle} gap={1}>
         <Box>{isOpen ? <ChevronUpIcon boxSize={5} /> : <ChevronDownIcon boxSize={5} />}</Box>
-        {campaign.name}
+        {campaign.name?.replace('$MOON', '$🌕').replace('$SUN', '$☀️')}
       </Flex>
       <Collapse in={isOpen} animateOpacity>
         <UnorderedList pt={2.5} fontWeight={400} lineHeight={1.4}>
           {campaign.details.map((e) => (
             <ListItem ml={1.5} key={e.symbol}>
-              Hold <Currency value={e.amount} decimalNumber={e.decimal} /> {e.symbol}
+              Hold <Currency value={e.amount} decimalNumber={e.decimal} />{' '}
+              {e.symbol?.replace('$MOON', '$🌕').replace('$SUN', '$☀️')}
             </ListItem>
           ))}
         </UnorderedList>
