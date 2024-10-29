@@ -14,6 +14,7 @@ const menus = [
   { name: 'Voting', href: '/voting' },
   { name: 'Pool', href: '/pool' },
   { name: 'Campaign', href: '/campaign' },
+  { name: 'Leaderboard', href: '/leaderboard' },
   { name: 'Launch', href: '/launch' },
 ];
 
