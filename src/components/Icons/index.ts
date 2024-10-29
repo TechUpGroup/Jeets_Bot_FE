@@ -1,3 +1,7 @@
+export * from './SearchIcon';
+export * from './SettingIcon';
+export * from './Social';
+export * from './SwapIcon';
 export * from './TeleIcon';
 export * from './Toast';
 export * from './VerifiedIcon';

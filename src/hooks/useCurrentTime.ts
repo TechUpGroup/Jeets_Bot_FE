@@ -1,16 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-const getCurrentTime = () => Math.floor(Date.now() / 1000);
+import { useInterval } from '@chakra-ui/react';
+
+const getCurrentTime = () => Math.floor(Date.now());
 
 export const useCurrentTime = () => {
-  var [date, setDate] = useState(getCurrentTime());
+  var [currentTime, setCurrentTime] = useState(getCurrentTime());
 
-  useEffect(() => {
-    var timer = setInterval(() => setDate(getCurrentTime()), 1_000);
-    return function cleanup() {
-      clearInterval(timer);
-    };
-  }, []);
+  useInterval(() => setCurrentTime(getCurrentTime()), 1_000);
 
-  return date;
+  return currentTime;
 };

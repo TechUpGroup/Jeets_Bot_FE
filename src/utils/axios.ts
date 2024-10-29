@@ -46,7 +46,6 @@ const refreshToken = async (tokens?: ITokens | null) => {
   try {
     if (!tokens) {
       const x = useUserStore.getState();
-      console.log(x);
       tokens = getToken();
       if (!tokens) throw new Error('token not found');
     }

@@ -1,0 +1,1 @@
+export const TOTAL_TOKEN_SUPPLY = 100_000_000_000;

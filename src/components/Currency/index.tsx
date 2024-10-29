@@ -6,7 +6,7 @@ import { FC } from 'react';
 
 import { Tooltip } from '@chakra-ui/react';
 
-type Value = string | number | undefined | BigNumber | bigint;
+type Value = string | number | undefined | null | BigNumber | bigint;
 
 type Props = {
   value: Value;
@@ -26,7 +26,7 @@ const getValue = (props: Props) => {
     value,
     isWei,
     rounded,
-    decimal = 3,
+    decimal = 7,
     decimalNumber,
     isPositive,
     roundingMode = BigNumber.ROUND_FLOOR,
@@ -40,7 +40,7 @@ const getValue = (props: Props) => {
   try {
     if (!isNil(value)) {
       const valueTemp = value instanceof BigNumber ? value.toFixed() : value.toString();
-      const numberDecimal = isWei ? 6 : decimalNumber;
+      const numberDecimal = isWei ? 9 : decimalNumber;
       const valTemp =
         numberDecimal !== undefined ? BigNumber(valueTemp).dividedBy(Math.pow(10, numberDecimal)) : valueTemp;
       let valueBig = BigNumber(valTemp);
@@ -97,5 +97,9 @@ const getValue = (props: Props) => {
 export const Currency: FC<Props> = (props) => {
   const { value: valueShow, isRounded, fullValue } = getValue(props);
   if (!isRounded) return <>{valueShow}</>;
-  return <Tooltip label={fullValue}>{valueShow}</Tooltip>;
+  return (
+    <Tooltip label={fullValue} fontFamily="sfPro" fontWeight={600}>
+      {valueShow}
+    </Tooltip>
+  );
 };
