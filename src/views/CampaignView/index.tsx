@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Button, Currency, FlexBanner, FlexCol, InputCurrency, Title, Title2, Wrapper } from '@/components';
+import { Button, Currency, FlexBanner, FlexCol, InputCurrency, LinkCustom, Title, Title2, Wrapper } from '@/components';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
 import dayjs from '@/utils/dayjs';
 import {
@@ -81,6 +81,7 @@ export default function CampaignView() {
                 { name: 'Campaign', center: false, w: 288 },
                 { name: 'Time' },
                 { name: 'Jeets Score Rewards' },
+                { name: 'Historical' },
                 { name: 'Status', w: 288 },
               ].map((e, i) => (
                 <Td
@@ -115,8 +116,27 @@ export default function CampaignView() {
                     </Flex>
                   </Td>
                   <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                    <Flex alignItems="center" justifyContent="center" textAlign="center">
+                    <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}>
                       <Currency value={campaign.score} />
+                    </Flex>
+                  </Td>
+                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
+                    <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}>
+                      <LinkCustom href="/profile">
+                        <Button
+                          h={{ base: 9, md: 10 }}
+                          w="fit-content"
+                          color="rgba(23, 210, 133, 1)"
+                          border="1px solid"
+                          borderColor="rgba(23, 210, 133, 1)"
+                          rounded={8}
+                          bg="white"
+                          px={{ base: 4, md: 4 }}
+                          cursor="default"
+                        >
+                          View
+                        </Button>
+                      </LinkCustom>
                     </Flex>
                   </Td>
 

@@ -18,7 +18,8 @@ export default function DefaultLayout({ children }: React.PropsWithChildren) {
         flex={1}
         bgImage="/images/bg-main.png"
         bgPos="top"
-        bgRepeat={pathname !== '/login' ? 'repeat-y' : 'no-repeat'}
+        // bgRepeat={pathname !== '/login' ? 'repeat-y' : 'no-repeat'}
+        bgRepeat="no-repeat"
         bgSize="contain"
         maxW={1920}
         w="full"
