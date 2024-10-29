@@ -1,5 +1,5 @@
 export type JeetsSolana = {
-  address: 'H8tGYwn6ibSPhvTTCZCqJDxgnG2WZjvQCy4EnUfZzwN7';
+  address: 'DJxtpd2QfwQxLGfrXpHmoGDUuphpjz2aeud7ZtUXZg68';
   metadata: {
     name: 'jeetsSolana';
     version: '0.1.0';
