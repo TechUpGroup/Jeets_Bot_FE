@@ -32,7 +32,7 @@ export default function SolanaProvider({ children }: React.PropsWithChildren) {
   );
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
+    <ConnectionProvider endpoint={'https://wispy-ultra-card.solana-mainnet.quiknode.pro/8f5ca2a6ff610b3cb3a71390147658a21b62a204'}>
       <WalletProvider wallets={wallets} autoConnect>
         <TipLinkWalletAutoConnectV2 isReady query={searchParams}>
           <WalletModalProvider>{children}</WalletModalProvider>
