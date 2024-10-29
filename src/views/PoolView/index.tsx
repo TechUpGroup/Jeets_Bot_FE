@@ -36,7 +36,7 @@ export default function PoolView() {
             justifyContent="center"
             flexWrap="wrap"
           >
-            <Currency value={remaining} isWei />{' '}
+            <Currency value={remaining} decimalNumber={6} />{' '}
             <FlexCenter gap={2.5}>
               <Box as="span" color="rgba(32, 27, 3, 1)">
                 $MOON
@@ -84,7 +84,7 @@ export default function PoolView() {
               <Tr key={i}>
                 <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
                   <Flex alignItems="center">
-                    <Currency value={e.transfer_amount} isWei />
+                    <Currency value={e.transfer_amount} decimalNumber={6} />
                   </Flex>
                 </Td>
                 <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
