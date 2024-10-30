@@ -168,8 +168,8 @@ export default function TokenDevelopmentTab() {
         name: res.name,
         targetScore: 0,
         priceSolPerToken: BigNumber(res.price_sol_per_token).multipliedBy(1e9).toFixed(0),
-        totalSolReceive: res.total_sol_receive,
-        maxTokenCanBuy: maxBuyPerAddress,
+        totalSolReceive: BigNumber(res.total_sol_receive).toFixed(0),
+        maxTokenCanBuy: BigNumber(maxBuyPerAddress).toFixed(0),
       });
       await sleep(5_000);
       push(`/launch/${res.mint}`);
