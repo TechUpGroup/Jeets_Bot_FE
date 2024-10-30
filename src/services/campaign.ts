@@ -68,13 +68,15 @@ export interface IAirdrop {
   updatedAt: string;
 }
 
+export interface ICampaignResponse {
+  airdrops?: IAirdrop[];
+  campaigns: IPaginationResponse<ICampaign>;
+}
+
 export const getListCampaign = async () => {
   const params: IPaginationParams = { page: 1, limit: 100 };
 
-  const data = await axiosInstance.get<{
-    airdrops?: IAirdrop[];
-    campaigns: IPaginationResponse<ICampaign>;
-  }>(`/campaigns/list`, {
+  const data = await axiosInstance.get<ICampaignResponse>(`/campaigns/list`, {
     params: params,
   });
   return data.data;
@@ -90,5 +92,10 @@ export const getCampaignHistories = async () => {
 
 export const postCampaign = async (body: any) => {
   const data = await axiosInstance.post<boolean>(`/create-new-campaign`, body);
+  return data.data;
+};
+
+export const postClaimAirdrop = async (id: string) => {
+  const data = await axiosInstance.post<string>(`/campaigns/airdrop/claim/${id}`);
   return data.data;
 };

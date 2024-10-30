@@ -1,10 +1,14 @@
 'use client';
 
+import { cloneDeep } from 'lodash';
 import { useState } from 'react';
 
 import { Button, Currency, FlexBanner, FlexCol, InputCurrency, LinkCustom, Title, Title2, Wrapper } from '@/components';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
+import { queryClient } from '@/providers/react-query';
+import { ICampaignResponse, postClaimAirdrop } from '@/services/campaign';
 import dayjs from '@/utils/dayjs';
+import { toastError, toastSuccess } from '@/utils/toast';
 import { InfoIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -32,6 +36,7 @@ import {
 
 import { CollapseAirdrop } from './CollapseAirdrop';
 import { CollapseItem } from './CollapseItem';
+import { useClaimVault } from './hooks/useClaimVault';
 import { useQueryCampaign } from './hooks/useQueryCampaign';
 
 export default function CampaignView() {
@@ -42,6 +47,30 @@ export default function CampaignView() {
   const currentTime = useCurrentTime();
 
   const { data } = useQueryCampaign();
+
+  const claimVault = useClaimVault();
+  const [loading, setLoading] = useState('');
+
+  const handleClaimVault = async (id: string) => {
+    try {
+      setLoading(id);
+      const signature = await postClaimAirdrop(id);
+      await claimVault(signature);
+      toastSuccess('Claim success!');
+      queryClient.setQueryData(['getListCampaign'], (oldData: ICampaignResponse) => {
+        const cloned = cloneDeep(oldData);
+        const airdrop = cloned.airdrops?.find((e) => e._id === id);
+        if (airdrop) {
+          airdrop.status = true;
+        }
+        return cloned;
+      });
+    } catch (e) {
+      toastError('Claim failed!', e);
+    } finally {
+      setLoading('');
+    }
+  };
 
   return (
     <Wrapper>
@@ -160,7 +189,9 @@ export default function CampaignView() {
                           rounded={8}
                           bg="white"
                           px={{ base: 3, md: 5 }}
-                          cursor="default"
+                          disabled={!!loading}
+                          isLoading={loading === airdrop._id}
+                          onClick={() => handleClaimVault(airdrop._id)}
                         >
                           Claim
                         </Button>
