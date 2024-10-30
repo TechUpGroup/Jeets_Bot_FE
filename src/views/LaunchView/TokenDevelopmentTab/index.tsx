@@ -479,7 +479,7 @@ export default function TokenDevelopmentTab() {
           <Box w="full" borderBottom="1px solid rgba(99, 99, 102, 1)" />
           <FlexCol w="full" gap={2.5}>
             <Box>
-              Price SOL/Token{' '}
+              Price/Slot{' '}
               <Box as="span" color="red">
                 *
               </Box>
