@@ -13,4 +13,12 @@ export interface IUser {
 
   twitter_verified_type: 'none' | 'blue' | 'business' | 'government';
   twitter_followers_count: number;
+
+  is_hold_token?: boolean;
+  partner: {
+    symbol: string;
+    decimal: number;
+    mint: string;
+    amount: string;
+  };
 }

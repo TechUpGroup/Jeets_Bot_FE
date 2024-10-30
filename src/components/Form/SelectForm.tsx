@@ -1,6 +1,6 @@
 import Select, { Props } from 'react-select';
 
-export const SelectForm = (props: Props) => {
+export const SelectForm = ({ styles, ...props }: Props) => {
   return (
     <Select
       // isClearable
@@ -51,6 +51,7 @@ export const SelectForm = (props: Props) => {
             display: 'none',
           };
         },
+        ...styles,
       }}
       {...props}
     />
