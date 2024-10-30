@@ -27,12 +27,13 @@ export default function ProfileView() {
     <Wrapper>
       <Title>PROFILE</Title>
       <Flex
-        gap={10}
+        gap={{ base: 5, md: 10 }}
         rounded={10}
         bg="rgba(238, 226, 255, 1)"
         w="full"
         px={{ base: 3, md: 6, lg: 8, xl: '46px', '2xl': '56px' }}
         py={{ base: 4, md: '54px' }}
+        flexDirection={{ base: 'column', md: 'row' }}
       >
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={'5px'}>
           <Box fontSize={{ base: 18, md: 22 }} fontFamily="sfPro" fontWeight={800}>
