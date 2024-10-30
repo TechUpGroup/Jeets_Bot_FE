@@ -1,5 +1,3 @@
-import { Network } from '@/enums/network.enum';
-
 import { ObjectID } from './common.type';
 
 export interface IUser {
@@ -12,4 +10,15 @@ export interface IUser {
   twitter_uid: string;
   telegram_username: string;
   telegram_uid: string;
+
+  twitter_verified_type: 'none' | 'blue' | 'business' | 'government';
+  twitter_followers_count: number;
+
+  is_hold_token?: boolean;
+  partner: {
+    symbol: string;
+    decimal: number;
+    mint: string;
+    amount: string;
+  };
 }

@@ -9,6 +9,7 @@ export interface ICampaign {
   start_time: number;
   end_time: number;
   score: number;
+  statusHold: boolean;
   details: {
     mint: string;
     symbol: string;
@@ -22,7 +23,7 @@ export interface ICampaignHistories {
   address: string;
   timestamp: string;
   score: number;
-  event: 'Sent' | 'Received' | 'Bought' | 'Sold';
+  event: string;
   is_buy: boolean;
   is_send: boolean;
   tx: string;
@@ -50,10 +51,32 @@ export interface ICampaignHistories {
   };
 }
 
+export interface IAirdrop {
+  _id: string;
+  address: string;
+  nonce: string;
+  vid: number;
+  timestamp: string;
+  detail: {
+    symbol: string;
+    decimal: number;
+    mint: string;
+    amount: string;
+  };
+  status: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const getListCampaign = async () => {
   const params: IPaginationParams = { page: 1, limit: 100 };
 
-  const data = await axiosInstance.get<IPaginationResponse<ICampaign>>(`/campaigns/list`, { params: params });
+  const data = await axiosInstance.get<{
+    airdrops?: IAirdrop[];
+    campaigns: IPaginationResponse<ICampaign>;
+  }>(`/campaigns/list`, {
+    params: params,
+  });
   return data.data;
 };
 
