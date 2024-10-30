@@ -14,9 +14,9 @@ export const useCreateToken = () => {
       symbol: string;
       name: string;
       targetScore: number;
-      priceSolPerToken: string | number;
-      totalSolReceive: string | number;
-      maxTokenCanBuy: string | number;
+      priceSolPerToken: string;
+      totalSolReceive: string;
+      maxTokenCanBuy: string;
       mint: Keypair;
     }) => {
       const { mint } = params;
