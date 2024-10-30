@@ -1,78 +1,30 @@
 'use client';
 
-import { useMemo } from 'react';
-
-import { Currency, FlexBanner, FlexCenter, FlexCol, ImageRatio, Title, Wrapper } from '@/components';
+import { Currency, FlexBanner, FlexCenter, FlexCol, Title, Wrapper } from '@/components';
 import { useUser } from '@/store/useUserStore';
 import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 import { useQueryCampaignHistories } from './hooks/useQueryCampaignHistories';
+import UserInfoProfile from './UserInfoProfile';
 
 export default function ProfileView() {
   const { data } = useQueryCampaignHistories();
   const user = useUser();
-
-  const imageXVerified = useMemo(() => {
-    switch (user?.twitter_verified_type) {
-      case 'blue':
-        return '/icons/tick-2.png';
-      case 'business':
-        return '/icons/tick-1.png';
-      case 'government':
-        return '/icons/tick-3.png';
-    }
-  }, [user?.twitter_verified_type]);
-
   return (
     <Wrapper>
       <Title>PROFILE</Title>
-      <Flex
-        gap={{ base: 5, md: 10 }}
-        rounded={10}
-        bg="rgba(238, 226, 255, 1)"
-        w="full"
-        px={{ base: 3, md: 6, lg: 8, xl: '46px', '2xl': '56px' }}
-        py={{ base: 4, md: '54px' }}
-        flexDirection={{ base: 'column', md: 'row' }}
-      >
-        <FlexCol justifyContent="center" alignItems="center" flex={1} gap={'5px'}>
-          <Box fontSize={{ base: 18, md: 22 }} fontFamily="sfPro" fontWeight={800}>
-            X Account
+      <FlexBanner>
+        <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
+          <Box fontSize={30} fontFamily="sfPro" fontWeight={800}>
+            Jeets Score
           </Box>
-          <Box color="purple" fontSize={{ base: 28, md: 40 }}>
-            <FlexCenter gap={2.5}>
-              {user?.twitter_username}
-              {!!imageXVerified && <ImageRatio src={imageXVerified} ratio={1} w={6} />}
-            </FlexCenter>
-          </Box>
-        </FlexCol>
-        <FlexCol justifyContent="center" alignItems="center" flex={1} gap={'5px'}>
-          <Box fontSize={{ base: 18, md: 22 }} fontFamily="sfPro" fontWeight={800}>
-            Followers
-          </Box>
-          <Box color="purple" fontSize={{ base: 28, md: 40 }}>
-            <Currency value={user?.twitter_followers_count} />
-          </Box>
-        </FlexCol>
-        {user?.partner && (
-          <FlexCol justifyContent="center" alignItems="center" flex={1} gap={'5px'}>
-            <Box fontSize={{ base: 18, md: 22 }} fontFamily="sfPro" fontWeight={800}>
-              Token Hold
-            </Box>
-            <Box color="purple" fontSize={{ base: 28, md: 40 }}>
-              <Currency value={user?.partner.amount} decimalNumber={user?.partner.decimal} /> {user?.partner.symbol}
-            </Box>
-          </FlexCol>
-        )}
-        <FlexCol justifyContent="center" alignItems="center" flex={1} gap={'5px'}>
-          <Box fontSize={{ base: 18, md: 22 }} fontFamily="sfPro" fontWeight={800}>
-            Total Jeets Score
-          </Box>
-          <Box color="purple" fontSize={{ base: 28, md: 40 }}>
+          <Box color="purple" fontSize={42}>
             <Currency value={user?.score} />
           </Box>
         </FlexCol>
-      </Flex>
+      </FlexBanner>
+
+      <UserInfoProfile />
 
       <TableContainer w="full" pb={4}>
         <Table
