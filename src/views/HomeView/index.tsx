@@ -77,6 +77,22 @@ export default function HomeView() {
     handleConnectTelegram();
   }, [tgAuthResult, user?.telegram_uid, address]);
 
+  const imageXVerified = useMemo(() => {
+    switch (user?.twitter_verified_type) {
+      case 'blue':
+        return '/icons/tick-2.png';
+      case 'business':
+        return '/icons/tick-1.png';
+      case 'government':
+        return '/icons/tick-3.png';
+    }
+  }, [user?.twitter_verified_type]);
+
+  const isPassed = useMemo(() => {
+    if (!user) return false;
+    return user.twitter_verified_type !== 'none' && user.twitter_followers_count >= 2000;
+  }, [user]);
+
   return (
     <Flex
       pt={{ base: '80px', md: 91 }}
@@ -191,21 +207,33 @@ export default function HomeView() {
               </FlexCol>
               <FlexCenter gap="5px">
                 <Box>X blue/gold tick</Box>
-                <ImageRatio src="/icons/tick-1.png" ratio={1} w={6} />
-                <ImageRatio src="/icons/tick-2.png" ratio={1} w={6} />
+                <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
               </FlexCenter>
               <FlexCenter gap="5px">
                 <Box>Has more than 2000 followers</Box>
-                <ImageRatio src="/icons/p.png" ratio={1} w={6} />
+                <ImageRatio
+                  src={(user?.twitter_followers_count ?? 0) >= 2000 ? `/icons/success.png` : `/icons/error.png`}
+                  ratio={1}
+                  w={6}
+                />
               </FlexCenter>
               <FlexCenter gap="5px">
-                <Box>Hold tokens from our partners</Box>
-                <ImageRatio src="/icons/sun.png" ratio={1} w={6} />
-                <ImageRatio src="/icons/moon.png" ratio={1} w={6} />
+                <Box>
+                  Hold tokens from{' '}
+                  <Box color="#2BA2DE" textDecor="underline" cursor='pointer' >
+                    our partners
+                  </Box>
+                </Box>
               </FlexCenter>
+              {/* <FlexCenter gap="5px">
+                <Box>
+                  Hold tokens from our partners
+                </Box>
+                <ImageRatio src={isPassed ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
+              </FlexCenter> */}
               <FlexCenter gap="5px">
                 <Box>Pass our voting process</Box>
-                <ImageRatio src="/icons/like.png" ratio={1} w={6} />
+                <ImageRatio src={isPassed ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
               </FlexCenter>
             </FlexCol>
           </FlexCol>
