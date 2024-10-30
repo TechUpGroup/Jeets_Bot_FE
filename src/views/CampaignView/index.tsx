@@ -18,6 +18,10 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  Popover,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   SimpleGrid,
   Slider,
   SliderFilledTrack,
@@ -115,9 +119,20 @@ export default function CampaignView() {
                   name: (
                     <Flex gap={1}>
                       SPW{' '}
-                      <Tooltip label="Score Per Week" placement="top">
-                        <InfoIcon />
-                      </Tooltip>
+                      <Popover placement="top" trigger={'hover'}>
+                        <PopoverTrigger>
+                          <Button display="flex" h="fit-content">
+                            <InfoIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent w="fit-content" bg="black">
+                          <PopoverBody>
+                            <Box fontFamily="sfPro" fontWeight={800} color="white">
+                              Score Per Week
+                            </Box>
+                          </PopoverBody>
+                        </PopoverContent>
+                      </Popover>
                     </Flex>
                   ),
                 },
