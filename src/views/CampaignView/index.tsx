@@ -18,6 +18,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Portal,
   SimpleGrid,
   Slider,
   SliderFilledTrack,
@@ -89,20 +90,22 @@ export default function CampaignView() {
                 {
                   name: (
                     <Flex gap={1}>
-                      SPW{' '}
                       <Popover placement="top" trigger={'hover'}>
                         <PopoverTrigger>
-                          <Button display="flex" h="fit-content">
+                          <Button display="flex" h="fit-content" gap={1}>
+                            SPW
                             <InfoIcon />
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent w="fit-content" bg="black">
-                          <PopoverBody>
-                            <Box fontFamily="sfPro" fontWeight={800} color="white">
-                              Score Per Week
-                            </Box>
-                          </PopoverBody>
-                        </PopoverContent>
+                        <Portal>
+                          <PopoverContent w="fit-content" bg="black" rootProps={{ zIndex: 999 }}>
+                            <PopoverBody>
+                              <Box fontFamily="sfPro" fontWeight={800} color="white">
+                                Score Per Week
+                              </Box>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Portal>
                       </Popover>
                     </Flex>
                   ),
