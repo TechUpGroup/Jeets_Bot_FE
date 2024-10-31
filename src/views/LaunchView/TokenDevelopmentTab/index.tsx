@@ -69,7 +69,7 @@ export default function TokenDevelopmentTab() {
   const { push } = useRouter();
   const { address, network } = useWalletActive();
   const [amount, setAmount] = useState<string>('1');
-  const [priceToken, setPriceToken] = useState<string>();
+  const [pricePerSlot, setPricePerSlot] = useState<string>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const imageRef = useRef<any>(null);
   const {
@@ -104,9 +104,15 @@ export default function TokenDevelopmentTab() {
     );
   }, [amount]);
 
+  const amountSlot = useMemo(() => {
+    return totalTokenRemain.dividedBy(maxBuyPerAddress).toNumber();
+  }, [maxBuyPerAddress, totalTokenRemain]);
+
   const totalSol = useMemo(() => {
-    return BigNumber(totalTokenRemain.multipliedBy(priceToken || 0).toFixed(9));
-  }, [priceToken, totalTokenRemain]);
+    return BigNumber(amountSlot)
+      .multipliedBy(pricePerSlot || 0)
+      .toFixed(9);
+  }, [pricePerSlot, amountSlot]);
 
   const watchImage = watch('image');
   const watchSymbol = watch('symbol');
@@ -130,16 +136,9 @@ export default function TokenDevelopmentTab() {
       .toFixed();
   }, [amount]);
 
-  // const amountSolBuy = useMemo(() => {
-  //   return BigNumber(estimatedReceive)
-  //     .multipliedBy(priceToken || 0)
-  //     .multipliedBy(1e9)
-  //     .toFixed(0);
-  // }, [estimatedReceive, priceToken]);
-
   const onSubmit: SubmitHandler<ITokenDeployer> = async (values) => {
     try {
-      if (!address || !network || !values.image[0] || !Number(priceToken)) return;
+      if (!address || !network || !values.image[0] || !Number(pricePerSlot)) return;
       const mint = Keypair.generate(); // tạo địa chỉ token
       const res = await postCreateMintToken(
         {
@@ -153,7 +152,7 @@ export default function TokenDevelopmentTab() {
           max_target_score: maxTargetScore,
           max_buy_per_address: maxBuyPerAddress,
           total_sol_receive: BigNumber(totalSol).multipliedBy(1e9).toNumber(),
-          price_sol_per_token: BigNumber(priceToken ?? 0).toNumber(),
+          price_sol_per_token: BigNumber(pricePerSlot ?? 0).toNumber(),
 
           twitter: values.twitterLink,
           telegram: values.telegramLink,
@@ -167,7 +166,7 @@ export default function TokenDevelopmentTab() {
         symbol: res.symbol,
         name: res.name,
         targetScore: 0,
-        priceSolPerToken: BigNumber(res.price_sol_per_token).multipliedBy(1e9).toFixed(0),
+        priceSolPerSlot: BigNumber(res.price_sol_per_token).multipliedBy(1e9).toFixed(0),
         totalSolReceive: BigNumber(res.total_sol_receive).toFixed(0),
         maxTokenCanBuy: BigNumber(maxBuyPerAddress).toFixed(0),
       });
@@ -423,7 +422,7 @@ export default function TokenDevelopmentTab() {
             {[
               { value: 0.001 * TOTAL_TOKEN_SUPPLY, label: '0.1%' },
               { value: 0.005 * TOTAL_TOKEN_SUPPLY, label: '0.5%' },
-              { value: 0.007 * TOTAL_TOKEN_SUPPLY, label: '0.7%' },
+              { value: 0.008 * TOTAL_TOKEN_SUPPLY, label: '0.8%' },
               { value: 0.01 * TOTAL_TOKEN_SUPPLY, label: '1%' },
             ].map((e) => (
               <Box
@@ -440,7 +439,7 @@ export default function TokenDevelopmentTab() {
               </Box>
             ))}
           </SimpleGrid>
-          <Box pb={'30px'}>
+          {/* <Box pb={'30px'}>
             <Slider
               value={maxBuyPerAddress}
               min={0.001 * TOTAL_TOKEN_SUPPLY}
@@ -475,7 +474,7 @@ export default function TokenDevelopmentTab() {
                 </Box>
               </Box>
             </Slider>
-          </Box>
+          </Box> */}
           <Box w="full" borderBottom="1px solid rgba(99, 99, 102, 1)" />
           <FlexCol w="full" gap={2.5}>
             <Box>
@@ -485,7 +484,7 @@ export default function TokenDevelopmentTab() {
               </Box>
             </Box>
             <Box position="relative" w="full">
-              <InputCurrency style={{ paddingRight: '52px' }} value={priceToken} onValueChange={setPriceToken} />
+              <InputCurrency style={{ paddingRight: '52px' }} value={pricePerSlot} onValueChange={setPricePerSlot} />
               <Flex
                 position="absolute"
                 top={0}
@@ -596,7 +595,7 @@ export default function TokenDevelopmentTab() {
           <Box fontSize={{ base: 16, md: 18 }}>
             We need{' '}
             <b>
-              <Currency value={Math.ceil(totalTokenRemain.dividedBy(maxBuyPerAddress).toNumber())} />
+              <Currency value={amountSlot} />
             </b>{' '}
             person for tokens to push to Raydium
           </Box>

@@ -150,13 +150,13 @@ export default function LaunchDetailView({ mint }: { mint: string }) {
             <LineCustom />
             <FlexCol gap={1.5} flex={1} alignItems="center" justifyContent="center">
               <Box color="rgba(131, 131, 131, 1)" fontSize={14}>
-                Price/Token
+                Price/Slot
               </Box>
               <Box fontSize={16} fontWeight={600}>
                 <Box as="span" style={{ textWrap: 'nowrap' }}>
                   <Currency value={data.mintToken?.price_sol_per_token} />
                 </Box>
-                SOL/MEME
+                SOL/SLOT {data.mintToken?.symbol}
               </Box>
             </FlexCol>
             <LineCustom />

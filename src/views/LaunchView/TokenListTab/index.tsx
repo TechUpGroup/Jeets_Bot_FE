@@ -76,7 +76,7 @@ export default function TokenListTab() {
             <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
               {[
                 { name: 'Token', center: false },
-                { name: 'Price/Token' },
+                { name: 'Price/Slot' },
                 { name: 'Holder' },
                 { name: 'Sale Progress' },
                 { name: '', w: 209 },

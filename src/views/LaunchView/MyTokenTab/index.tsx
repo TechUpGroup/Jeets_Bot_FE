@@ -60,7 +60,7 @@ export default function MyTokenTab() {
         >
           <Thead>
             <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              {[{ name: 'Token', center: false }, { name: 'Amount' }, { name: 'Price/Token' }].map((e, i) => (
+              {[{ name: 'Token', center: false }, { name: 'Amount' }, { name: 'Price/Slot' }].map((e, i) => (
                 <Td
                   key={i}
                   p={0}

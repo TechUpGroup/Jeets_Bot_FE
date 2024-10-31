@@ -75,6 +75,36 @@
           }
         },
         {
+          "name": "pda_buyer",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  100,
+                  97,
+                  95,
+                  98,
+                  117,
+                  121,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "buyer"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
           "name": "associate_vault",
           "writable": true,
           "pda": {
@@ -189,13 +219,6 @@
               ]
             }
           }
-        },
-        {
-          "name": "fee_receiver",
-          "writable": true,
-          "relations": [
-            "config"
-          ]
         },
         {
           "name": "fund",
@@ -808,7 +831,7 @@
         },
         {
           "name": "sol_target",
-          "type": "u64"
+          "type": "u128"
         },
         {
           "name": "max_buy",
@@ -1555,6 +1578,11 @@
       "code": 6010,
       "name": "BuyOnce",
       "msg": "Creator 1st buy: already bought"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidSolTarget",
+      "msg": "Sol target must be larger than 10 Sol"
     }
   ],
   "types": [
@@ -1649,7 +1677,7 @@
           },
           {
             "name": "virtual_sol_reserve",
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "virtual_token_reserve",
@@ -1701,7 +1729,7 @@
           },
           {
             "name": "sol_target",
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "max_token_buy",
@@ -1770,6 +1798,11 @@
       "name": "MINT_AUTHORITY",
       "type": "bytes",
       "value": "[109, 105, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121]"
+    },
+    {
+      "name": "PDA_CHECK",
+      "type": "bytes",
+      "value": "[112, 100, 97, 95, 98, 117, 121, 101, 114]"
     },
     {
       "name": "PERCENT",

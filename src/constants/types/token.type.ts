@@ -47,6 +47,26 @@ export type JeetsSolana = {
           };
         },
         {
+          name: 'pdaBuyer';
+          writable: true;
+          pda: {
+            seeds: [
+              {
+                kind: 'const';
+                value: [112, 100, 97, 95, 98, 117, 121, 101, 114];
+              },
+              {
+                kind: 'account';
+                path: 'buyer';
+              },
+              {
+                kind: 'account';
+                path: 'mint';
+              },
+            ];
+          };
+        },
+        {
           name: 'associateVault';
           writable: true;
           pda: {
@@ -151,11 +171,6 @@ export type JeetsSolana = {
               ];
             };
           };
-        },
-        {
-          name: 'feeReceiver';
-          writable: true;
-          relations: ['config'];
         },
         {
           name: 'fund';
@@ -586,7 +601,7 @@ export type JeetsSolana = {
         },
         {
           name: 'solTarget';
-          type: 'u64';
+          type: 'u128';
         },
         {
           name: 'maxBuy';
@@ -1176,6 +1191,11 @@ export type JeetsSolana = {
       name: 'buyOnce';
       msg: 'Creator 1st buy: already bought';
     },
+    {
+      code: 6011;
+      name: 'invalidSolTarget';
+      msg: 'Sol target must be larger than 10 Sol';
+    },
   ];
   types: [
     {
@@ -1269,7 +1289,7 @@ export type JeetsSolana = {
           },
           {
             name: 'virtualSolReserve';
-            type: 'u64';
+            type: 'u128';
           },
           {
             name: 'virtualTokenReserve';
@@ -1321,7 +1341,7 @@ export type JeetsSolana = {
           },
           {
             name: 'solTarget';
-            type: 'u64';
+            type: 'u128';
           },
           {
             name: 'maxTokenBuy';
@@ -1390,6 +1410,11 @@ export type JeetsSolana = {
       name: 'mintAuthority';
       type: 'bytes';
       value: '[109, 105, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121]';
+    },
+    {
+      name: 'pdaCheck';
+      type: 'bytes';
+      value: '[112, 100, 97, 95, 98, 117, 121, 101, 114]';
     },
     {
       name: 'percent';

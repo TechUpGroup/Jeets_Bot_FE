@@ -14,7 +14,7 @@ export const useCreateToken = () => {
       symbol: string;
       name: string;
       targetScore: number;
-      priceSolPerToken: string;
+      priceSolPerSlot: string;
       totalSolReceive: string;
       maxTokenCanBuy: string;
       mint: Keypair;
@@ -49,7 +49,7 @@ export const useCreateToken = () => {
       const ix2 = await program.methods
         .mint(
           publicKey, // creator pubKey
-          new BN(params.priceSolPerToken), // price
+          new BN(params.priceSolPerSlot), // price
           new BN(params.totalSolReceive), // sol target
           new BN(params.maxTokenCanBuy), // max token can buy
         )
