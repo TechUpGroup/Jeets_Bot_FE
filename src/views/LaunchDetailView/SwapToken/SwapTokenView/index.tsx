@@ -72,14 +72,13 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
   const sellToken = useSellToken();
 
   const estReceive = useMemo(() => {
-    if (isBuy)
-      return BigNumber(amountDebounce || 0)
-        .dividedBy(token.price_sol_per_token)
-        .toFixed();
+    const tokenPerSlot = BigNumber(token.max_buy_per_address);
+    if (isBuy) return tokenPerSlot.toFixed();
+    const priceSolPerToken = BigNumber(token.price_sol_per_token).dividedBy(tokenPerSlot);
     return BigNumber(amountDebounce || 0)
-      .multipliedBy(token.price_sol_per_token)
+      .multipliedBy(priceSolPerToken)
       .toFixed();
-  }, [amountDebounce, isBuy, token.price_sol_per_token]);
+  }, [amountDebounce, isBuy, token.max_buy_per_address, token.price_sol_per_token]);
   const handleSwap = useCallback(async () => {
     if (!address || !network) {
       toastError('You have not connected your wallet yet');
@@ -131,20 +130,12 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
 
   const messageError = useMemo(() => {
     const userScore = user?.score ?? 0;
-    if (isBuy && Number(estReceive) > token.max_buy_per_address) return 'Exceeded maximum number of tokens purchased';
+    // if (isBuy && Number(estReceive) > token.max_buy_per_address) return 'Exceeded maximum number of tokens purchased';
     if (userScore < token.min_target_score) return `You don't have enough score to swap token`;
     if (userScore > token.max_target_score) return `You exceed score to swap token`;
     if (isOutValue) return 'Insufficient balance';
     return '';
-  }, [
-    user?.score,
-    isBuy,
-    estReceive,
-    token.max_buy_per_address,
-    token.min_target_score,
-    token.max_target_score,
-    isOutValue,
-  ]);
+  }, [user?.score, token.min_target_score, token.max_target_score, isOutValue]);
 
   const isDisableSwap = useMemo(() => {
     if (Number(amount || '0') === 0) return true;
