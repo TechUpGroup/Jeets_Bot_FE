@@ -54,11 +54,11 @@ export const SwapTokenView = ({ token }: { token: ITokenInfo }) => {
   const [isBuy, setIsBuy] = useState(true);
   // const [amount, setAmount] = useState<string>();
   const amount = useMemo(() => {
-    if (isBuy) return BigNumber(token.max_buy_per_address).multipliedBy(token.price_sol_per_token).toFixed();
+    if (isBuy) return BigNumber(token.price_sol_per_token).toFixed();
     return BigNumber(tokenBalance?.amount ?? 0)
       .dividedBy(10 ** (tokenBalance?.decimals ?? 1))
       .toFixed();
-  }, [isBuy, token.max_buy_per_address, token.price_sol_per_token, tokenBalance?.amount, tokenBalance?.decimals]);
+  }, [isBuy, token.price_sol_per_token, tokenBalance?.amount, tokenBalance?.decimals]);
 
   const [comment, setComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
