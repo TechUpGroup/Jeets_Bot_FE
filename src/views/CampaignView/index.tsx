@@ -76,7 +76,7 @@ export default function CampaignView() {
   return (
     <Wrapper>
       <Flex justifyContent="center" w="full" gap={1}>
-        <Title>CAMPAIGN</Title>
+        <Title>Jeets Index</Title>
         {/* <Button
           bg="makeColor"
           fontSize={{ base: 16, md: 20 }}
@@ -92,7 +92,7 @@ export default function CampaignView() {
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
           <Box fontSize={30} fontFamily="sfPro" fontWeight={800}>
-            List campaign
+            List Jeets Index
           </Box>
           {/* <Box color="purple" fontSize={42}>
             Oct 21 - oct 27, 2024

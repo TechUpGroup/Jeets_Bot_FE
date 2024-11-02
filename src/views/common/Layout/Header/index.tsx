@@ -15,7 +15,7 @@ const menus = [
   // { name: 'Pool', href: '/pool' },
   { name: 'Airdrop', href: '/airdrop', sub: '/' },
   { name: 'Leaderboard', href: '/leaderboard' },
-  { name: 'Campaign', href: '/campaign' },
+  { name: 'Jeets Index', href: '/campaign' },
   { name: 'Launch', href: '/launch' },
 ];
 
