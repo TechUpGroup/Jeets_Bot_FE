@@ -10,10 +10,11 @@ import { Box, Drawer, DrawerCloseButton, DrawerContent, IconButton, SimpleGrid, 
 import { ProfileMenu } from './ProfileMenu';
 
 const menus = [
-  { name: 'Missions', href: '/missions', sub: '/' },
-  { name: 'Voting', href: '/voting' },
-  { name: 'Pool', href: '/pool' },
-  { name: 'Campaign', href: '/campaign' },
+  // { name: 'Missions', href: '/missions', sub: '/' },
+  // { name: 'Voting', href: '/voting' },
+  // { name: 'Pool', href: '/pool' },
+  // { name: 'Campaign', hrepaign' },f: '/cam
+  { name: 'Airdrop', href: '/airdrop', sub: '/' },
   { name: 'Leaderboard', href: '/leaderboard' },
   { name: 'Launch', href: '/launch' },
 ];

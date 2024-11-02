@@ -22,7 +22,7 @@ export default function PoolView() {
   const { data: histories } = useQueryHistories();
   const { data: remaining } = useQueryHistoriesRemain();
   return (
-    <Wrapper>
+    <Wrapper container={false}>
       <Title>POOL</Title>
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>

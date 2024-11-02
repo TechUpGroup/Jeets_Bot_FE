@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 
 import { useIsLogin } from '@/hooks/useIsLogin';
 import useWalletActive from '@/hooks/useWalletActive';
+import AirdropView from '@/views/AirdropView';
 import HomeView from '@/views/HomeView';
-import MissionsView from '@/views/MissionsView';
 
 export default function Home() {
   const isLinked = useIsLogin();
@@ -18,5 +18,5 @@ export default function Home() {
     }
   }, [address, isLinked, router]);
 
-  return isLinked ? <MissionsView /> : <HomeView />;
+  return isLinked ? <AirdropView /> : <HomeView />;
 }

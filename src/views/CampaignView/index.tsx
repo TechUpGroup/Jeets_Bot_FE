@@ -1,14 +1,10 @@
 'use client';
 
-import { cloneDeep } from 'lodash';
 import { useState } from 'react';
 
 import { Button, Currency, FlexBanner, FlexCol, InputCurrency, LinkCustom, Title, Title2, Wrapper } from '@/components';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
-import { queryClient } from '@/providers/react-query';
-import { ICampaignResponse, postClaimAirdrop } from '@/services/campaign';
 import dayjs from '@/utils/dayjs';
-import { toastError, toastSuccess } from '@/utils/toast';
 import { InfoIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -39,9 +35,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { CollapseAirdrop } from './CollapseAirdrop';
 import { CollapseItem } from './CollapseItem';
-import { useClaimVault } from './hooks/useClaimVault';
 import { useQueryCampaign } from './hooks/useQueryCampaign';
 
 export default function CampaignView() {
@@ -53,32 +47,8 @@ export default function CampaignView() {
 
   const { data } = useQueryCampaign();
 
-  const claimVault = useClaimVault();
-  const [loading, setLoading] = useState('');
-
-  const handleClaimVault = async (id: string) => {
-    try {
-      setLoading(id);
-      const signature = await postClaimAirdrop(id);
-      await claimVault(signature);
-      toastSuccess('Claim success!');
-      queryClient.setQueryData(['getListCampaign'], (oldData: ICampaignResponse) => {
-        const cloned = cloneDeep(oldData);
-        const airdrop = cloned.airdrops?.find((e) => e._id === id);
-        if (airdrop) {
-          airdrop.status = true;
-        }
-        return cloned;
-      });
-    } catch (e) {
-      toastError('Claim failed!', e);
-    } finally {
-      setLoading('');
-    }
-  };
-
   return (
-    <Wrapper>
+    <Wrapper container={false}>
       <Flex justifyContent="center" w="full" gap={1}>
         <Title>CAMPAIGN</Title>
         {/* <Button
@@ -158,69 +128,7 @@ export default function CampaignView() {
             </Tr>
           </Thead>
           <Tbody fontSize={{ base: 16, md: 20 }}>
-            {data?.airdrops?.map((airdrop, i) => {
-              return (
-                <Tr key={i}>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
-                    <CollapseAirdrop item={airdrop} />
-                    {/* Airdroped { } */}
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                    <Flex alignItems="center" justifyContent="center" textAlign="center">
-                      {dayjs.utc(airdrop.timestamp).format('MMM DD, YYYY')}
-                    </Flex>
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                    <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}>
-                      {/* <Currency value={airdrop.score} /> */}
-                    </Flex>
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                    <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}></Flex>
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                    <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}></Flex>
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
-                    <Flex alignItems="center">
-                      {airdrop.status ? (
-                        <Button
-                          h={{ base: 9, md: 10 }}
-                          w="full"
-                          color="rgba(23, 210, 133, 1)"
-                          border="1px solid"
-                          borderColor="rgba(23, 210, 133, 1)"
-                          rounded={8}
-                          bg="white"
-                          px={{ base: 3, md: 5 }}
-                          cursor="default"
-                        >
-                          Claimed
-                        </Button>
-                      ) : (
-                        <Button
-                          h={{ base: 9, md: 10 }}
-                          w="full"
-                          color="rgba(253, 214, 75, 1)"
-                          border="1px solid"
-                          borderColor="rgba(253, 214, 75, 1)"
-                          rounded={8}
-                          bg="white"
-                          px={{ base: 3, md: 5 }}
-                          disabled={!!loading}
-                          isLoading={loading === airdrop._id}
-                          onClick={() => handleClaimVault(airdrop._id)}
-                        >
-                          Claim
-                        </Button>
-                      )}
-                    </Flex>
-                  </Td>
-                </Tr>
-              );
-            })}
-
-            {data?.campaigns.docs.map((campaign, i) => {
+            {data?.docs.map((campaign, i) => {
               const startTime = dayjs.utc(campaign.start_time);
               const endTime = dayjs.utc(campaign.end_time);
               return (

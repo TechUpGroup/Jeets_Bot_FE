@@ -69,7 +69,7 @@ export default function MissionsView() {
   }, [searchParams, address, refetch]);
 
   return (
-    <Wrapper>
+    <Wrapper container={false}>
       <Title>MISSIONS</Title>
       {!!data?.ratio && data?.ratio >= 100 && (
         <FlexBanner bg="rgba(29, 246, 157, 0.2)">
