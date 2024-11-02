@@ -13,7 +13,7 @@ import VotingView from '../VotingView';
 import ClaimTab from './ClaimTab';
 import ConditionTab from './ConditionTab';
 
-const tabs = ['Campaign', 'Condition', 'Missions', 'Voting', 'Pool', 'Claim'];
+const tabs = ['Condition', 'Missions', 'Voting', 'Pool', 'Claim'];
 
 export default function AirdropView() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function AirdropView() {
   const pathname = usePathname();
   const tabIndex = useMemo(() => {
     const tab = Number(searchParams.get('tab'));
-    if ([0, 1, 2, 3, 4, 5].includes(tab)) return tab;
+    if ([0, 1, 2, 3, 4].includes(tab)) return tab;
     return 0;
   }, [searchParams]);
 
@@ -67,9 +67,6 @@ export default function AirdropView() {
         </SimpleGrid>
       </FlexContent>
       <TabPanels>
-        <TabPanel p={0}>
-          <CampaignView />
-        </TabPanel>
         <TabPanel p={0}>
           <ConditionTab />
         </TabPanel>

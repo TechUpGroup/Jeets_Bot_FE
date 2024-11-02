@@ -14,6 +14,6 @@ export const getLeaderboard = async (type: 'W' | 'M' | 'Y' | 'D') => {
       totalScore: number;
       rank: number;
     }[];
-  }>(`/campaigns/leaderboard`, { params: { type } });
+  }>(`/users/leaderboard`, { params: { type } });
   return data.data;
 };

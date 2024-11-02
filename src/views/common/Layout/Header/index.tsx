@@ -13,9 +13,9 @@ const menus = [
   // { name: 'Missions', href: '/missions', sub: '/' },
   // { name: 'Voting', href: '/voting' },
   // { name: 'Pool', href: '/pool' },
-  // { name: 'Campaign', hrepaign' },f: '/cam
   { name: 'Airdrop', href: '/airdrop', sub: '/' },
   { name: 'Leaderboard', href: '/leaderboard' },
+  { name: 'Campaign', href: '/campaign' },
   { name: 'Launch', href: '/launch' },
 ];
 

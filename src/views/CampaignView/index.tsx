@@ -1,9 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { Button, Currency, FlexBanner, FlexCol, InputCurrency, LinkCustom, Title, Title2, Wrapper } from '@/components';
+import {
+  Button,
+  Currency,
+  FlexBanner,
+  FlexCenter,
+  FlexCol,
+  ImageRatio,
+  InputCurrency,
+  LinkCustom,
+  Title,
+  Title2,
+  Wrapper,
+} from '@/components';
+import { XIconBlack } from '@/components/Icons';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
+import { useUser } from '@/store/useUserStore';
 import dayjs from '@/utils/dayjs';
 import { InfoIcon } from '@chakra-ui/icons';
 import {
@@ -39,6 +53,7 @@ import { CollapseItem } from './CollapseItem';
 import { useQueryCampaign } from './hooks/useQueryCampaign';
 
 export default function CampaignView() {
+  const user = useUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(0);
   const [totalSol, setTotalSol] = useState(1);
@@ -47,8 +62,19 @@ export default function CampaignView() {
 
   const { data } = useQueryCampaign();
 
+  const imageXVerified = useMemo(() => {
+    switch (user?.twitter_verified_type) {
+      case 'blue':
+        return '/icons/tick-2.png';
+      case 'business':
+        return '/icons/tick-1.png';
+      case 'government':
+        return '/icons/tick-3.png';
+    }
+  }, [user?.twitter_verified_type]);
+
   return (
-    <Wrapper container={false}>
+    <Wrapper>
       <Flex justifyContent="center" w="full" gap={1}>
         <Title>CAMPAIGN</Title>
         {/* <Button
@@ -73,6 +99,15 @@ export default function CampaignView() {
           </Box> */}
         </FlexCol>
       </FlexBanner>
+
+      <FlexCol fontSize={20} bg="rgba(208, 255, 237, 1)" rounded={10} py={4} px={6} w="full" gap={1.5}>
+        <Box>Condition to get Jeet Score</Box>
+        <FlexCenter gap="5px">
+          <XIconBlack w={6} />
+          <Box>{user?.twitter_username ?? ''}</Box>
+          <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={7} />
+        </FlexCenter>
+      </FlexCol>
 
       <TableContainer w="full" pb={4}>
         <Table

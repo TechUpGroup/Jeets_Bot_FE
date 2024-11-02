@@ -97,8 +97,7 @@ export default function ConditionTab() {
           textAlign="center"
         >
           <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-            <Box>Conditions for Airdrop</Box>
-            <Box>and Jeets Score Index Eligibility</Box>
+            Conditions for Airdrop Eligibility
           </FlexCol>
           <FlexCenter gap="5px">
             <Box>X blue/gold tick</Box>
@@ -133,6 +132,33 @@ export default function ConditionTab() {
           <FlexCenter gap="5px">
             <Box>Pass our voting process</Box>
             <ImageRatio src={isPassed ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
+          </FlexCenter>
+        </FlexCol>
+
+        <FlexCol
+          w="full"
+          border="3px dashed"
+          borderColor="#8F51EC"
+          rounded={8}
+          p={5}
+          alignItems="center"
+          gap={{ base: 1.5, md: 2.5 }}
+          lineHeight={1.145}
+          fontSize={{ base: 14, md: 20 }}
+          color="#201B03"
+          textAlign="center"
+        >
+          <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+            Conditions Jeets Score Index Eligibility
+          </FlexCol>
+          <FlexCenter gap="5px">
+            <Box>X blue/gold tick</Box>
+            <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
+          </FlexCenter>
+
+          <FlexCenter gap="5px">
+            <Box>Pass Jeets Score process</Box>
+            <ImageRatio src={!!imageXVerified ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
           </FlexCenter>
         </FlexCol>
       </FlexCol>
