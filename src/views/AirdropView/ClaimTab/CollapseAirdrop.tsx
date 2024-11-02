@@ -6,7 +6,7 @@ export const CollapseAirdrop = ({ item }: { item: IAirdrop }) => {
   return (
     <>
       <Flex gap={1}>
-        Airdropped <Currency value={item.detail.amount} decimalNumber={item.detail.decimal} />{' '}
+        <Currency value={item.detail.amount} decimalNumber={item.detail.decimal} />{' '}
         {item.detail.symbol?.replace('$MOON', '$🌕').replace('$SUN', '$☀️')}
       </Flex>
     </>

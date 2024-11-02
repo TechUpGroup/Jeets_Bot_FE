@@ -76,9 +76,7 @@ export interface ICampaignResponse {
 export const getListCampaign = async () => {
   const params: IPaginationParams = { page: 1, limit: 100 };
 
-  const data = await axiosInstance.get<ICampaignResponse>(`/campaigns/list`, {
-    params: params,
-  });
+  const data = await axiosInstance.get<IPaginationResponse<ICampaign>>(`/campaigns/list`, { params });
   return data.data;
 };
 
@@ -96,6 +94,6 @@ export const postCampaign = async (body: any) => {
 };
 
 export const postClaimAirdrop = async (id: string) => {
-  const data = await axiosInstance.post<string>(`/campaigns/airdrop/claim/${id}`);
+  const data = await axiosInstance.post<string>(`/airdrops/claim/${id}`);
   return data.data;
 };

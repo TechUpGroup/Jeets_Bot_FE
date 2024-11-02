@@ -48,7 +48,7 @@ export default function VotingView() {
   };
 
   return (
-    <Wrapper>
+    <Wrapper container={false}>
       <Title>VOTING</Title>
       <FlexBanner bg="rgba(29, 246, 157, 0.2)">
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
