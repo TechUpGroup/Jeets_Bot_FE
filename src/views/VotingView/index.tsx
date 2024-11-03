@@ -72,7 +72,7 @@ export default function VotingView() {
         </FlexCol>
       </FlexBanner>
       <FlexCol fontSize={20} bg="rgba(208, 255, 237, 1)" rounded={10} py={4} px={6} w="full" gap={1.5}>
-        <Box>Condition to get Jeet Score</Box>
+        <Box>Voting Conditions</Box>
         <FlexCenter gap="5px">
           <XIconBlack w={6} />
           <Box>{user?.twitter_username ?? ''}</Box>
