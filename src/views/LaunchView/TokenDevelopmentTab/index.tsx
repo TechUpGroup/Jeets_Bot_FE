@@ -364,7 +364,7 @@ export default function TokenDevelopmentTab() {
         }}
         isLoading={isSubmitting}
       >
-        NEXT/DEPLOY
+        NEXT
       </Button>
 
       <ModalBase
@@ -675,7 +675,7 @@ export default function TokenDevelopmentTab() {
             onClick={handleSubmit(onSubmit)}
             isLoading={isSubmitting}
           >
-            NEXT/DEPLOY
+            DEPLOY
           </Button>
         </FlexCol>
       </ModalBase>
