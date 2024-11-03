@@ -110,7 +110,7 @@ export default function HomeView() {
         h="fit-content"
       >
         <Box lineHeight={1.145} fontSize={{ base: 32, md: 82 }}>
-          SUBMIT
+        SolJeets - First Anti-jeets Launchpad
         </Box>
         {!address ? (
           <FlexCol w="full">

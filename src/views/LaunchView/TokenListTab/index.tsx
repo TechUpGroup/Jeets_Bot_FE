@@ -25,7 +25,7 @@ import { useQueryTokenList } from './hooks/useQueryTokenList';
 const options = [
   { value: 'current_price', label: 'Price' },
   { value: 'totalHolders', label: 'Holder' },
-  { value: 'saleProgress', label: 'Sale Progress' },
+  { value: 'Progress', label: 'Progress' },
 ];
 
 export default function TokenListTab() {
@@ -77,7 +77,7 @@ export default function TokenListTab() {
               {[
                 { name: 'Token', center: false },
                 { name: 'Price/Slot' },
-                { name: 'Holder' },
+                { name: 'Holders' },
                 { name: 'Sale Progress' },
                 { name: '', w: 209 },
               ].map((e, i) => (

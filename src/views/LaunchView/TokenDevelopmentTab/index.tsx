@@ -364,7 +364,7 @@ export default function TokenDevelopmentTab() {
         }}
         isLoading={isSubmitting}
       >
-        Deploy
+        NEXT/DEPLOY
       </Button>
 
       <ModalBase
@@ -379,7 +379,7 @@ export default function TokenDevelopmentTab() {
             Deploy your token
           </Box>
           <FlexCol w="full" gap={2.5}>
-            <Box>You will hold 1% of the token supply</Box>
+            <Box>You will receive 1% of the total supply for free</Box>
             <Box position="relative" w="full">
               <InputCurrency
                 style={{ paddingRight: '40px' }}
@@ -411,7 +411,7 @@ export default function TokenDevelopmentTab() {
             </Box>
           </FlexCol>
           <FlexCol w="full" gap={2.5}>
-            <Box fontSize={14}>You receive</Box>
+            <Box fontSize={14}>Tokens you will receive</Box>
             <Title2 color="purple" fontWeight={600}>
               <Currency value={estimatedReceive} /> {watchSymbol}
             </Title2>
@@ -500,7 +500,7 @@ export default function TokenDevelopmentTab() {
           </FlexCol>
           <FlexCol w="full" gap={3} p={4} rounded={16} border="1px solid" borderColor="rgba(192, 192, 192, 1)" pb={9}>
             <Box fontSize={14}>
-              Target Jeets Score {totalUserWithScore !== undefined && `(${totalUserWithScore} users)`}
+            Target Jeets Index Score {totalUserWithScore !== undefined && `(${totalUserWithScore} users)`}
             </Box>
             <RangeSlider
               min={0}
@@ -590,15 +590,14 @@ export default function TokenDevelopmentTab() {
             </RangeSlider>
           </FlexCol>
           <Box fontSize={{ base: 16, md: 18 }}>
-            Total SOL will add liquidity: <Currency value={totalSol} suffix=" SOL" />
+          Total SOLs will be added to liquidity: <Currency value={totalSol} suffix=" SOL" />
           </Box>
           <Box fontSize={{ base: 16, md: 18 }}>
-            We need{' '}
+            You need{' '}
             <b>
               <Currency value={amountSlot} />
             </b>{' '}
-            person for tokens to push to Raydium
-          </Box>
+            participants to join this launch          </Box>
           {/* 0.001 * TOTAL_TOKEN_SUPPLY */}
           {/* <Box pb={'30px'}>
             <Slider
@@ -676,7 +675,7 @@ export default function TokenDevelopmentTab() {
             onClick={handleSubmit(onSubmit)}
             isLoading={isSubmitting}
           >
-            DEPLOY
+            NEXT/DEPLOY
           </Button>
         </FlexCol>
       </ModalBase>

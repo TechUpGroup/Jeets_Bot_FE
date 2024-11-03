@@ -100,11 +100,11 @@ export default function ConditionTab() {
             Conditions for Airdrop Eligibility
           </FlexCol>
           <FlexCenter gap="5px">
-            <Box>X blue/gold tick</Box>
+            <Box>Have X blue/gold tick</Box>
             <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
           </FlexCenter>
           <FlexCenter gap="5px">
-            <Box>Has more than 2000 followers</Box>
+            <Box>Have more than 2000 followers</Box>
             <ImageRatio
               src={(user?.twitter_followers_count ?? 0) >= 2000 ? `/icons/success.png` : `/icons/error.png`}
               ratio={1}
@@ -152,7 +152,7 @@ export default function ConditionTab() {
             Voting conditions
           </FlexCol>
           <FlexCenter gap="5px">
-            <Box>X blue/gold tick</Box>
+            <Box>Have X blue/gold tick</Box>
             <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
           </FlexCenter>
           {user?.is_hold_token ? (

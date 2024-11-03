@@ -91,17 +91,17 @@ export default function CampaignView() {
       </Flex>
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
-          <Box fontSize={30} fontFamily="sfPro" fontWeight={800}>
-            List Jeets Index
-          </Box>
-          {/* <Box color="purple" fontSize={42}>
-            Oct 21 - oct 27, 2024
-          </Box> */}
+          <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+          How it work? 
+          </FlexCol>
+          <FlexCenter gap="5px">Hold tokens of our partners for 1 week, and you&apos;ll earn +7 points.</FlexCenter>
+          <FlexCenter gap="5px">Selling 0.001% supply -1 point.</FlexCenter>
+          <FlexCenter gap="5px">Buying 0.001% supply +1 point.</FlexCenter>
+          <FlexCenter gap="5px">Voting for airdrop qualified +1 point.</FlexCenter>
         </FlexCol>
       </FlexBanner>
-
       <FlexCol fontSize={20} bg="rgba(208, 255, 237, 1)" rounded={10} py={4} px={6} w="full" gap={1.5}>
-        <Box>Condition to get Jeet Score</Box>
+        <Box>Conditions to start earning Jeets Index Score</Box>
         <FlexCenter gap="5px">
           <XIconBlack w={6} />
           <Box>{user?.twitter_username ?? ''}</Box>

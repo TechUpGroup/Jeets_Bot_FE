@@ -48,7 +48,7 @@ export default function LeaderboardView() {
             <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
               {[
                 { name: 'Rank', center: false },
-                { name: 'Jeets Score Rewards', w: 420 },
+                { name: 'Jeets Index Score', w: 420 },
               ].map((e, i) => (
                 <Td
                   key={i}
