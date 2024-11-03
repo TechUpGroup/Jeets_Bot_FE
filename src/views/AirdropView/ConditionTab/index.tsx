@@ -97,7 +97,7 @@ export default function ConditionTab() {
           textAlign="center"
         >
           <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-            Conditions for Airdrop Eligibility
+            Airdrop Eligibility
           </FlexCol>
           <FlexCenter gap="5px">
             <Box>Have X blue/gold tick</Box>
@@ -149,7 +149,7 @@ export default function ConditionTab() {
           textAlign="center"
         >
           <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-            Voting conditions
+            Voting Eligibility
           </FlexCol>
           <FlexCenter gap="5px">
             <Box>Have X blue/gold tick</Box>
