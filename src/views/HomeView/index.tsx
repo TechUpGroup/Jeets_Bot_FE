@@ -109,7 +109,7 @@ export default function HomeView() {
         gap="30px"
         h="fit-content"
       >
-        <Box lineHeight={1.145} fontSize={{ base: 32, md: 82 }}>
+        <Box lineHeight={1.145} fontSize={{ base: 12, md: 22 }}>
         SolJeets - First Anti-jeets Launchpad
         </Box>
         {!address ? (
