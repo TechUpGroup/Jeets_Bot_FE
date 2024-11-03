@@ -149,15 +149,31 @@ export default function ConditionTab() {
           textAlign="center"
         >
           <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-            Conditions Jeets Score Index Eligibility
+            Voting conditions
           </FlexCol>
           <FlexCenter gap="5px">
             <Box>X blue/gold tick</Box>
             <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
           </FlexCenter>
-
+          {user?.is_hold_token ? (
+            <FlexCenter gap="5px">
+              <Box>Hold tokens from our partners</Box>
+              <ImageRatio src={`/icons/success.png`} ratio={1} w={6} />
+            </FlexCenter>
+          ) : (
+            <FlexCenter gap="5px">
+              <Box>
+                Hold tokens from{' '}
+                <Box as="span" color="#2BA2DE" textDecor="underline" cursor="pointer" onClick={onOpen}>
+                  our partners{' '}
+                </Box>
+                {user?.partner && <Box as="span">{user?.partner.symbol}</Box>}
+              </Box>
+              {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
+            </FlexCenter>
+          )}
           <FlexCenter gap="5px">
-            <Box>Pass Jeets Score process</Box>
+            <Box>Eligible for voting</Box>
             <ImageRatio src={!!imageXVerified ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
           </FlexCenter>
         </FlexCol>

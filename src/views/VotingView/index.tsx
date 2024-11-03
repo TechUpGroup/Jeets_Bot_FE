@@ -13,6 +13,8 @@ import { Box, Flex, SimpleGrid } from '@chakra-ui/react';
 
 import { useQueryVoting } from './hooks/useQueryVoting';
 import { useVoting } from './hooks/useVoting';
+import { XIconBlack } from '@/components/Icons/XIconBlack';
+import { useUser } from '@/store/useUserStore';
 
 const colors = ['rgba(255, 237, 237, 1)', 'rgba(238, 255, 237, 1)', 'rgba(255, 255, 237, 1)'];
 const borders = ['rgba(255, 107, 107, 1)', 'rgba(88, 211, 82, 1)', 'rgba(253, 214, 75, 1)'];
@@ -20,8 +22,20 @@ const borders = ['rgba(255, 107, 107, 1)', 'rgba(88, 211, 82, 1)', 'rgba(253, 21
 export default function VotingView() {
   const { data } = useQueryVoting();
   const { address } = useWalletActive();
+  const user = useUser();
 
   const voting = useVoting();
+
+  const imageXVerified = useMemo(() => {
+    switch (user?.twitter_verified_type) {
+      case 'blue':
+        return '/icons/tick-2.png';
+      case 'business':
+        return '/icons/tick-1.png';
+      case 'government':
+        return '/icons/tick-3.png';
+    }
+  }, [user?.twitter_verified_type]);
 
   const [current, setCurrent] = useState(Date.now());
 
@@ -57,7 +71,31 @@ export default function VotingView() {
           </Box>
         </FlexCol>
       </FlexBanner>
-
+      <FlexCol fontSize={20} bg="rgba(208, 255, 237, 1)" rounded={10} py={4} px={6} w="full" gap={1.5}>
+        <Box>Condition to get Jeet Score</Box>
+        <FlexCenter gap="5px">
+          <XIconBlack w={6} />
+          <Box>{user?.twitter_username ?? ''}</Box>
+          <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={7} />
+        </FlexCenter>
+        {user?.is_hold_token ? (
+            <FlexCenter gap="5px">
+              <Box>Hold tokens from our partners</Box>
+              <ImageRatio src={`/icons/success.png`} ratio={1} w={6} />
+            </FlexCenter>
+          ) : (
+            <FlexCenter gap="5px">
+              <Box>
+                Hold tokens from{' '}
+                <Box as="span" color="#2BA2DE" textDecor="underline" cursor="pointer" >
+                  our partners{' '}
+                </Box>
+                {user?.partner && <Box as="span">{user?.partner.symbol}</Box>}
+              </Box>
+              {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
+            </FlexCenter>
+          )}
+      </FlexCol>
       <FlexCol w="full" gap={2.5}>
         {data?.result?.map((e, i) => (
           <SimpleGrid

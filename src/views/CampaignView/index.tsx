@@ -107,6 +107,23 @@ export default function CampaignView() {
           <Box>{user?.twitter_username ?? ''}</Box>
           <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={7} />
         </FlexCenter>
+        {user?.is_hold_token ? (
+            <FlexCenter gap="5px">
+              <Box>Hold tokens from our partners</Box>
+              <ImageRatio src={`/icons/success.png`} ratio={1} w={6} />
+            </FlexCenter>
+          ) : (
+            <FlexCenter gap="5px">
+              <Box>
+                Hold tokens from{' '}
+                <Box as="span" color="#2BA2DE" textDecor="underline" cursor="pointer">
+                  our partners{' '}
+                </Box>
+                {user?.partner && <Box as="span">{user?.partner.symbol}</Box>}
+              </Box>
+              {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
+            </FlexCenter>
+          )}
       </FlexCol>
 
       <TableContainer w="full" pb={4}>
