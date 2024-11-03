@@ -11,7 +11,7 @@ import MyTokenTab from './MyTokenTab';
 import TokenDevelopmentTab from './TokenDevelopmentTab';
 import TokenListTab from './TokenListTab';
 
-const tabs = ['Token List', 'Token Development', 'My Token'];
+const tabs = ['Token List', 'Launch A Token', 'My Token'];
 
 export default function LaunchView() {
   const router = useRouter();

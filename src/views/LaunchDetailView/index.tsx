@@ -15,7 +15,7 @@ import { TradeComponent } from './TradeComponent';
 
 const tabs = [
   { name: 'Token List', href: '/launch?tab=0' },
-  { name: 'Token Development', href: '/launch?tab=1' },
+  { name: 'Launch A Token', href: '/launch?tab=1' },
   { name: 'My Token', href: '/launch?tab=2' },
 ];
 

@@ -188,7 +188,7 @@ export default function TokenDevelopmentTab() {
   return (
     <FlexContent w="full" fontFamily="sfPro" lineHeight={1.4} fontWeight={500}>
       <Title2 fontFamily="titanOne" fontWeight={400}>
-        Token Development
+        Launch A Token
       </Title2>
       <Box bg="rgba(243, 235, 255, 1)" rounded={12} p={2} w="full">
         <Flex

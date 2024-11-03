@@ -14,7 +14,7 @@ const menus = [
   // { name: 'Voting', href: '/voting' },
   // { name: 'Pool', href: '/pool' },
   { name: 'Airdrop', href: '/airdrop', sub: '/' },
-  { name: 'Leaderboard', href: '/leaderboard' },
+  { name: 'JeetsBoard', href: '/jeetsboard' },
   { name: 'Jeets Index', href: '/jeetsindex' },
   { name: 'Launch', href: '/launch' },
 ];
