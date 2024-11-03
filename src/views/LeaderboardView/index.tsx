@@ -13,7 +13,7 @@ export default function LeaderboardView() {
 
   return (
     <Wrapper>
-      <Title textTransform="uppercase">leaderboard</Title>
+      <Title textTransform="uppercase">JeetsBoard</Title>
       <Flex justifyContent="center" gap={{ base: 2.5, md: '30px' }} w="full" fontSize={{ base: 14, md: 16 }}>
         {[
           // { name: 'Day', value: 'D' },
