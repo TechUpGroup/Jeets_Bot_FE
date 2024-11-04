@@ -1,5 +1,7 @@
 'use client';
 
+import BigNumber from 'bignumber.js';
+
 import {
   Button,
   Currency,
@@ -13,14 +15,14 @@ import {
 } from '@/components';
 import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
-import dayjs from '@/utils/dayjs';
-import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
-import { useQueryHistories, useQueryHistoriesRemain } from './hooks/useQueryHistories';
+import ConditionTab from './ConditionTab';
+import { useQueryAirdropsPoolInfos } from './hooks/useQueryHistories';
 
 export default function PoolView() {
-  const { data: histories } = useQueryHistories();
-  const { data: remaining } = useQueryHistoriesRemain();
+  const { data: airdropsPoolInfos } = useQueryAirdropsPoolInfos();
+
   return (
     <Wrapper container={false}>
       <Title>POOL</Title>
@@ -36,19 +38,14 @@ export default function PoolView() {
             justifyContent="center"
             flexWrap="wrap"
           >
-            <Currency value={remaining} decimalNumber={6} />{' '}
             <FlexCenter gap={2.5}>
-              <Box as="span" color="rgba(32, 27, 3, 1)">
-                $MOON
-              </Box>
-              <ImageRatio src="/icons/moon.png" ratio={1} w={10} />
+              <ImageRatio src="/icons/moon.png" ratio={1} w={20} />
             </FlexCenter>
           </Flex>
-          <Box fontSize={20} flexFlow="sfPro" color="rgba(16, 16, 16, 1)">
-            Locked
-          </Box>
         </FlexCol>
       </FlexBanner>
+
+      <ConditionTab />
 
       <TableContainer w="full" pb={4}>
         <Table
@@ -60,10 +57,11 @@ export default function PoolView() {
           <Thead>
             <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
               {[
-                { name: 'Amount', center: false, w: 288 },
-                { name: 'Transactions' },
-                { name: 'Deposit time' },
-                { name: 'Status', w: 288 },
+                { name: 'Token', center: false, w: 288 },
+                { name: 'Total Aidrop' },
+                { name: 'Aidropped' },
+                { name: 'Remaining' },
+                { name: 'Pool Address', w: 288 },
               ].map((e, i) => (
                 <Td
                   key={i}
@@ -80,40 +78,32 @@ export default function PoolView() {
             </Tr>
           </Thead>
           <Tbody fontSize={{ base: 16, md: 20 }}>
-            {histories?.docs?.map((e, i) => (
+            {airdropsPoolInfos?.map((e, i) => (
               <Tr key={i}>
                 <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
-                  <Flex alignItems="center">
-                    <Currency value={e.transfer_amount} decimalNumber={6} />
-                  </Flex>
-                </Td>
-                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                  <LinkCustom target="_blank" href={getTransactionHashUrl(e.transaction_hash)}>
-                    <Flex alignItems="center" justifyContent="center" textAlign="center">
-                      {formatAddress(e.transaction_hash)}
-                    </Flex>
-                  </LinkCustom>
+                  <Flex alignItems="center">{e.detail.symbol}</Flex>
                 </Td>
                 <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
                   <Flex alignItems="center" justifyContent="center" textAlign="center">
-                    {dayjs.utc(e.timestamp * 1000).format('DD/MM/YYYY')}
+                    <Currency value={e.total} decimalNumber={e.detail.decimal} />
+                  </Flex>
+                </Td>
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
+                  <Flex alignItems="center" justifyContent="center" textAlign="center">
+                    <Currency value={e.total_airdropped} decimalNumber={e.detail.decimal} />
+                  </Flex>
+                </Td>
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
+                  <Flex alignItems="center" justifyContent="center" textAlign="center">
+                    <Currency value={BigNumber(e.total).minus(e.total_airdropped)} decimalNumber={e.detail.decimal} />
                   </Flex>
                 </Td>
                 <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
-                  <Flex alignItems="center">
-                    <Button
-                      h={{ base: 10, md: '50px' }}
-                      w="full"
-                      color="green"
-                      border="1px solid"
-                      borderColor="green"
-                      rounded={8}
-                      px={5}
-                      cursor="default"
-                    >
-                      AIRDROPPED
-                    </Button>
-                  </Flex>
+                  <LinkCustom target="_blank" href={getTransactionHashUrl(e.pool_address, 'address')}>
+                    <Flex alignItems="center" justifyContent="center" textAlign="center">
+                      {formatAddress(e.pool_address)}
+                    </Flex>
+                  </LinkCustom>
                 </Td>
               </Tr>
             ))}

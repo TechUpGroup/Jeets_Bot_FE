@@ -10,7 +10,13 @@ export function middleware(request: NextRequest) {
     searchParams.forEach((_, key) => {
       params = `${params ? `${params}&` : '?'}${key}=`;
     });
-    return NextResponse.redirect(origin + '/missions?' + searchParams);
+    return NextResponse.redirect(origin + '/airdrop?' + searchParams);
+  } else if (state && state === 'retwitter') {
+    let params = '';
+    searchParams.forEach((_, key) => {
+      params = `${params ? `${params}&` : '?'}${key}=`;
+    });
+    return NextResponse.redirect(origin + '/airdrop?tab=2&' + searchParams);
   }
 }
 

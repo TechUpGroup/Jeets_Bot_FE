@@ -13,7 +13,7 @@ export default function LeaderboardView() {
 
   return (
     <Wrapper>
-      <Title textTransform="uppercase">leaderboard</Title>
+      <Title textTransform="uppercase">JeetsBoard</Title>
       <Flex justifyContent="center" gap={{ base: 2.5, md: '30px' }} w="full" fontSize={{ base: 14, md: 16 }}>
         {[
           // { name: 'Day', value: 'D' },
@@ -48,7 +48,7 @@ export default function LeaderboardView() {
             <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
               {[
                 { name: 'Rank', center: false },
-                { name: 'Jeets Score Rewards', w: 420 },
+                { name: 'Jeets Index Score', w: 420 },
               ].map((e, i) => (
                 <Td
                   key={i}

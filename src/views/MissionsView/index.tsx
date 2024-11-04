@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { Button, FlexBanner, FlexBetween, FlexCol, ImageRatio, LinkCustom, Title, Wrapper } from '@/components';
@@ -13,6 +13,9 @@ import { Box, Center, Flex } from '@chakra-ui/react';
 import { useQueryMissions } from './hooks/useQueryMissions';
 
 export default function MissionsView() {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const { data, refetch } = useQueryMissions();
   const [loading, setLoading] = useState('');
   const { address } = useWalletActive();
@@ -86,18 +89,18 @@ export default function MissionsView() {
             >
               You have been added to the whitelist. Let’s vote to find the winner
             </Box>
-            <LinkCustom href="/voting">
-              <Button
-                bg="makeColor"
-                px="96px"
-                h={{ base: 10, md: '50px' }}
-                fontSize={{ base: 16, md: 20 }}
-                color="white"
-                rounded={8}
-              >
-                VOTE
-              </Button>
-            </LinkCustom>
+
+            <Button
+              bg="makeColor"
+              px="96px"
+              h={{ base: 10, md: '50px' }}
+              fontSize={{ base: 16, md: 20 }}
+              color="white"
+              rounded={8}
+              onClick={() => router.push(`${pathname}?tab=1`)}
+            >
+              VOTE
+            </Button>
           </FlexCol>
         </FlexBanner>
       )}

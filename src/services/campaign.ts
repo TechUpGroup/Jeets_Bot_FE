@@ -73,18 +73,13 @@ export interface ICampaignResponse {
   campaigns: IPaginationResponse<ICampaign>;
 }
 
-export const getListCampaign = async () => {
-  const params: IPaginationParams = { page: 1, limit: 100 };
-
+export const getListCampaign = async (params: IPaginationParams) => {
   const data = await axiosInstance.get<IPaginationResponse<ICampaign>>(`/campaigns/list`, { params });
   return data.data;
 };
 
-export const getCampaignHistories = async () => {
-  const params: IPaginationParams = { page: 1, limit: 100 };
-  const data = await axiosInstance.get<IPaginationResponse<ICampaignHistories>>(`/campaigns/histories`, {
-    params: params,
-  });
+export const getCampaignHistories = async (params: IPaginationParams) => {
+  const data = await axiosInstance.get<IPaginationResponse<ICampaignHistories>>(`/campaigns/histories`, { params });
   return data.data;
 };
 

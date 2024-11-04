@@ -1,5 +1,6 @@
 'use client';
 
+import { isNil } from 'lodash';
 import { useMemo } from 'react';
 
 import { Button, FlexCenter, FlexCol, ImageRatio } from '@/components';
@@ -8,10 +9,14 @@ import { appConfig } from '@/config';
 import useCodeSocial from '@/hooks/useCodeSocial';
 import useWalletActive from '@/hooks/useWalletActive';
 import { useUser } from '@/store/useUserStore';
+import { useQueryMissions } from '@/views/MissionsView/hooks/useQueryMissions';
+import { useVotingCheck } from '@/views/PoolView/ConditionTab/hooks/useVotingCheck';
 import { Box, Center, Flex } from '@chakra-ui/react';
 
 export default function UserInfoProfile() {
   const { address } = useWalletActive();
+  const { data: missionInfo } = useQueryMissions();
+  const { data: isPassed } = useVotingCheck();
 
   const openConnectTwitter = () => {
     window.open(`${appConfig.publicUrl}/users/twitter/start`, '_self');
@@ -36,11 +41,6 @@ export default function UserInfoProfile() {
         return '/icons/tick-3.png';
     }
   }, [user?.twitter_verified_type]);
-
-  const isPassed = useMemo(() => {
-    if (!user) return false;
-    return user?.is_hold_token && user.twitter_verified_type !== 'none' && user.twitter_followers_count >= 2000;
-  }, [user]);
 
   if (!address) return undefined;
 
@@ -110,16 +110,16 @@ export default function UserInfoProfile() {
             textAlign="center"
           >
             <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-              Conditions for Airdrop Eligibility
+              Airdrop Eligibility
             </FlexCol>
             <FlexCenter gap="5px">
-              <Box>X blue/gold tick</Box>
+              <Box>Have X blue/gold tick</Box>
               <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
             </FlexCenter>
             <FlexCenter gap="5px">
-              <Box>Has more than 2000 followers</Box>
+              <Box>Have more than 1000 followers</Box>
               <ImageRatio
-                src={(user?.twitter_followers_count ?? 0) >= 2000 ? `/icons/success.png` : `/icons/error.png`}
+                src={(user?.twitter_followers_count ?? 0) >= 1000 ? `/icons/success.png` : `/icons/error.png`}
                 ratio={1}
                 w={6}
               />
@@ -140,6 +140,16 @@ export default function UserInfoProfile() {
             )}
 
             <FlexCenter gap="5px">
+              <Box>Completed missions</Box>
+              {!isNil(missionInfo?.ratio) && (
+                <ImageRatio
+                  src={missionInfo?.ratio >= 100 ? `/icons/success.png` : `/icons/error.png`}
+                  ratio={1}
+                  w={6}
+                />
+              )}
+            </FlexCenter>
+            <FlexCenter gap="5px">
               <Box>Pass our voting process</Box>
               <ImageRatio src={isPassed ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
             </FlexCenter>
@@ -159,10 +169,10 @@ export default function UserInfoProfile() {
             textAlign="center"
           >
             <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-              Conditions Jeets Score Index Eligibility
+              Conditions to start earning Jeets Index Score
             </FlexCol>
             <FlexCenter gap="5px">
-              <Box>X blue/gold tick</Box>
+              <Box>Have X blue/gold tick</Box>
               <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
             </FlexCenter>
 
@@ -170,6 +180,48 @@ export default function UserInfoProfile() {
               <Box>Pass Jeets Score process</Box>
               <ImageRatio src={!!imageXVerified ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
             </FlexCenter>
+          </FlexCol>
+          <FlexCol
+            w="full"
+            border="3px dashed"
+            borderColor="#8F51EC"
+            rounded={8}
+            p={5}
+            alignItems="center"
+            gap={{ base: 1.5, md: 2.5 }}
+            lineHeight={1.145}
+            fontSize={{ base: 14, md: 20 }}
+            color="#201B03"
+            textAlign="center"
+          >
+            <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+              Voting Eligibility
+            </FlexCol>
+            <FlexCenter gap="5px">
+              <Box>Have X blue/gold tick</Box>
+              <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
+            </FlexCenter>
+            {user?.is_hold_token ? (
+              <FlexCenter gap="5px">
+                <Box>Hold tokens from our partners</Box>
+                <ImageRatio src={`/icons/success.png`} ratio={1} w={6} />
+              </FlexCenter>
+            ) : (
+              <FlexCenter gap="5px">
+                <Box>
+                  Hold tokens from{' '}
+                  <Box as="span" color="#2BA2DE" textDecor="underline" cursor="pointer">
+                    our partners{' '}
+                  </Box>
+                  {user?.partner && <Box as="span">{user?.partner.symbol}</Box>}
+                </Box>
+                {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
+              </FlexCenter>
+            )}
+            {/* <FlexCenter gap="5px">
+            <Box>Eligible for voting</Box>
+            <ImageRatio src={!!imageXVerified ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
+          </FlexCenter> */}
           </FlexCol>
         </FlexCol>
       </FlexCol>

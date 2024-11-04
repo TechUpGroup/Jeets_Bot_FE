@@ -30,3 +30,8 @@ export const postVoting = async (wid: string) => {
   const data = await axiosInstance.post<string>(`/votings/create-vote/${wid}`);
   return data.data;
 };
+
+export const getVotingCheck = async () => {
+  const data = await axiosInstance.get<boolean>(`/votings/check`);
+  return data.data;
+};

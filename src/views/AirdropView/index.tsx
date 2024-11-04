@@ -3,17 +3,15 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
-import { FlexContent, Title2, Wrapper } from '@/components';
-import { SimpleGrid, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { FlexContent, Wrapper } from '@/components';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
-import CampaignView from '../CampaignView';
 import MissionsView from '../MissionsView/index';
 import PoolView from '../PoolView';
 import VotingView from '../VotingView';
 import ClaimTab from './ClaimTab';
-import ConditionTab from './ConditionTab';
 
-const tabs = ['Condition', 'Missions', 'Voting', 'Pool', 'Claim'];
+const tabs = ['Missions', 'Voting', 'Pool', 'Claim'];
 
 export default function AirdropView() {
   const router = useRouter();
@@ -45,31 +43,35 @@ export default function AirdropView() {
         maxW={{ base: 'full', md: 300, lg: 320, xl: 350, '2xl': 402 }}
         w="full"
         flex="unset"
-        gap={5}
+        // px={{ base: 5, md: 4 }}
+        py={{ base: 5, md: 6 }}
+        gap={{ base: 2.5, md: 5 }}
+        justifyContent="center"
+        flexWrap="wrap"
+        flexDir={{ base: 'row', md: 'column' }}
       >
-        <SimpleGrid columns={{ base: 3, md: 1 }} gap={5} w="full">
-          {tabs.map((name) => (
-            <Tab
-              key={name}
-              w="full"
-              _selected={{ color: 'white', bg: 'purple' }}
-              bg="rgba(237, 247, 255, 1)"
-              fontSize={{ base: 14, md: 20 }}
-              lineHeight={1.4}
-              px={{ base: 2, md: 5 }}
-              py={{ base: 3, md: 5 }}
-              rounded={10}
-              textAlign="center"
-            >
-              {name}
-            </Tab>
-          ))}
-        </SimpleGrid>
+        {tabs.map((name) => (
+          <Tab
+            key={name}
+            w={{ base: 'unset', md: 'full' }}
+            flex="0 0 calc(33.33% - 10px)"
+            _selected={{ color: 'white', bg: 'purple' }}
+            bg="rgba(237, 247, 255, 1)"
+            fontSize={{ base: 14, md: 20 }}
+            lineHeight={1.4}
+            px={{ base: 2, md: 5 }}
+            py={{ base: 3, md: 5 }}
+            rounded={10}
+            textAlign="center"
+          >
+            {name}
+          </Tab>
+        ))}
       </FlexContent>
       <TabPanels>
-        <TabPanel p={0}>
+        {/* <TabPanel p={0}>
           <ConditionTab />
-        </TabPanel>
+        </TabPanel> */}
         <TabPanel p={0}>
           <MissionsView />
         </TabPanel>

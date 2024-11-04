@@ -6,20 +6,17 @@ import {
   Button,
   Currency,
   FlexBanner,
+  FlexBetween,
   FlexCenter,
   FlexCol,
   ImageRatio,
   InputCurrency,
-  LinkCustom,
   Title,
   Title2,
   Wrapper,
 } from '@/components';
 import { XIconBlack } from '@/components/Icons';
-import { useCurrentTime } from '@/hooks/useCurrentTime';
 import { useUser } from '@/store/useUserStore';
-import dayjs from '@/utils/dayjs';
-import { InfoIcon } from '@chakra-ui/icons';
 import {
   Box,
   Flex,
@@ -28,29 +25,19 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  Popover,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-  Portal,
   SimpleGrid,
   Slider,
   SliderFilledTrack,
   SliderMark,
   SliderThumb,
   SliderTrack,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Thead,
   Tooltip,
-  Tr,
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { CollapseItem } from './CollapseItem';
-import { useQueryCampaign } from './hooks/useQueryCampaign';
+import CampainHistoriesTable from './CampainHistoriesTable';
+import CampainTable from './CampainTable';
+import { FlexEmpty } from '@/components/Flex/FlexEmpty';
 
 export default function CampaignView() {
   const user = useUser();
@@ -58,9 +45,6 @@ export default function CampaignView() {
   const [maxBuyPerAddress, setMaxBuyPerAddress] = useState(0);
   const [totalSol, setTotalSol] = useState(1);
   const [showTooltip, setShowTooltip] = useState(false);
-  const currentTime = useCurrentTime();
-
-  const { data } = useQueryCampaign();
 
   const imageXVerified = useMemo(() => {
     switch (user?.twitter_verified_type) {
@@ -76,7 +60,7 @@ export default function CampaignView() {
   return (
     <Wrapper>
       <Flex justifyContent="center" w="full" gap={1}>
-        <Title>CAMPAIGN</Title>
+        <Title>Jeets Index</Title>
         {/* <Button
           bg="makeColor"
           fontSize={{ base: 16, md: 20 }}
@@ -91,176 +75,65 @@ export default function CampaignView() {
       </Flex>
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
-          <Box fontSize={30} fontFamily="sfPro" fontWeight={800}>
-            List campaign
+        <Flex alignItems="center" fontSize={{ base: 18, md: 24 }} color="#88888" gap={2.5}>
+          Jeets Index Score
+        </Flex>
+          <Box color="purple" fontSize={42}>
+            <Currency value={user?.score} />
           </Box>
-          {/* <Box color="purple" fontSize={42}>
-            Oct 21 - oct 27, 2024
-          </Box> */}
         </FlexCol>
       </FlexBanner>
-
-      <FlexCol fontSize={20} bg="rgba(208, 255, 237, 1)" rounded={10} py={4} px={6} w="full" gap={1.5}>
-        <Box>Condition to get Jeet Score</Box>
+      <FlexEmpty>
+        <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
+          <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+            How it work?
+          </FlexCol>
+          <FlexCenter gap="5px">Hold tokens of our partners for 1 week, and you&apos;ll earn +7 points.</FlexCenter>
+          <FlexCenter gap="5px">Selling 0.001% supply -1 point.</FlexCenter>
+          <FlexCenter gap="5px">Buying 0.001% supply +1 point.</FlexCenter>
+          <FlexCenter gap="5px">Voting for airdrop qualified +1 point.</FlexCenter>
+        </FlexCol>
+      </FlexEmpty>
+      <FlexCol
+        bg="rgba(208, 255, 237, 1)"
+        rounded={10}
+        py={4}
+        px={6}
+        w="full"
+        gap={1.5}
+        alignItems="center"
+        textAlign="center"
+      >
+         <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+         Conditions to start earning Jeets Index Score
+          </FlexCol>
         <FlexCenter gap="5px">
           <XIconBlack w={6} />
           <Box>{user?.twitter_username ?? ''}</Box>
           <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={7} />
         </FlexCenter>
+        {user?.is_hold_token ? (
+          <FlexCenter gap="5px">
+            <Box>Hold tokens from our partners</Box>
+            <ImageRatio src={`/icons/success.png`} ratio={1} w={6} />
+          </FlexCenter>
+        ) : (
+          <FlexCenter gap="5px">
+            <Box>
+              Hold tokens from{' '}
+              <Box as="span" color="#2BA2DE" textDecor="underline" cursor="pointer">
+                our partners{' '}
+              </Box>
+              {user?.partner && <Box as="span">{user?.partner.symbol}</Box>}
+            </Box>
+            {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
+          </FlexCenter>
+        )}
       </FlexCol>
 
-      <TableContainer w="full" pb={4}>
-        <Table
-          variant="unstyled"
-          style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}
-          fontFamily="sfPro"
-          fontWeight={800}
-        >
-          <Thead>
-            <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              {[
-                { name: 'Campaign', center: false, w: 288 },
-                { name: 'Time' },
-                {
-                  name: (
-                    <Flex gap={1}>
-                      <Popover placement="top" trigger={'hover'}>
-                        <PopoverTrigger>
-                          <Button display="flex" h="fit-content" gap={1}>
-                            SPW
-                            <InfoIcon />
-                          </Button>
-                        </PopoverTrigger>
-                        <Portal>
-                          <PopoverContent w="fit-content" bg="black" rootProps={{ zIndex: 999 }}>
-                            <PopoverBody>
-                              <Box fontFamily="sfPro" fontWeight={800} color="white">
-                                Score Per Week
-                              </Box>
-                            </PopoverBody>
-                          </PopoverContent>
-                        </Portal>
-                      </Popover>
-                    </Flex>
-                  ),
-                },
-                { name: 'Historical' },
-                { name: 'Eligible' },
-                { name: 'Status', w: 288 },
-              ].map((e, i) => (
-                <Td
-                  key={i}
-                  p={0}
-                  lineHeight={1.4}
-                  textAlign={e.center === false ? undefined : 'center'}
-                  pr={i === 0 ? { base: 2, md: 5 } : undefined}
-                  px={i !== 0 ? { base: 2, md: 5 } : undefined}
-                  w={e.w}
-                >
-                  {e.name}
-                </Td>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody fontSize={{ base: 16, md: 20 }}>
-            {data?.docs.map((campaign, i) => {
-              const startTime = dayjs.utc(campaign.start_time);
-              const endTime = dayjs.utc(campaign.end_time);
-              return (
-                <Tr key={i}>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
-                    <CollapseItem campaign={campaign} />
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                    <Flex alignItems="center" justifyContent="center" textAlign="center">
-                      {startTime.isSame(endTime, 'year')
-                        ? startTime.format('MMM DD')
-                        : startTime.format('MMM DD, YYYY')}{' '}
-                      - {endTime.format('MMM DD, YYYY')}
-                    </Flex>
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                    <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}>
-                      <Currency value={campaign.score} />
-                    </Flex>
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                    <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}>
-                      <LinkCustom href="/profile">
-                        <Button
-                          h={{ base: 9, md: 10 }}
-                          w="fit-content"
-                          color="rgba(23, 210, 133, 1)"
-                          border="1px solid"
-                          borderColor="rgba(23, 210, 133, 1)"
-                          rounded={8}
-                          bg="white"
-                          px={{ base: 4, md: 4 }}
-                          cursor="default"
-                        >
-                          View
-                        </Button>
-                      </LinkCustom>
-                    </Flex>
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
-                    <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}>
-                      {campaign.statusHold ? 'Yes' : 'No'}
-                    </Flex>
-                  </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
-                    <Flex alignItems="center">
-                      {currentTime > campaign.end_time ? (
-                        <Button
-                          h={{ base: 9, md: 10 }}
-                          w="full"
-                          color="rgba(23, 210, 133, 1)"
-                          border="1px solid"
-                          borderColor="rgba(23, 210, 133, 1)"
-                          rounded={8}
-                          bg="white"
-                          px={{ base: 3, md: 5 }}
-                          cursor="default"
-                        >
-                          Finished
-                        </Button>
-                      ) : currentTime < campaign.start_time ? (
-                        <Button
-                          h={{ base: 9, md: 10 }}
-                          w="full"
-                          color="rgba(253, 214, 75, 1)"
-                          border="1px solid"
-                          borderColor="rgba(253, 214, 75, 1)"
-                          rounded={8}
-                          bg="white"
-                          px={{ base: 3, md: 5 }}
-                          cursor="default"
-                        >
-                          Comming Soon
-                        </Button>
-                      ) : (
-                        <Button
-                          h={{ base: 9, md: 10 }}
-                          w="full"
-                          color="rgba(253, 214, 75, 1)"
-                          border="1px solid"
-                          borderColor="rgba(253, 214, 75, 1)"
-                          rounded={8}
-                          bg="white"
-                          px={{ base: 3, md: 5 }}
-                          cursor="default"
-                        >
-                          On Going
-                        </Button>
-                      )}
-                    </Flex>
-                  </Td>
-                </Tr>
-              );
-            })}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      <CampainTable />
+
+      <CampainHistoriesTable />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
