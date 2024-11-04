@@ -1,15 +1,18 @@
 'use client';
 
 import { cloneDeep } from 'lodash';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Button, LinkCustom, Title, Wrapper } from '@/components';
 import { queryClient } from '@/providers/react-query';
 import { ICampaignResponse, postClaimAirdrop } from '@/services/campaign';
+import { useUser } from '@/store/useUserStore';
 import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
 import dayjs from '@/utils/dayjs';
 import { toastError, toastSuccess } from '@/utils/toast';
+import { useQueryMissions } from '@/views/MissionsView/hooks/useQueryMissions';
+import { useVotingCheck } from '@/views/PoolView/ConditionTab/hooks/useVotingCheck';
 import { Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 import { CollapseAirdrop } from './CollapseAirdrop';
@@ -17,7 +20,10 @@ import { useClaimVault } from './hooks/useClaimVault';
 import { useQueryAirdrops } from './hooks/useQueryAirdrops';
 
 export default function ClaimTab() {
+  const user = useUser();
   const { data } = useQueryAirdrops();
+  const { data: missionInfo } = useQueryMissions();
+  const { data: isPassed } = useVotingCheck();
 
   const claimVault = useClaimVault();
   const [loading, setLoading] = useState('');
@@ -42,6 +48,27 @@ export default function ClaimTab() {
       setLoading('');
     }
   };
+
+  const imageXVerified = useMemo(() => {
+    switch (user?.twitter_verified_type) {
+      case 'blue':
+        return '/icons/tick-2.png';
+      case 'business':
+        return '/icons/tick-1.png';
+      case 'government':
+        return '/icons/tick-3.png';
+    }
+  }, [user?.twitter_verified_type]);
+
+  const isClaimable = useMemo(() => {
+    return (
+      (user?.twitter_followers_count ?? 0) >= 1000 &&
+      imageXVerified &&
+      !!user?.is_hold_token &&
+      (missionInfo?.ratio ?? 0) >= 100 &&
+      isPassed
+    );
+  }, [imageXVerified, isPassed, missionInfo?.ratio, user?.is_hold_token, user?.twitter_followers_count]);
 
   return (
     <Wrapper container={false}>
@@ -124,7 +151,7 @@ export default function ClaimTab() {
                           bg="makeColor"
                           px={{ base: 3, md: 5 }}
                           color="white"
-                          disabled={!!loading}
+                          disabled={!!loading || !isClaimable}
                           isLoading={loading === airdrop._id}
                           onClick={() => handleClaimVault(airdrop._id)}
                         >

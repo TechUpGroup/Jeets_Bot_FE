@@ -9,8 +9,8 @@ import { appConfig } from '@/config';
 import useCodeSocial from '@/hooks/useCodeSocial';
 import useWalletActive from '@/hooks/useWalletActive';
 import { useUser } from '@/store/useUserStore';
-import { useVotingCheck } from '@/views/AirdropView/ConditionTab/hooks/useVotingCheck';
 import { useQueryMissions } from '@/views/MissionsView/hooks/useQueryMissions';
+import { useVotingCheck } from '@/views/PoolView/ConditionTab/hooks/useVotingCheck';
 import { Box, Center, Flex } from '@chakra-ui/react';
 
 export default function UserInfoProfile() {
