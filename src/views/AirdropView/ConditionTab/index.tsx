@@ -1,7 +1,7 @@
 'use client';
 
 import { isNil } from 'lodash';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 import { Button, Currency, FlexCenter, FlexCol, ImageRatio, ModalBase, SelectForm } from '@/components';
@@ -19,7 +19,9 @@ import { useQueryHolderRequire } from './hooks/useQueryHolderRequire';
 export default function ConditionTab() {
   const { data: holderRequire } = useQueryHolderRequire();
   const { data: missionInfo } = useQueryMissions();
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { address } = useWalletActive();
 
   const options = useMemo(() => {
@@ -108,11 +110,12 @@ export default function ConditionTab() {
           toastError('Refresh failed', e);
         } finally {
           setLoadingRefresh(false);
+          router.replace(pathname);
         }
       }
     };
     handleTwitterReconnect();
-  }, [searchParams, address]);
+  }, [searchParams, address, router, pathname]);
 
   return (
     <>
