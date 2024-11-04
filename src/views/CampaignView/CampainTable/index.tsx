@@ -69,7 +69,6 @@ export default function CampainTable() {
                     </Flex>
                   ),
                 },
-                { name: 'Historical' },
                 { name: 'Eligible' },
                 { name: 'Status', w: 288 },
               ].map((e, i) => (
@@ -109,7 +108,7 @@ export default function CampainTable() {
                       <Currency value={campaign.score} />
                     </Flex>
                   </Td>
-                  <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
+                  {/* <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
                     <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}>
                       <LinkCustom href="/profile">
                         <Button
@@ -127,7 +126,7 @@ export default function CampainTable() {
                         </Button>
                       </LinkCustom>
                     </Flex>
-                  </Td>
+                  </Td> */}
                   <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
                     <Flex alignItems="center" justifyContent="center" textAlign="center" gap={2}>
                       {campaign.statusHold ? 'Yes' : 'No'}

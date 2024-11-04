@@ -82,7 +82,9 @@ export default function VotingView() {
         alignItems="center"
         textAlign="center"
       >
-        <Box>Voting Eligibility</Box>
+        <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+        Voting Eligibility
+          </FlexCol>
         <FlexCenter gap="5px">
           <XIconBlack w={6} />
           <Box>{user?.twitter_username ?? ''}</Box>

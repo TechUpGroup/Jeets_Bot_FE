@@ -103,7 +103,9 @@ export default function CampaignView() {
         alignItems="center"
         textAlign="center"
       >
-        <Box>Conditions to start earning Jeets Index Score</Box>
+         <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+         Conditions to start earning Jeets Index Score
+          </FlexCol>
         <FlexCenter gap="5px">
           <XIconBlack w={6} />
           <Box>{user?.twitter_username ?? ''}</Box>
