@@ -17,6 +17,7 @@ import { getTransactionHashUrl } from '@/utils';
 import { formatAddress } from '@/utils/address';
 import { Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
+import ConditionTab from './ConditionTab';
 import { useQueryAirdropsPoolInfos } from './hooks/useQueryHistories';
 
 export default function PoolView() {
@@ -43,6 +44,8 @@ export default function PoolView() {
           </Flex>
         </FlexCol>
       </FlexBanner>
+
+      <ConditionTab />
 
       <TableContainer w="full" pb={4}>
         <Table

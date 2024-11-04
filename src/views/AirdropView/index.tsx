@@ -3,17 +3,15 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
-import { FlexContent, Title2, Wrapper } from '@/components';
-import { Flex, SimpleGrid, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { FlexContent, Wrapper } from '@/components';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
-import CampaignView from '../CampaignView';
 import MissionsView from '../MissionsView/index';
 import PoolView from '../PoolView';
 import VotingView from '../VotingView';
 import ClaimTab from './ClaimTab';
-import ConditionTab from './ConditionTab';
 
-const tabs = ['Condition', 'Missions', 'Voting', 'Pool', 'Claim'];
+const tabs = ['Missions', 'Voting', 'Pool', 'Claim'];
 
 export default function AirdropView() {
   const router = useRouter();
@@ -71,9 +69,9 @@ export default function AirdropView() {
         ))}
       </FlexContent>
       <TabPanels>
-        <TabPanel p={0}>
+        {/* <TabPanel p={0}>
           <ConditionTab />
-        </TabPanel>
+        </TabPanel> */}
         <TabPanel p={0}>
           <MissionsView />
         </TabPanel>

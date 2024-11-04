@@ -97,7 +97,7 @@ export default function MissionsView() {
               fontSize={{ base: 16, md: 20 }}
               color="white"
               rounded={8}
-              onClick={() => router.push(`${pathname}?tab=2`)}
+              onClick={() => router.push(`${pathname}?tab=1`)}
             >
               VOTE
             </Button>

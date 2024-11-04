@@ -88,6 +88,7 @@ export default function ConditionTab() {
       setLoadingRefresh(false);
     }
   };
+
   useEffect(() => {
     const handleTwitterReconnect = async () => {
       const state = searchParams.get('state');
@@ -110,7 +111,7 @@ export default function ConditionTab() {
 
   return (
     <>
-      <FlexCol
+      {/* <FlexCol
         maxW={1517}
         w="full"
         rounded={24}
@@ -121,7 +122,8 @@ export default function ConditionTab() {
         alignItems="center"
         gap={30}
         lineHeight={1.145}
-      >
+      > */}
+      <>
         <FlexCol
           w="full"
           border="3px dashed"
@@ -234,7 +236,7 @@ export default function ConditionTab() {
             <ImageRatio src={!!imageXVerified ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
           </FlexCenter> */}
         </FlexCol>
-      </FlexCol>
+      </>
 
       <ModalBase isOpen={isOpen} onClose={onClose} isCentered minW={{ base: 'unset', md: 530 }}>
         <FlexCol gap={5} w="full">
