@@ -46,8 +46,10 @@ export default function AirdropView() {
         w="full"
         flex="unset"
         gap={5}
+        px={{ base: 3, md: 4 }}
+        py={{ base: 4, md: 6 }}
       >
-        <SimpleGrid columns={{ base: 3, md: 1 }} gap={5} w="full">
+        <SimpleGrid columns={{ base: 3, md: 1 }} gap={{ base: 3, md: 5 }} w="full">
           {tabs.map((name) => (
             <Tab
               key={name}
