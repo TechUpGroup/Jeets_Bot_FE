@@ -8,7 +8,7 @@ import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-
 import { useQueryLeaderboard } from './hooks/useQueryLeaderboard';
 
 export default function LeaderboardView() {
-  const [type, setType] = useState<'W' | 'M' | 'Y' | 'D'>('W');
+  const [type, setType] = useState<'W' | 'M' | 'Y' | 'D' | 'TOP_100'>('W');
   const { data: leaderboardList } = useQueryLeaderboard(type);
 
   return (
@@ -20,6 +20,7 @@ export default function LeaderboardView() {
           { name: 'Week', value: 'W' },
           { name: 'Month', value: 'M' },
           { name: 'Year', value: 'Y' },
+          { name: 'Top', value: 'TOP_100' },
         ].map((e, i) => (
           <Box
             key={i}

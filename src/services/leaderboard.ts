@@ -1,6 +1,6 @@
 import { axiosInstance } from '@/utils/axios';
 
-export const getLeaderboard = async (type: 'W' | 'M' | 'Y' | 'D') => {
+export const getLeaderboard = async (type: 'W' | 'M' | 'Y' | 'D' | 'TOP_100') => {
   const data = await axiosInstance.get<{
     user: {
       twitter_username: string;

@@ -193,49 +193,6 @@ export default function ConditionTab() {
             <ImageRatio src={isPassed ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
           </FlexCenter>
         </FlexCol>
-
-        <FlexCol
-          w="full"
-          border="3px dashed"
-          borderColor="#8F51EC"
-          rounded={8}
-          p={5}
-          alignItems="center"
-          gap={{ base: 1.5, md: 2.5 }}
-          lineHeight={1.145}
-          fontSize={{ base: 14, md: 20 }}
-          color="#201B03"
-          textAlign="center"
-        >
-          <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-            Voting Eligibility
-          </FlexCol>
-          <FlexCenter gap="5px">
-            <Box>Have X blue/gold tick</Box>
-            <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
-          </FlexCenter>
-          {user?.is_hold_token ? (
-            <FlexCenter gap="5px">
-              <Box>Hold tokens from our partners</Box>
-              <ImageRatio src={`/icons/success.png`} ratio={1} w={6} />
-            </FlexCenter>
-          ) : (
-            <FlexCenter gap="5px">
-              <Box>
-                Hold tokens from{' '}
-                <Box as="span" color="#2BA2DE" textDecor="underline" cursor="pointer" onClick={onOpen}>
-                  our partners{' '}
-                </Box>
-                {user?.partner && <Box as="span">{user?.partner.symbol}</Box>}
-              </Box>
-              {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
-            </FlexCenter>
-          )}
-          {/* <FlexCenter gap="5px">
-            <Box>Eligible for voting</Box>
-            <ImageRatio src={!!imageXVerified ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
-          </FlexCenter> */}
-        </FlexCol>
       </>
 
       <ModalBase isOpen={isOpen} onClose={onClose} isCentered minW={{ base: 'unset', md: 530 }}>
