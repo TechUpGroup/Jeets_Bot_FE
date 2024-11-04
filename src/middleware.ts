@@ -11,6 +11,12 @@ export function middleware(request: NextRequest) {
       params = `${params ? `${params}&` : '?'}${key}=`;
     });
     return NextResponse.redirect(origin + '/airdrop?tab=1&' + searchParams);
+  } else if (state && state === 'retwitter') {
+    let params = '';
+    searchParams.forEach((_, key) => {
+      params = `${params ? `${params}&` : '?'}${key}=`;
+    });
+    return NextResponse.redirect(origin + '/airdrop?' + searchParams);
   }
 }
 

@@ -1,18 +1,26 @@
 'use client';
 
+import { isNil } from 'lodash';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 import { Button, Currency, FlexCenter, FlexCol, ImageRatio, ModalBase, SelectForm } from '@/components';
 import { SearchIcon } from '@/components/Icons';
+import useWalletActive from '@/hooks/useWalletActive';
 import { postUpdatePartner } from '@/services/contract';
+import { getUserTwitterRestart, postUserTwitterReconnect } from '@/services/users';
 import { useUser } from '@/store/useUserStore';
 import { toastError } from '@/utils/toast';
-import { Box, useDisclosure } from '@chakra-ui/react';
+import { useQueryMissions } from '@/views/MissionsView/hooks/useQueryMissions';
+import { Box, Flex, useDisclosure } from '@chakra-ui/react';
 
 import { useQueryHolderRequire } from './hooks/useQueryHolderRequire';
 
 export default function ConditionTab() {
   const { data: holderRequire } = useQueryHolderRequire();
+  const { data: missionInfo } = useQueryMissions();
+  const searchParams = useSearchParams();
+  const { address } = useWalletActive();
 
   const options = useMemo(() => {
     return holderRequire?.map((item) => ({
@@ -51,8 +59,14 @@ export default function ConditionTab() {
 
   const isPassed = useMemo(() => {
     if (!user) return false;
-    return user?.is_hold_token && user.twitter_verified_type !== 'none' && user.twitter_followers_count >= 2000;
-  }, [user]);
+    return (
+      user?.is_hold_token &&
+      user.twitter_verified_type !== 'none' &&
+      user.twitter_followers_count >= 1000 &&
+      !!missionInfo?.ratio &&
+      missionInfo?.ratio >= 100
+    );
+  }, [missionInfo?.ratio, user]);
 
   const [loadingUpdatePartner, setLoadingUpdatePartner] = useState(false);
   const handleUpdatePartner = async () => {
@@ -68,6 +82,37 @@ export default function ConditionTab() {
       }
     }
   };
+
+  const [loadingRefresh, setLoadingRefresh] = useState(false);
+  const handleRefresh = async () => {
+    try {
+      setLoadingRefresh(true);
+      const res = await getUserTwitterRestart();
+      window.open(res.redirectUrl, '_self');
+      setLoadingRefresh(false);
+    } catch (e: any) {
+      toastError('Refresh failed', e);
+      setLoadingRefresh(false);
+    }
+  };
+  useEffect(() => {
+    const handleTwitterReconnect = async () => {
+      const state = searchParams.get('state');
+      const code = searchParams.get('code');
+      if (state && state === 'retwitter' && code && !!address) {
+        try {
+          setLoadingRefresh(true);
+          await postUserTwitterReconnect(code);
+          // refetch();
+        } catch (e: any) {
+          toastError('Refresh failed', e);
+        } finally {
+          setLoadingRefresh(false);
+        }
+      }
+    };
+    handleTwitterReconnect();
+  }, [searchParams, address]);
 
   return (
     <>
@@ -96,17 +141,30 @@ export default function ConditionTab() {
           color="#201B03"
           textAlign="center"
         >
-          <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+          <Flex alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC" gap={2.5}>
             Airdrop Eligibility
-          </FlexCol>
+            <Button
+              isLoading={loadingRefresh}
+              onClick={handleRefresh}
+              bg="makeColor"
+              h={10}
+              px={3}
+              fontSize={16}
+              minW={100}
+              color="white"
+              rounded={8}
+            >
+              Refresh
+            </Button>
+          </Flex>
           <FlexCenter gap="5px">
             <Box>Have X blue/gold tick</Box>
             <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
           </FlexCenter>
           <FlexCenter gap="5px">
-            <Box>Have more than 2000 followers</Box>
+            <Box>Have more than 1000 followers</Box>
             <ImageRatio
-              src={(user?.twitter_followers_count ?? 0) >= 2000 ? `/icons/success.png` : `/icons/error.png`}
+              src={(user?.twitter_followers_count ?? 0) >= 1000 ? `/icons/success.png` : `/icons/error.png`}
               ratio={1}
               w={6}
             />
@@ -128,7 +186,12 @@ export default function ConditionTab() {
               {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
             </FlexCenter>
           )}
-
+          <FlexCenter gap="5px">
+            <Box>Completed missions</Box>
+            {!isNil(missionInfo?.ratio) && (
+              <ImageRatio src={missionInfo?.ratio >= 100 ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
+            )}
+          </FlexCenter>
           <FlexCenter gap="5px">
             <Box>Pass our voting process</Box>
             <ImageRatio src={isPassed ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />

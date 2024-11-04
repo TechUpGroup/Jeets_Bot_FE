@@ -1,5 +1,6 @@
 'use client';
 
+import { isNil } from 'lodash';
 import { useMemo } from 'react';
 
 import { Button, FlexCenter, FlexCol, ImageRatio } from '@/components';
@@ -10,8 +11,11 @@ import useWalletActive from '@/hooks/useWalletActive';
 import { useUser } from '@/store/useUserStore';
 import { Box, Center, Flex } from '@chakra-ui/react';
 
+import { useQueryMissions } from '../MissionsView/hooks/useQueryMissions';
+
 export default function UserInfoProfile() {
   const { address } = useWalletActive();
+  const { data: missionInfo } = useQueryMissions();
 
   const openConnectTwitter = () => {
     window.open(`${appConfig.publicUrl}/users/twitter/start`, '_self');
@@ -39,8 +43,14 @@ export default function UserInfoProfile() {
 
   const isPassed = useMemo(() => {
     if (!user) return false;
-    return user?.is_hold_token && user.twitter_verified_type !== 'none' && user.twitter_followers_count >= 2000;
-  }, [user]);
+    return (
+      user?.is_hold_token &&
+      user.twitter_verified_type !== 'none' &&
+      user.twitter_followers_count >= 1000 &&
+      !!missionInfo?.ratio &&
+      missionInfo?.ratio >= 100
+    );
+  }, [missionInfo?.ratio, user]);
 
   if (!address) return undefined;
 
@@ -117,9 +127,9 @@ export default function UserInfoProfile() {
               <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
             </FlexCenter>
             <FlexCenter gap="5px">
-              <Box>Have more than 2000 followers</Box>
+              <Box>Have more than 1000 followers</Box>
               <ImageRatio
-                src={(user?.twitter_followers_count ?? 0) >= 2000 ? `/icons/success.png` : `/icons/error.png`}
+                src={(user?.twitter_followers_count ?? 0) >= 1000 ? `/icons/success.png` : `/icons/error.png`}
                 ratio={1}
                 w={6}
               />
@@ -140,6 +150,16 @@ export default function UserInfoProfile() {
             )}
 
             <FlexCenter gap="5px">
+              <Box>Completed missions</Box>
+              {!isNil(missionInfo?.ratio) && (
+                <ImageRatio
+                  src={missionInfo?.ratio >= 100 ? `/icons/success.png` : `/icons/error.png`}
+                  ratio={1}
+                  w={6}
+                />
+              )}
+            </FlexCenter>
+            <FlexCenter gap="5px">
               <Box>Pass our voting process</Box>
               <ImageRatio src={isPassed ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
             </FlexCenter>
@@ -159,7 +179,7 @@ export default function UserInfoProfile() {
             textAlign="center"
           >
             <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-            Conditions to start earning Jeets Index Score
+              Conditions to start earning Jeets Index Score
             </FlexCol>
             <FlexCenter gap="5px">
               <Box>Have X blue/gold tick</Box>
