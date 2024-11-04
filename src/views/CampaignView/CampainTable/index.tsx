@@ -104,10 +104,11 @@ export default function CampainTable() {
                   </Td>
                   <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
                     <Flex alignItems="center" justifyContent="center" textAlign="center">
-                      {startTime.isSame(endTime, 'year')
+                      1 Week
+                      {/* {startTime.isSame(endTime, 'year')
                         ? startTime.format('MMM DD')
                         : startTime.format('MMM DD, YYYY')}{' '}
-                      - {endTime.format('MMM DD, YYYY')}
+                      - {endTime.format('MMM DD, YYYY')} */}
                     </Flex>
                   </Td>
                   <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
