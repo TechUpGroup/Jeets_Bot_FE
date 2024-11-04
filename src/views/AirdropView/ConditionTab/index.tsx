@@ -172,10 +172,10 @@ export default function ConditionTab() {
               {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
             </FlexCenter>
           )}
-          <FlexCenter gap="5px">
+          {/* <FlexCenter gap="5px">
             <Box>Eligible for voting</Box>
             <ImageRatio src={!!imageXVerified ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
-          </FlexCenter>
+          </FlexCenter> */}
         </FlexCol>
       </FlexCol>
 
