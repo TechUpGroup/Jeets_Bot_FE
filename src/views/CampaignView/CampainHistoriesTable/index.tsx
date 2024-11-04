@@ -25,7 +25,7 @@ export default function CampainHistoriesTable() {
             <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
               {[
                 { name: 'History', center: false, w: 288 },
-                { name: 'Jeets Score', w: 300 },
+                { name: 'Jeets Index Score', w: 300 },
               ].map((e, i) => (
                 <Td key={i} lineHeight={1.4} textAlign={e.center === false ? undefined : 'center'} p={0} px={5} w={e.w}>
                   {e.name}
