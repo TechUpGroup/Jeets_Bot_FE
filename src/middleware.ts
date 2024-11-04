@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
     searchParams.forEach((_, key) => {
       params = `${params ? `${params}&` : '?'}${key}=`;
     });
-    return NextResponse.redirect(origin + '/airdrop?' + searchParams);
+    return NextResponse.redirect(origin + '/airdrop?tab=1&' + searchParams);
   }
 }
 
