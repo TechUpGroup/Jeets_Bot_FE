@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from 'react';
 
-import { Currency, FlexCol, Pagination } from '@/components';
-import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { Absolute, Currency, FlexCol, Pagination } from '@/components';
+import { Box, Center, Flex, Spinner, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 import { useQueryCampaignHistories } from './hooks/useQueryCampaignHistories';
 
@@ -11,9 +11,14 @@ export default function CampainHistoriesTable() {
   const [page, setPage] = useState(1);
 
   const params = useMemo(() => ({ page, limit: 10 }), [page]);
-  const { data } = useQueryCampaignHistories(params);
+  const { data, isFetching } = useQueryCampaignHistories(params);
   return (
-    <FlexCol w="full" gap={5}>
+    <FlexCol w="full" gap={5} position="relative">
+      {isFetching && (
+        <Absolute as={Center} bg="rgba(0, 0, 0, 0.1)" zIndex={999}>
+          <Spinner />
+        </Absolute>
+      )}
       <TableContainer w="full" pb={4}>
         <Table
           variant="unstyled"

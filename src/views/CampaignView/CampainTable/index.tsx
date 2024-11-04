@@ -2,18 +2,20 @@
 
 import { useMemo, useState } from 'react';
 
-import { Button, Currency, FlexCol, LinkCustom, Pagination } from '@/components';
+import { Absolute, Button, Currency, FlexCol, LinkCustom, Pagination } from '@/components';
 import { useCurrentTime } from '@/hooks/useCurrentTime';
 import dayjs from '@/utils/dayjs';
 import { InfoIcon } from '@chakra-ui/icons';
 import {
   Box,
+  Center,
   Flex,
   Popover,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
   Portal,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -30,10 +32,15 @@ export default function CampainTable() {
   const [page, setPage] = useState(1);
 
   const params = useMemo(() => ({ page, limit: 10 }), [page]);
-  const { data } = useQueryCampaign(params);
+  const { data, isFetching } = useQueryCampaign(params);
 
   return (
-    <FlexCol w="full" gap={5}>
+    <FlexCol w="full" gap={5} position="relative">
+      {isFetching && (
+        <Absolute as={Center} bg="rgba(0, 0, 0, 0.1)" zIndex={999}>
+          <Spinner />
+        </Absolute>
+      )}
       <TableContainer w="full" pb={4}>
         <Table
           variant="unstyled"
