@@ -1,3 +1,4 @@
+import { IPoolInfo } from '@/types/airdrop.type';
 import { IPaginationParams, IPaginationResponse } from '@/types/api.type';
 import { axiosInstance } from '@/utils/axios';
 
@@ -28,5 +29,10 @@ export const getListAirdrops = async () => {
 
 export const postClaimAirdrop = async (id: string) => {
   const data = await axiosInstance.post<string>(`/airdrops/claim/${id}`);
+  return data.data;
+};
+
+export const getAirdropsPoolInfos = async () => {
+  const data = await axiosInstance.get<IPoolInfo[]>(`/airdrops/pool-infos`);
   return data.data;
 };
