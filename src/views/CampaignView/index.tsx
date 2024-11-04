@@ -74,7 +74,7 @@ export default function CampaignView() {
       <FlexBanner>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
           <Box fontSize={30} fontFamily="sfPro" fontWeight={800}>
-            Jeets Score
+          Jeets Index Score
           </Box>
           <Box color="purple" fontSize={42}>
             <Currency value={user?.score} />

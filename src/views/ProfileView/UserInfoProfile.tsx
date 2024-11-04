@@ -159,7 +159,7 @@ export default function UserInfoProfile() {
             textAlign="center"
           >
             <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-              Conditions Jeets Score Index Eligibility
+            Conditions to start earning Jeets Index Score
             </FlexCol>
             <FlexCenter gap="5px">
               <Box>Have X blue/gold tick</Box>
