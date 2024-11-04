@@ -6,6 +6,7 @@ import {
   Button,
   Currency,
   FlexBanner,
+  FlexBetween,
   FlexCenter,
   FlexCol,
   ImageRatio,
@@ -36,6 +37,7 @@ import {
 
 import CampainHistoriesTable from './CampainHistoriesTable';
 import CampainTable from './CampainTable';
+import { FlexEmpty } from '@/components/Flex/FlexEmpty';
 
 export default function CampaignView() {
   const user = useUser();
@@ -81,7 +83,7 @@ export default function CampaignView() {
           </Box>
         </FlexCol>
       </FlexBanner>
-      <FlexBanner>
+      <FlexEmpty>
         <FlexCol justifyContent="center" alignItems="center" flex={1} gap={2.5}>
           <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
             How it work?
@@ -91,9 +93,8 @@ export default function CampaignView() {
           <FlexCenter gap="5px">Buying 0.001% supply +1 point.</FlexCenter>
           <FlexCenter gap="5px">Voting for airdrop qualified +1 point.</FlexCenter>
         </FlexCol>
-      </FlexBanner>
+      </FlexEmpty>
       <FlexCol
-        fontSize={20}
         bg="rgba(208, 255, 237, 1)"
         rounded={10}
         py={4}
