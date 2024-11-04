@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 
 import { Absolute, Currency, FlexCol, Pagination } from '@/components';
+import dayjs from '@/utils/dayjs';
 import { Box, Center, Flex, Spinner, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
 import { useQueryCampaignHistories } from './hooks/useQueryCampaignHistories';
@@ -12,6 +13,8 @@ export default function CampainHistoriesTable() {
 
   const params = useMemo(() => ({ page, limit: 10 }), [page]);
   const { data, isFetching } = useQueryCampaignHistories(params);
+
+  console.log(data);
   return (
     <FlexCol w="full" gap={5} position="relative">
       {isFetching && (
@@ -30,6 +33,7 @@ export default function CampainHistoriesTable() {
             <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
               {[
                 { name: 'History', center: false, w: 288 },
+                { name: 'Time' },
                 { name: 'Jeets Index Score', w: 300 },
               ].map((e, i) => (
                 <Td key={i} lineHeight={1.4} textAlign={e.center === false ? undefined : 'center'} p={0} px={5} w={e.w}>
@@ -49,6 +53,10 @@ export default function CampainHistoriesTable() {
                         <Currency value={his.detail?.amount} decimalNumber={his.detail?.decimal} /> {his.detail?.symbol}
                       </Box>
                     </Flex>
+                  ) : his.event === 'Voted' ? (
+                    <Flex lineHeight={1.4} gap={1} alignContent="center">
+                      {his.event}
+                    </Flex>
                   ) : (
                     <Flex lineHeight={1.4} gap={1} alignContent="center">
                       Hold
@@ -60,6 +68,11 @@ export default function CampainHistoriesTable() {
                       ))}
                     </Flex>
                   )}
+                </Td>
+                <Td p={{ base: 2, md: 5 }} bg="rgba(237, 247, 255, 1)">
+                  <Flex alignItems="center" justifyContent="center" textAlign="center">
+                    {dayjs.utc(his.timestamp).format('MMM DD, YYYY')}
+                  </Flex>
                 </Td>
                 <Td p={5} bg="rgba(237, 247, 255, 1)" roundedRight={10}>
                   <Flex
