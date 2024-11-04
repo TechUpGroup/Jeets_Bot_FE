@@ -9,13 +9,14 @@ import { appConfig } from '@/config';
 import useCodeSocial from '@/hooks/useCodeSocial';
 import useWalletActive from '@/hooks/useWalletActive';
 import { useUser } from '@/store/useUserStore';
+import { useVotingCheck } from '@/views/AirdropView/ConditionTab/hooks/useVotingCheck';
+import { useQueryMissions } from '@/views/MissionsView/hooks/useQueryMissions';
 import { Box, Center, Flex } from '@chakra-ui/react';
-
-import { useQueryMissions } from '../MissionsView/hooks/useQueryMissions';
 
 export default function UserInfoProfile() {
   const { address } = useWalletActive();
   const { data: missionInfo } = useQueryMissions();
+  const { data: isPassed } = useVotingCheck();
 
   const openConnectTwitter = () => {
     window.open(`${appConfig.publicUrl}/users/twitter/start`, '_self');
@@ -40,17 +41,6 @@ export default function UserInfoProfile() {
         return '/icons/tick-3.png';
     }
   }, [user?.twitter_verified_type]);
-
-  const isPassed = useMemo(() => {
-    if (!user) return false;
-    return (
-      user?.is_hold_token &&
-      user.twitter_verified_type !== 'none' &&
-      user.twitter_followers_count >= 1000 &&
-      !!missionInfo?.ratio &&
-      missionInfo?.ratio >= 100
-    );
-  }, [missionInfo?.ratio, user]);
 
   if (!address) return undefined;
 
@@ -192,47 +182,47 @@ export default function UserInfoProfile() {
             </FlexCenter>
           </FlexCol>
           <FlexCol
-          w="full"
-          border="3px dashed"
-          borderColor="#8F51EC"
-          rounded={8}
-          p={5}
-          alignItems="center"
-          gap={{ base: 1.5, md: 2.5 }}
-          lineHeight={1.145}
-          fontSize={{ base: 14, md: 20 }}
-          color="#201B03"
-          textAlign="center"
-        >
-          <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
-            Voting Eligibility
-          </FlexCol>
-          <FlexCenter gap="5px">
-            <Box>Have X blue/gold tick</Box>
-            <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
-          </FlexCenter>
-          {user?.is_hold_token ? (
+            w="full"
+            border="3px dashed"
+            borderColor="#8F51EC"
+            rounded={8}
+            p={5}
+            alignItems="center"
+            gap={{ base: 1.5, md: 2.5 }}
+            lineHeight={1.145}
+            fontSize={{ base: 14, md: 20 }}
+            color="#201B03"
+            textAlign="center"
+          >
+            <FlexCol alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC">
+              Voting Eligibility
+            </FlexCol>
             <FlexCenter gap="5px">
-              <Box>Hold tokens from our partners</Box>
-              <ImageRatio src={`/icons/success.png`} ratio={1} w={6} />
+              <Box>Have X blue/gold tick</Box>
+              <ImageRatio src={imageXVerified ?? `/icons/error.png`} ratio={1} w={6} />
             </FlexCenter>
-          ) : (
-            <FlexCenter gap="5px">
-              <Box>
-                Hold tokens from{' '}
-                <Box as="span" color="#2BA2DE" textDecor="underline" cursor="pointer" >
-                  our partners{' '}
+            {user?.is_hold_token ? (
+              <FlexCenter gap="5px">
+                <Box>Hold tokens from our partners</Box>
+                <ImageRatio src={`/icons/success.png`} ratio={1} w={6} />
+              </FlexCenter>
+            ) : (
+              <FlexCenter gap="5px">
+                <Box>
+                  Hold tokens from{' '}
+                  <Box as="span" color="#2BA2DE" textDecor="underline" cursor="pointer">
+                    our partners{' '}
+                  </Box>
+                  {user?.partner && <Box as="span">{user?.partner.symbol}</Box>}
                 </Box>
-                {user?.partner && <Box as="span">{user?.partner.symbol}</Box>}
-              </Box>
-              {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
-            </FlexCenter>
-          )}
-          {/* <FlexCenter gap="5px">
+                {!user?.partner && <ImageRatio src={`/icons/error.png`} ratio={1} w={6} />}
+              </FlexCenter>
+            )}
+            {/* <FlexCenter gap="5px">
             <Box>Eligible for voting</Box>
             <ImageRatio src={!!imageXVerified ? `/icons/success.png` : `/icons/error.png`} ratio={1} w={6} />
           </FlexCenter> */}
-        </FlexCol>
+          </FlexCol>
         </FlexCol>
       </FlexCol>
     </Flex>

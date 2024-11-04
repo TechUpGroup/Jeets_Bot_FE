@@ -15,10 +15,12 @@ import { useQueryMissions } from '@/views/MissionsView/hooks/useQueryMissions';
 import { Box, Flex, useDisclosure } from '@chakra-ui/react';
 
 import { useQueryHolderRequire } from './hooks/useQueryHolderRequire';
+import { useVotingCheck } from './hooks/useVotingCheck';
 
 export default function ConditionTab() {
   const { data: holderRequire } = useQueryHolderRequire();
   const { data: missionInfo } = useQueryMissions();
+  const { data: isPassed } = useVotingCheck();
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -58,17 +60,6 @@ export default function ConditionTab() {
         return '/icons/tick-3.png';
     }
   }, [user?.twitter_verified_type]);
-
-  const isPassed = useMemo(() => {
-    if (!user) return false;
-    return (
-      user?.is_hold_token &&
-      user.twitter_verified_type !== 'none' &&
-      user.twitter_followers_count >= 1000 &&
-      !!missionInfo?.ratio &&
-      missionInfo?.ratio >= 100
-    );
-  }, [missionInfo?.ratio, user]);
 
   const [loadingUpdatePartner, setLoadingUpdatePartner] = useState(false);
   const handleUpdatePartner = async () => {
