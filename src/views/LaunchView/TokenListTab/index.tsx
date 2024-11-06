@@ -8,17 +8,17 @@ import {
   Button,
   Currency,
   FlexCenter,
+  FlexCol,
   FlexContent,
   ImageRatio,
   InputForm,
-  LinkCustom,
   Pagination,
   SelectForm,
   Title2,
 } from '@/components';
 import { SearchIcon } from '@/components/Icons';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
+import { AspectRatio, Box, Flex, Image, SimpleGrid, Skeleton } from '@chakra-ui/react';
 
 import { useQueryTokenList } from './hooks/useQueryTokenList';
 
@@ -38,10 +38,10 @@ export default function TokenListTab() {
   const searchDeb = useDebounce(search, 300);
 
   const params = useMemo(
-    () => ({ page, limit: 10, sortBy: sortBy.value, sortType, search: searchDeb }),
+    () => ({ page, limit: 12, sortBy: sortBy.value, sortType, search: searchDeb }),
     [page, sortBy, sortType, searchDeb],
   );
-  const { data } = useQueryTokenList(params);
+  const { data, isLoading } = useQueryTokenList(params);
 
   return (
     <FlexContent w="full">
@@ -65,87 +65,77 @@ export default function TokenListTab() {
           <SelectForm options={options} value={sortBy} onChange={(e: any) => setSortBy(e)} />
         </FlexCenter>
       </Flex>
-      <TableContainer w="full" pb={4}>
-        <Table
-          variant="unstyled"
-          style={{ borderCollapse: 'separate', borderSpacing: '0 10px' }}
-          fontFamily="sfPro"
-          fontWeight={800}
-        >
-          <Thead>
-            <Tr fontSize={{ base: 16, md: 20 }} color="rgba(172, 172, 172, 1)">
-              {[
-                { name: 'Token', center: false },
-                { name: 'Price/Slot' },
-                { name: 'Holders' },
-                { name: 'Sale Progress' },
-                { name: '', w: 209 },
-              ].map((e, i) => (
-                <Td
-                  key={i}
-                  p={0}
-                  lineHeight={1.4}
-                  textAlign={e.center === false ? undefined : 'center'}
-                  pr={i === 0 ? { base: 2, md: 5 } : undefined}
-                  px={i !== 0 ? { base: 2, md: 5 } : undefined}
-                  w={e.w}
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap={4} w="full">
+        {isLoading && Array.from({ length: 12 }).map((_, i) => <Skeleton key={i} w="full" h={'419px'} rounded={24} />)}
+
+        {data?.docs.map((token, i) => (
+          <FlexCol
+            key={i}
+            rounded={24}
+            bg="rgba(237, 247, 255, 1)"
+            p={4}
+            w="full"
+            cursor="pointer"
+            onClick={() => router.push(`/launch/${token.mint}`)}
+          >
+            <Box w="full" pos="relative">
+              <AspectRatio ratio={355 / 240} rounded={20} overflow="hidden" bg="black">
+                <Image src={token.image_uri ?? 'https://placehold.co/30x30/png'} w="full" h="full" alt="" />
+              </AspectRatio>
+
+              <Box pos="absolute" bottom={-6} left={3} p={1} rounded={16} bg="rgba(237, 247, 255, 1)">
+                <ImageRatio
+                  src={token.image_uri ?? 'https://placehold.co/30x30/png'}
+                  ratio={1}
+                  w={20}
+                  rounded={16}
+                  overflow="hidden"
+                />
+              </Box>
+            </Box>
+            <FlexCol pt={10} lineHeight={1.4} fontFamily="sfPro">
+              <Flex gap={{ base: 3, xl: 3 }} justifyContent="space-between">
+                {[
+                  { name: 'Price/Slot', value: <Currency value={token.price_sol_per_token} suffix=" SOL" /> },
+                  { name: 'Holder', value: <Currency value={token.totalHolders} /> },
+                  {
+                    name: 'Sale Progress',
+                    value: <Currency value={BigNumber(token.saleProgress).multipliedBy(100)} decimal={2} suffix="%" />,
+                  },
+                ].map((e, i) => (
+                  <FlexCol key={i} gap={1}>
+                    <Box fontSize={12} fontWeight={500} color="rgba(142, 142, 147, 1)">
+                      {e.name}
+                    </Box>
+                    <Box fontSize={16} fontWeight={800} color="black">
+                      {e.value}
+                    </Box>
+                  </FlexCol>
+                ))}
+              </Flex>
+              <Box my={3} w="full" borderBottom="1px solid rgba(192, 192, 192, 1)" />
+              <Flex justifyContent="space-between" gap={2}>
+                <Box fontSize={16} fontWeight={800}>
+                  {token.name}
+                </Box>
+                <Button
+                  bg="makeColor"
+                  h={10}
+                  minW={169}
+                  fontFamily="titanOne"
+                  fontWeight={400}
+                  fontSize={20}
+                  color="white"
+                  rounded={8}
+                  px={5}
                 >
-                  {e.name}
-                </Td>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody fontSize={{ base: 16, md: 16 }}>
-            {data?.docs.map((token, i) => (
-              <Tr key={i} onClick={() => router.push(`/launch/${token.mint}`)} cursor="pointer">
-                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" roundedLeft={10}>
-                  <FlexCenter gap={2.5}>
-                    <ImageRatio
-                      src={token.image_uri ?? 'https://placehold.co/30x30/png'}
-                      ratio={1}
-                      w="30px"
-                      rounded={999}
-                      overflow="hidden"
-                    />
-                    {token.name}
-                  </FlexCenter>
-                </Td>
-                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
-                  <Currency value={token.price_sol_per_token} suffix=" SOL" />
-                </Td>
-                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
-                  <Currency value={token.totalHolders} />
-                </Td>
-                <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
-                  <Currency value={BigNumber(token.saleProgress).multipliedBy(100)} decimal={2} suffix="%" />
-                </Td>
-                <Td
-                  px={{ base: 2, md: 5 }}
-                  py={{ base: 1.5, md: 2.5 }}
-                  bg="rgba(237, 247, 255, 1)"
-                  roundedBottomRight={10}
-                >
-                  <Flex justifyContent="end">
-                    <Button
-                      bg="makeColor"
-                      h={10}
-                      w="full"
-                      fontFamily="titanOne"
-                      fontWeight={400}
-                      fontSize={20}
-                      color="white"
-                      rounded={8}
-                      px={5}
-                    >
-                      BUY
-                    </Button>
-                  </Flex>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+                  BUY
+                </Button>
+              </Flex>
+            </FlexCol>
+          </FlexCol>
+        ))}
+      </SimpleGrid>
 
       {!!data?.totalPages && data?.totalPages > 1 && (
         <Pagination page={page} onChange={setPage} total={data?.totalPages ?? 0} />
