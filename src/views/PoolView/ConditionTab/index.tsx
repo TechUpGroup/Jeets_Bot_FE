@@ -4,7 +4,7 @@ import { isNil } from 'lodash';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-import { Button, Currency, FlexCenter, FlexCol, ImageRatio, ModalBase, SelectForm } from '@/components';
+import { Button, Currency, FlexCenter, FlexCol, ImageRatio, LinkCustom, ModalBase, SelectForm } from '@/components';
 import { SearchIcon } from '@/components/Icons';
 import useWalletActive from '@/hooks/useWalletActive';
 import { postUpdatePartner } from '@/services/contract';
@@ -16,6 +16,8 @@ import { Box, Flex, useDisclosure } from '@chakra-ui/react';
 
 import { useQueryHolderRequire } from './hooks/useQueryHolderRequire';
 import { useVotingCheck } from './hooks/useVotingCheck';
+import { formatAddress } from '@/utils/address';
+import { isMobile } from 'react-device-detect';
 
 export default function ConditionTab() {
   const { data: holderRequire } = useQueryHolderRequire();
@@ -137,6 +139,17 @@ export default function ConditionTab() {
           color="#201B03"
           textAlign="center"
         >
+          <FlexCenter gap="5px">
+            {isMobile ? <LinkCustom href='https://www.wemoon.ing' target="_blank">
+              <FlexCenter gap="5px">  <ImageRatio src="/icons/moon.png" ratio={1} w={6} /><Box>{formatAddress('FZEWxnkkVM4Eqvrt8Shipj6MJsnGptZNgM7bZwPmpump')}
+              </Box>
+              </FlexCenter>
+            </LinkCustom> : <LinkCustom href='https://www.wemoon.ing' target="_blank">
+              <FlexCenter gap="5px"><ImageRatio src="/icons/moon.png" ratio={1} w={6} /> <Box>FZEWxnkkVM4Eqvrt8Shipj6MJsnGptZNgM7bZwPmpump
+              </Box>
+              </FlexCenter>
+            </LinkCustom>}
+          </FlexCenter>
           <Flex alignItems="center" fontSize={{ base: 18, md: 24 }} color="#8F51EC" gap={2.5}>
             Airdrop Eligibility
             <Button
