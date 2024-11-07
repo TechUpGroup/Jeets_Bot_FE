@@ -1,7 +1,7 @@
 import { useBaseQuery } from '@/hooks/useBaseQuery';
 import { getTokenListOfUser } from '@/services/token';
 
-export const useQueryTokenList = (params: {
+export const useQueryMyTokenList = (params: {
   page: number;
   limit: number;
   sortBy: string;

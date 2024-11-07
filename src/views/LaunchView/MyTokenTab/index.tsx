@@ -8,7 +8,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { SearchIcon } from '@chakra-ui/icons';
 import { Box, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 
-import { useQueryTokenList } from './hooks/useQueryTokenList';
+import { useQueryMyTokenList } from './hooks/useQueryMyTokenList';
 
 const options = [
   { value: 'current_price', label: 'Price' },
@@ -26,7 +26,7 @@ export default function MyTokenTab() {
     () => ({ page, limit: 10, sortBy: sortBy.value, sortType, search: searchDeb }),
     [page, sortBy, sortType, searchDeb],
   );
-  const { data } = useQueryTokenList(params);
+  const { data } = useQueryMyTokenList(params);
 
   const router = useRouter();
 

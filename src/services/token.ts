@@ -2,16 +2,7 @@ import { isNil } from 'lodash';
 
 import { appConfig } from '@/config';
 import { IPaginationResponse, ITokenPaginationParams } from '@/types/api.type';
-import {
-  IChat,
-  ICreateTokenSignature,
-  IReferralToken,
-  ITokenCreate,
-  ITokenData,
-  ITokenHolder,
-  ITokenInfo,
-  ITokenTrade,
-} from '@/types/token.type';
+import { ICreateTokenSignature, ITokenCreate, ITokenData, ITokenHolder, ITokenTrade } from '@/types/token.type';
 import { axiosInstance, axiosNoAuthInstance } from '@/utils/axios';
 
 export const postCreateMintToken = async (

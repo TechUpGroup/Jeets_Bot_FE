@@ -183,38 +183,15 @@ export interface ITokenData {
 export interface IChat {
   _id: string;
   network: string;
-  nonce: string;
-  user: {
-    _id: string;
-    username: string;
-    avatar: string;
-  };
+  username: string;
+  avatar: string;
+  telegram_username: string;
   mint: string;
-  is_buy: true;
-  eth_amount: string;
-  token_amount: string;
   description: string;
+  account: string;
   createdAt: string;
   updatedAt: string;
-  timestamp: number;
-  transaction_hash: string;
-}
-
-export interface IReferralToken {
-  _id: string;
-  network: string;
-  transaction_hash: string;
-  referred: {
-    address: string;
-    username: string;
-  };
-  referral: {
-    address: string;
-    username: string;
-  };
-  mint: string;
-  timestamp: number;
-  token_amount: string;
+  __v: number;
 }
 
 export interface IVolumeMilestone {

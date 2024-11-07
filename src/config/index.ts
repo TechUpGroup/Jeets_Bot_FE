@@ -2,6 +2,7 @@ export const appConfig = {
   basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '',
   publicUrl: process.env.NEXT_PUBLIC_URL,
   publicUrlV2: process.env.NEXT_PUBLIC_URL_V2,
+  publicSocketUrl: process.env.NEXT_PUBLIC_SOCKET_URL ?? '',
   chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID ?? 1),
 
   isSolanaMainnet: process.env.NEXT_PUBLIC_IS_SOLANA_MAINNET?.trim().toLowerCase() === 'true',
