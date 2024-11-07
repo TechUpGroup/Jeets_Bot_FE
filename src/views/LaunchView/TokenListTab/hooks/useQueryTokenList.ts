@@ -36,14 +36,14 @@ export const useQueryTokenList = (params: {
       (state) => state.lastestTokenUpdated,
       (lastestTokenUpdated) => {
         queryClient.setQueryData(queryKey, (data?: IPaginationResponse<ITokenCreate>) => {
-          if (!lastestTokenUpdated || !data?.docs.length) return data;
+          if (!lastestTokenUpdated || data?.page !== 1) return data;
+          const cloneData = cloneDeep(data);
           const indexFinded = data?.docs.findIndex((e) => e._id === lastestTokenUpdated._id);
           if (indexFinded >= 0) {
-            const cloneData = cloneDeep(data);
-            cloneData.docs[indexFinded] = lastestTokenUpdated;
-            return cloneData;
+            cloneData.docs.splice(indexFinded, 1);
           }
-          return data;
+          cloneData.docs.unshift(lastestTokenUpdated);
+          return cloneData;
         });
       },
     );
