@@ -90,7 +90,7 @@ export default function MyTokenTab() {
                   </FlexCenter>
                 </Td>
                 <Td px={{ base: 2, md: 5 }} py={{ base: 1.5, md: 2.5 }} bg="rgba(237, 247, 255, 1)" textAlign="center">
-                  <Currency value={token.myAmount} isWei />
+                  <Currency value={token.myAmount} decimalNumber={6} />
                 </Td>
 
                 <Td

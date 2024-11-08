@@ -575,7 +575,7 @@ export default function TokenDevelopmentTab() {
                   </RangeSliderMark>
                   <RangeSliderMark
                     style={{ textWrap: 'nowrap' }}
-                    value={500}
+                    value={2000}
                     textAlign="center"
                     color="rgba(142, 142, 147, 1)"
                     top="calc(100% + 14px)"
@@ -583,7 +583,7 @@ export default function TokenDevelopmentTab() {
                     fontSize={12}
                     transform="translateX(calc(-100% + 12px))"
                   >
-                    500 Jeets
+                    2000 Jeets
                   </RangeSliderMark>
                 </Box>
               </Box>
