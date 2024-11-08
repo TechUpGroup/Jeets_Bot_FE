@@ -57,6 +57,10 @@ export default function CampainHistoriesTable() {
                     <Flex lineHeight={1.4} gap={1} alignContent="center">
                       {his.event}
                     </Flex>
+                  ) : his.event === 'StartHold' ? (
+                    <Flex lineHeight={1.4} gap={1} alignContent="center">
+                      Hold {his.detail?.symbol}
+                    </Flex>
                   ) : (
                     <Flex lineHeight={1.4} gap={1} alignContent="center">
                       Hold
